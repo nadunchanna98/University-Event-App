@@ -4,9 +4,11 @@ import Chart from './Chart'
 import Moment from 'moment';
 import { NewContext } from '../../Common/Context';
 
+import NewEvent from '../Admin/NewEvent';
+
 const LastUpdate = () => {
 
-    const { date, fetchDate , event } = useContext(NewContext);
+    const { date, fetchDate, event } = useContext(NewContext);
 
     useEffect(() => { fetchDate(); }, []);
 
@@ -23,9 +25,13 @@ const LastUpdate = () => {
 
             </View>
 
-            {
+            {/* {
                 event === '' ? <Text style={styles.wait}  >Loading...</Text> : <Chart />
-            }
+            } */}
+
+            <View>
+                <NewEvent />
+            </View>
 
         </View>
     )

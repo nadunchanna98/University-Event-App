@@ -24,7 +24,7 @@ const MainPage = () => {
 
       <LastUpdate />
 
-      <View style={styles.topic} >
+      {/* <View style={styles.topic} >
         <Text style={styles.latest} >Total Marks</Text>
       </View>
 
@@ -33,6 +33,7 @@ const MainPage = () => {
         {marks.map((item, index) => {
 
           return (
+
             <View style={styles.bag} key={index}>
               <Text style={styles.team}> {item.team}</Text>
               <Text style={styles.marks}>  {item.total}</Text>
@@ -43,7 +44,7 @@ const MainPage = () => {
         })
         }
 
-      </View>
+      </View> */}
 
 
     </ScrollView>

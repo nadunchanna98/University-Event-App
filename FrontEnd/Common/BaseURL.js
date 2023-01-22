@@ -16,9 +16,9 @@ if (Platform.OS === "android") {
 }
 
 // if (Platform.OS === "android") {
-//     BASE_URL = "http://10.102.11.72:3000/api/v1/" // for android emulator
+//     BASE_URL = "http://10.102.10.220:3000/api/v1/" // for android emulator
 // } else {
-//     BASE_URL = "http://10.102.11.72:3000/api/v1/" // for ios emulator
+//     BASE_URL = "http://10.102.10.220:3000/api/v1/" // for ios emulator
 // }
 
 

@@ -1,17 +1,39 @@
-import React, {  useEffect , useContext} from 'react'
-import { View, Text, StyleSheet, FlatList, Image, Dimensions, ScrollView, RefreshControl } from 'react-native'
+import React, { useEffect, useContext } from 'react'
+import { View, Text, StyleSheet, FlatList, Image, Dimensions, ScrollView, RefreshControl, Button } from 'react-native'
 import Moment from 'moment';
 import { NewContext } from '../../Common/Context';
+import BASE_URL from '../../Common/BaseURL'
+import axios from 'axios';
 
-const UpComingContainer = () => {
 
-  const { newPost ,refresh ,pullMe ,getNewPost  } = useContext(NewContext);
+const UpComingContainer = ({navigation}) => {
+
+  const { newPost, refresh, pullMe, getNewPost } = useContext(NewContext);
+
+
+
+  const SharePost = (item) => {
+    navigate('/ShareEvent', { state: item });
+  }
+
+  const DeletePost = (id) => {
+
+    console.log(id);
+    axios.delete(`${BASE_URL}futureevents/delete/${id}`)
+      .then(res => {
+        console.log("success");
+        getNewPost();
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 
   useEffect(() => { getNewPost(); }, []);
 
   return (
 
-    <View  style={styles.AllPostContainer}  >
+    <View style={styles.AllPostContainer}  >
 
       <FlatList
 
@@ -27,18 +49,28 @@ const UpComingContainer = () => {
         renderItem={({ item }) =>
 
           <View style={styles.post}>
-            <Image style={styles.image} source={{ uri: item.image }} />
+
+            <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} />
             <Text style={styles.event}>{item.event} {item.gender}  {item.type}</Text>
-
             <Text style={styles.date}  > {Moment(item.date).format('LLLL')} </Text>
-
-
             <Text style={styles.description}>{item.description}</Text>
             <Text style={styles.date}>{item.location}</Text>
+
+            <View style={styles.buttonpanel} >
+              <View style={styles.buttons} >
+                <Button title="Share" color="#408cb2" onPress={() => SharePost(item)} />
+              </View>
+              <View style={styles.buttons} >
+                <Button title="Delete " color='red' onPress={() => DeletePost(item._id)} />
+              </View>
+            </View>
+
           </View>
         }
         keyExtractor={item => item._id}
       />
+
+
 
 
     </View>
@@ -92,7 +124,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     borderRadius: 20,
     borderWidth: 4,
-    borderColor: '#FF1E1E',
+    borderColor: '#3d6ecf',
     padding: Dimensions.get('window').width * 0.05,
   },
 
@@ -102,7 +134,20 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     marginBottom: 10,
-  }
+  },
+
+  buttonpanel: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: Dimensions.get('window').width * 0.7,
+
+  },
+
+  buttons: {
+    width: Dimensions.get('window').width * 0.3,
+    height: Dimensions.get('window').height * 0.05,
+    margin: 10,
+  },
 
 
 })

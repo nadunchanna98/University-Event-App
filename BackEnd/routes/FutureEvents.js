@@ -93,6 +93,7 @@ router.put('/update/:id', async (req, res) => {
 //delete the post
 router.delete('/delete/:id', (req, res) => {
 
+    console.log(req.params.id);
     FuturePost.findByIdAndRemove(req.params.id).then(post => {
         if (post) {
             return res.status(200).json({ success: true, message: 'post is deleted!' })

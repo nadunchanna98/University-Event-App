@@ -32,6 +32,6 @@ const FutureEventsSchema = mongoose.Schema({
 })
 
 
-exports.FuturePost = mongoose.model('FuturePost', FutureEventsSchema);
+exports.FuturePost = mongoose.model('Future-Events', FutureEventsSchema);
 
 

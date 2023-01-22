@@ -20,7 +20,7 @@ app.use(morgan('tiny'));  // for logging requests to the console (express4)
 
 
 //Routers 
-const postRoutes = require('./routes/Posts');
+const postRoutes = require('./routes/PastEvents');
 const futureEventRoutes = require('./routes/FutureEvents');
 const teamsRoutes = require('./routes/Teams');
 const LatestRoutes = require('./routes/Latest');
@@ -41,12 +41,12 @@ mongoose.connect(process.env.CONNECTION_STRING,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: 'E-WEEK'
+        dbName: 'Event-App'
     })
 
 .then(()=>{
    // res.json()
-   console.log('E-WEEK DB connected')
+   console.log('Event-App DB connected')
 }).catch((err)=>{
     console.log(err)
 })

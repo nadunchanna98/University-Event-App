@@ -52,4 +52,4 @@ const postSchema = mongoose.Schema({
 })
 
 
-exports.Post = mongoose.model('Post', postSchema);
+exports.Post = mongoose.model('Past-Events', postSchema);

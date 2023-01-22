@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "E-week",
-    "slug": "E-week",
+    "name": "Event App",
+    "slug": "Event App",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

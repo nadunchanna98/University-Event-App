@@ -6,7 +6,7 @@ import Eweek from '../assets/icon.png';
 function TopNavigation({ index, setIndex }) {
 
     return (
-        <View style={{ ...styles.container, backgroundColor: "#FF1E1E" }}>
+        <View style={{ ...styles.container, backgroundColor: "#4682B4" }}>
 
             {index === 0 ? (
 
