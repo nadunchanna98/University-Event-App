@@ -26,7 +26,7 @@ const teamsRoutes = require('./routes/Teams');
 const LatestRoutes = require('./routes/Latest');
 
 //api routes  
-app.use(`${api}/posts`, postRoutes);
+app.use(`${api}/pastevents`, postRoutes);
 app.use(`${api}/futureevents`, futureEventRoutes);
 app.use(`${api}/teams`, teamsRoutes);
 app.use(`${api}/latest`, LatestRoutes);

@@ -8,7 +8,6 @@ function App() {
 
       <View style={styles.container}  >
         <StatusBar backgroundColor="#000" barStyle="default" />
-
         <InshortTabs />
       </View>
   
