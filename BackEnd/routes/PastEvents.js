@@ -30,6 +30,9 @@ router.get(`/:id`, async (req, res) => {
 
 //add new post according to the catogory 
 router.post('/post/', async (req, res) => {
+ 
+
+
     let newspost = new Post({
 
         event: req.body.event,
@@ -47,6 +50,7 @@ router.post('/post/', async (req, res) => {
 
     })
 
+    // console.log(newspost)
     newspost = await newspost.save();
 
     if (!newspost)

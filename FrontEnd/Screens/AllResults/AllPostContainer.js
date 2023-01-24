@@ -30,7 +30,7 @@ const AllPostContainer = () => {
         renderItem={({ item }) =>
 
           <View style={styles.post}>
-            <Image style={styles.image} source={{ uri: item.image }} />
+            <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} />
             <Text style={styles.event}>{item.event} {item.gender}  {item.type}</Text>
             <Text style={styles.firstN}><FontAwesome5 name="medal" size={20} color="gold" />  {item.firstN} {item.firstT}</Text>
             <Text style={styles.secondN}><FontAwesome5 name="medal" size={20} color="#B2B2B2" />  {item.secondN} {item.secondT}</Text>
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     borderRadius: 20,
     borderWidth: 4,
-    borderColor: '#FF1E1E',
+    borderColor: '#3d6ecf',
     padding: Dimensions.get('window').width * 0.05,
   },
 

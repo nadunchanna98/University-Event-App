@@ -5,82 +5,21 @@ import { NewContext } from '../../Common/Context';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
 import ShareEvent from '../Admin/ShareEvent';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
-import { Formik, Field } from 'formik'
-import * as yup from 'yup'
-import CustomInput from '../Admin/CustomInput'
+const UpComingContainer = () => {
 
-const UpComingContainer = ({ navigation }) => {
-
-  const { newPost, refresh, pullMe, getNewPost } = useContext(NewContext);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const handleSubmit = (values) => {
-
-    setModalVisible(false);
-
-    const formData = {
-
-      firstN: values.firstN,
-      secondN: values.secondN,
-      thirdN: values.thirdN,
-      firstT: values.firstT,
-      secondT: values.secondT,
-      thirdT: values.thirdT,
-      event: values.event,
-      date: "2027-12-12 19:10:00",
-      description: values.description,
-      type: values.type,
-      gender: values.gender,
-
-    }
-
-    axios.post(`${BASE_URL}pastevents/post`, formData)
-      .then(data => {
-        console.log(" success ")
-        pullMe();
-        setModalVisible(!modalVisible);
-      }
-      )
-      .catch(err => console.log(err))
-
-  }
+  const { newPost, refresh, pullMe, getNewPost ,DeletePost } = useContext(NewContext);
+  const navigation = useNavigation(); 
 
 
-  const SharePost = (item) => {
-    navigate('/ShareEvent', { state: item });
-  }
 
-  const DeletePost = (id) => {
-
-    console.log(id);
-    axios.delete(`${BASE_URL}futureevents/delete/${id}`)
-      .then(res => {
-        console.log("success");
-        getNewPost();
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
 
   useEffect(() => { getNewPost(); }, []);
 
-  const signUpValidationSchema = yup.object().shape({
-    firstN: yup
-      .string()
-      .required('First place is required'),
-    secondN: yup
-      .string()
-      .required('Second place is required'),
-    thirdN: yup
-      .string()
-      .required('Third place is required'),
-    description: yup
-      .string()
-      .min(0, ({ min, value }) => `${min - value.length} characters to go`),
-    // photo: yup.object().required('Photo is required'),
-  })
+
 
   return (
 
@@ -97,7 +36,7 @@ const UpComingContainer = ({ navigation }) => {
         }
 
         data={newPost}
-        renderItem={({ item ,  index}) =>
+        renderItem={({ item, index }) =>
 
           <View style={styles.post}>
 
@@ -111,158 +50,26 @@ const UpComingContainer = ({ navigation }) => {
             <View style={styles.buttonpanel} >
 
               <View style={styles.buttons} >
-
-
-                <View style={styles.centeredView}>
-                  <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-    
-                    onRequestClose={() => {
-                      Alert.alert('Modal has been closed.');
-                      setModalVisible(!modalVisible);
-                    }}>
-
-
-                    <View style={styles.centeredView}>
-                      <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Share {item.event} </Text>
-
-
-                        <View style={styles.container}>
-                          <View style={styles.signupContainer}>
-
-                            <Formik
-                              initialValues={{
-                                event: item.event,
-                                location: item.location,
-                                gender: item.gender,
-                                type: item.type,
-                                date: item.date,
-                                description: '',
-                                firstN: '',
-                                secondN: '',
-                                thirdN: '',
-                                firstT: '',
-                                secondT: '',
-                                thirdT: '',
-                                setFieldValue: '',
-                                setFieldTouched: '',
-                                errors: '',
-                                touched: '',
-                              }}
-                              onSubmit={values => handleSubmit(values)}
-                              validationSchema={signUpValidationSchema}
-                            >
-                              {({ handleSubmit, isValid }) => (
-                                <>
-
-                                  <Text style={styles.lable}  >First Place</Text>
-                                  <Field
-                                    component={CustomInput}
-                                    name="firstN"
-                                    placeholder=""
-                                    keyboardType="email-address"
-                                  />
-
-                                  <Text style={styles.lable}  >Second Place</Text>
-                                  <Field
-                                    component={CustomInput}
-                                    name="secondN"
-                                    placeholder=""
-                                    keyboardType="email-address"
-                                  />
-
-                                  <Text style={styles.lable}  >Third Place</Text>
-                                  <Field
-                                    component={CustomInput}
-                                    name="thirdN"
-                                    placeholder=""
-                                    keyboardType="email-address"
-                                  />
-
-                                  <Text style={styles.lable}  >First Team</Text>
-                                  <Field
-                                    component={CustomInput}
-                                    name="firstT"
-                                    placeholder=""
-                                    keyboardType="email-address"
-                                  />
-
-                                  <Text style={styles.lable}  >Second Team</Text>
-                                  <Field
-                                    component={CustomInput}
-                                    name="secondT"
-                                    placeholder=""
-                                    keyboardType="email-address"
-                                  />
-
-                                  <Text style={styles.lable}  >Third Team</Text>
-                                  <Field
-                                    component={CustomInput}
-                                    name="thirdT"
-                                    placeholder=""
-                                    keyboardType="email-address"
-                                  />
-
-                                  <Text style={styles.lable}  >Description</Text>
-                                  <Field
-                                    component={CustomInput}
-                                    name="description"
-                                    placeholder="Write about Event.."
-                                    multiline
-                                    numberOfLines={3}
-                                  />
-
-                                  <Button
-                                    style={[styles.buttons, styles.buttonClose]}
-                                    onPress={() => handleSubmit }
-                                    disabled={!isValid}
-                                    title="Share"
-                                   />
-                                </>
-                              )}
-                            </Formik>
-
-                          </View>
-                        </View>
-
-
-
-
-
-
-
-
-
-
-
-                      </View>
-                    </View>
-
-
-                  </Modal>
-
-
-
                   <Button
-                    style={[styles.buttons, styles.buttonOpen]}
-                    currentItemId={item}
-                    onPress={(index) => setModalVisible(true)}
-                    title="Share Event"
+                    style={[styles.buttons]}
+                    onPress={() => navigation.navigate('ShareEvent', {ID: item._id})    }
+                    title="Share"
                   />
-                </View>
-
-
-
-
-
-
               </View>
+
               <View style={styles.buttons} >
-                <Button title="Delete " color='red' onPress={() => DeletePost(item._id)} />
+                  <Button
+                    style={[styles.buttons]}
+                    color='green'
+                    onPress={() => navigation.navigate('ShareEvent', {ID: item._id})    }
+                    title="Edit"
+                  />
               </View>
+
+              <View style={styles.buttons} >
+                <Button title="Delete" color='red' onPress={() => DeletePost(item._id)} />
+              </View>
+
             </View>
 
           </View>
@@ -282,47 +89,7 @@ export default UpComingContainer
 
 const styles = StyleSheet.create({
 
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
+ 
 
   AllPostContainer: {
     width: Dimensions.get('window').width * 0.9,
@@ -379,6 +146,7 @@ const styles = StyleSheet.create({
   },
 
   buttonpanel: {
+    
     flexDirection: 'row',
     justifyContent: 'center',
     width: Dimensions.get('window').width * 0.7,
@@ -386,9 +154,9 @@ const styles = StyleSheet.create({
   },
 
   buttons: {
-    width: Dimensions.get('window').width * 0.3,
+    width: Dimensions.get('window').width * 0.2,
     height: Dimensions.get('window').height * 0.05,
-    margin: 10,
+    margin:Dimensions.get('window').width * 0.01,
   },
 
 

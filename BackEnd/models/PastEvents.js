@@ -15,24 +15,27 @@ const postSchema = mongoose.Schema({
     },
     firstN: {
         type: String,
+        required: true
     },
     secondN: {
         type: String,
+        required: true
     },
     thirdN: {
         type: String,
+        required: true
     },
     firstT: {
         type: String,
-        required: true
+        
     },
     secondT: {
         type: String,
-        required: true
+        
     },
     thirdT: {
         type: String,
-        required: true
+        
     },
     description: {
         type: String,

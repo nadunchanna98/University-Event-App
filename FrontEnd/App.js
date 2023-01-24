@@ -1,7 +1,10 @@
 import { StyleSheet, View, StatusBar } from 'react-native';
 import Context from './Common/Context';
 import InshortTabs from './Components/InshortTabs';
-
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ShareEvent from './Screens/Admin/ShareEvent';
+import UpComingContainer from './Screens/UpComing/UpComingContainer';
 
 function App() {
   return (
@@ -15,10 +18,30 @@ function App() {
   );
 }
 
+const Stack = createNativeStackNavigator();
+
+ function AppContainer() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" 
+        component={App}
+        options={{ headerShown: false }} 
+        
+        
+        />
+        <Stack.Screen name="ShareEvent" component={ShareEvent} options={{ headerShown: false }}  />
+        <Stack.Screen name="UpComingContainer" component={UpComingContainer} options={{ headerShown: false }}  />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+
 export default () => {
   return (
     <Context>
-      <App />
+      <AppContainer />
     </Context>
 
   );
