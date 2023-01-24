@@ -38,6 +38,22 @@ const ShareEvent = ({ route }) => {
     setModalVisible(true);
   }, []);
 
+
+  const confirmModalClose = () => {
+    Alert.alert(
+        "Stop Share ?",
+        "Are you sure you want to discard sharing ?",
+        [
+            {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+            },
+            { text: "OK", onPress: () =>  navigation.goBack()}
+        ],
+        { cancelable: false }
+    );
+};
   
 
   const handleSubmit = (values) => {
@@ -99,10 +115,7 @@ const ShareEvent = ({ route }) => {
         transparent={true}
         visible={modalVisible}
 
-        onRequestClose={() => {
-          Alert.alert(' Event is not Shared.');
-          navigation.goBack()
-          setModalVisible(!modalVisible);
+        onRequestClose={() => { confirmModalClose()
         }}>
 
 

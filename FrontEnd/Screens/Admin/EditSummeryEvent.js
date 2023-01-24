@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     Dimensions,
     Alert,
-    Modal
+    Modal,
+    ScrollView
 } from 'react-native'
 import { Formik, Field } from 'formik'
 import * as yup from 'yup'
@@ -23,13 +24,19 @@ import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
 
 
-const EditEvent = ({ route }) => {
+const EditSummeryEvent = ({ route }) => {
 
     const { pullMe } = useContext(NewContext);
 
     const navigation = useNavigation();
     const ID = route.params.ID;
 
+    const [firstN , setFirstN] = useState('');
+    const [secondN , setSecondN] = useState('');
+    const [thirdN , setThirdN] = useState('');
+    const [firstT , setFirstT] = useState('');
+    const [secondT , setSecondT] = useState('');
+    const [thirdT , setThirdT] = useState('');
     const [event, setEvent] = useState('');
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
@@ -40,7 +47,7 @@ const EditEvent = ({ route }) => {
     // console.log(selectedEvent)
 
     const getEvent = () => {
-        axios.get(`${BASE_URL}futureevents/${ID}`)
+        axios.get(`${BASE_URL}pastevents/${ID}`)
             .then(res => {
 
                 setEvent(res.data.event);
@@ -49,6 +56,12 @@ const EditEvent = ({ route }) => {
                 setType(res.data.type);
                 setGender(res.data.gender);
                 setLocation(res.data.location);
+                setFirstN(res.data.firstN);
+                setSecondN(res.data.secondN);
+                setThirdN(res.data.thirdN);
+                setFirstT(res.data.firstT);
+                setSecondT(res.data.secondT);
+                setThirdT(res.data.thirdT);
             })
             .catch(err => {
                 console.log(err);
@@ -86,14 +99,20 @@ const EditEvent = ({ route }) => {
             description: description,
             type: type,
             gender: gender,
-            location: location
+            location: location,
+            firstN: firstN,
+            secondN: secondN,
+            thirdN: thirdN,
+            firstT: firstT,
+            secondT: secondT,
+            thirdT: thirdT,
 
         }
 
         // console.log(formData)
         // console.log(ID)
 
-        axios.put(`${BASE_URL}futureevents/update/${ID}`, formData)
+        axios.put(`${BASE_URL}pastevents/update/${ID}`, formData)
             .then(data => {
                 console.log(" successfull update")
                 pullMe();
@@ -136,7 +155,7 @@ const EditEvent = ({ route }) => {
 
 
     return (
-        <>
+        <ScrollView>
         <Modal visible={true} 
         animationType="slide"
 
@@ -146,13 +165,19 @@ const EditEvent = ({ route }) => {
         }
         >
             <View style={styles.title}>
-                <Text style={styles.titleText}>Edit Event</Text>
+                <Text style={styles.titleText}>Edit Event Summary</Text>
             </View>
             <View style={styles.container}    >
                 <View style={styles.signupContainer}>
 
                     <Formik
                         initialValues={{
+                            firstN: '',
+                            secondN: '',
+                            thirdN: '',
+                            firstT: '',
+                            secondT: '',
+                            thirdT: '',
                             event: event,
                             location: '',
                             gender: '',
@@ -191,6 +216,61 @@ const EditEvent = ({ route }) => {
                                     value={gender}
                                     onChangeText= {(text) => setGender(text)}
                                 />
+
+                                <Text style={styles.lable}  >First Name</Text>
+                                <Field
+                                    component={CustomInput}
+                                    name="firstN"
+                                    value={firstN}
+                                    onChangeText= {(text) => setFirstN(text)}
+                                />
+
+                                <Text style={styles.lable}  >Second Name</Text>
+                                <Field
+
+                                    component={CustomInput}
+                                    name="secondN"
+                                    value={secondN}
+                                    onChangeText= {(text) => setSecondN(text)}
+                                />
+
+                                <Text style={styles.lable}  >Third Name</Text>
+                                <Field
+                                    component={CustomInput}
+                                    name="thirdN"
+                                    value={thirdN}
+                                    onChangeText= {(text) => setThirdN(text)}
+                                />
+
+                                <Text style={styles.lable}  >First Team</Text>
+                                <Field
+
+                                    component={CustomInput}
+                                    name="firstT"
+                                    value={firstT}
+                                    onChangeText= {(text) => setFirstT(text)}
+                                />
+
+                                <Text style={styles.lable}  >Second Team</Text>
+                                <Field
+                                    component={CustomInput}
+                                    name="secondT"
+                                    value={secondT}
+                                    onChangeText= {(text) => setSecondT(text)}
+                                />
+
+                                <Text style={styles.lable}  >Third Team</Text>
+                                <Field
+
+                                    component={CustomInput}
+                                    name="thirdT"
+                                    value={thirdT}
+                                    onChangeText= {(text) => setThirdT(text)}
+                                />
+
+
+
+
                                 <Text style={styles.lable}  >Location</Text>
                                 <Field
                                     component={CustomInput}
@@ -267,7 +347,7 @@ const EditEvent = ({ route }) => {
             </View>
 
         </Modal>
-        </>
+        </ScrollView>
     )
 }
 
@@ -320,4 +400,4 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
 })
-export default EditEvent
+export default EditSummeryEvent;

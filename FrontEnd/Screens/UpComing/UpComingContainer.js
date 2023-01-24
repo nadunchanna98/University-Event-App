@@ -13,6 +13,22 @@ const UpComingContainer = () => {
   const { newPost, refresh, pullMe, getNewPost ,DeletePost } = useContext(NewContext);
   const navigation = useNavigation(); 
 
+  const confirmDelete = (id) => {
+    Alert.alert(
+      "Delete Event",
+      "Are you sure you want to delete this Event?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => DeletePost(id) }
+      ],
+      { cancelable: false }
+    );
+  };
+
 
 
 
@@ -66,7 +82,7 @@ const UpComingContainer = () => {
               </View>
 
               <View style={styles.buttons} >
-                <Button title="Delete" color='red' onPress={() => DeletePost(item._id)} />
+                <Button title="Delete" color='red' onPress={() => confirmDelete(item._id)} />
               </View>
 
             </View>

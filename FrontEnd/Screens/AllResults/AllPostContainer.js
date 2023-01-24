@@ -1,14 +1,46 @@
-import React, {useEffect , useContext } from 'react'
-import { View, Text, StyleSheet, FlatList, Image, Dimensions, RefreshControl } from 'react-native';
+import React, { useEffect, useContext } from 'react'
+import { View,Button,Alert, Text, StyleSheet, FlatList, Image, Dimensions, RefreshControl } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { NewContext } from '../../Common/Context';
+import { useNavigation } from '@react-navigation/native';
+import BASE_URL from '../../Common/BaseURL';
+import axios from 'axios';
 
 const AllPostContainer = () => {
 
-  const { post ,refresh ,pullMe ,getPost  } = useContext(NewContext);
+  const { post, refresh, pullMe, getPost } = useContext(NewContext);
+  const navigation = useNavigation(); 
 
+  useEffect(() => { getPost(); }, []);
 
-  useEffect(() => { getPost();}, []);
+  const DeletePost = (id) => {
+
+    console.log(id);
+    axios.delete(`${BASE_URL}pastevents/delete/${id}`)
+      .then(res => {
+        console.log("success");
+        getPost();
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  const confirmDelete = (id) => {
+    Alert.alert(
+      "Delete Event",
+      "Are you sure you want to delete this Event?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => DeletePost(id) }
+      ],
+      { cancelable: false }
+    );
+  };
 
 
   return (
@@ -37,7 +69,30 @@ const AllPostContainer = () => {
             <Text style={styles.thirdN}><FontAwesome5 name="medal" size={20} color="#CD7F32" />  {item.thirdN} {item.thirdT}</Text>
             {/* <Text style={styles.date}>{Moment(item.date).format('LLLL')}</Text> */}
             <Text style={styles.date}>{item.description}</Text>
+
+            <View style={styles.buttonpanel} >
+
+              
+
+              <View style={styles.buttons} >
+                <Button
+                  style={[styles.buttons]}
+                  color='green'
+                  onPress={() => navigation.navigate('EditSummeryEvent', { ID: item._id })}
+                  title="Edit"
+                />
+              </View>
+
+              <View style={styles.buttons} >
+                <Button title="Delete" color='red' onPress={() => confirmDelete(item._id)} />
+              </View>
+
+            </View>
+
+
           </View>
+
+
         }
         keyExtractor={item => item._id}
       />
@@ -67,6 +122,21 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: '#3d6ecf',
     padding: Dimensions.get('window').width * 0.05,
+  },
+
+  
+  buttonpanel: {
+    
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: Dimensions.get('window').width * 0.7,
+
+  },
+
+  buttons: {
+    width: Dimensions.get('window').width * 0.2,
+    height: Dimensions.get('window').height * 0.05,
+    margin:Dimensions.get('window').width * 0.01,
   },
 
   image: {
