@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ShareEvent from './Screens/Admin/ShareEvent';
 import UpComingContainer from './Screens/UpComing/UpComingContainer';
+import EditEvent from './Screens/Admin/EditEvent';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ const Stack = createNativeStackNavigator();
         />
         <Stack.Screen name="ShareEvent" component={ShareEvent} options={{ headerShown: false }}  />
         <Stack.Screen name="UpComingContainer" component={UpComingContainer} options={{ headerShown: false }}  />
+        <Stack.Screen name="EditEvent" component={EditEvent} options={{ headerShown: false }}  />
       </Stack.Navigator>
     </NavigationContainer>
   );

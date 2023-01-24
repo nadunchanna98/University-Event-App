@@ -4,7 +4,6 @@ import Moment from 'moment';
 import { NewContext } from '../../Common/Context';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
-import ShareEvent from '../Admin/ShareEvent';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -61,7 +60,7 @@ const UpComingContainer = () => {
                   <Button
                     style={[styles.buttons]}
                     color='green'
-                    onPress={() => navigation.navigate('ShareEvent', {ID: item._id})    }
+                    onPress={() => navigation.navigate('EditEvent', {ID: item._id})    }
                     title="Edit"
                   />
               </View>
