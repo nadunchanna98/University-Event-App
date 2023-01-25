@@ -1,4 +1,4 @@
-import React, { useState ,useContext  } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,7 +8,10 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Modal,
+  Alert,
+  ScrollView,
 } from 'react-native'
 import { Formik, Field } from 'formik'
 import * as yup from 'yup'
@@ -18,12 +21,33 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
 import { NewContext } from '../../Common/Context';
+import { useNavigation } from '@react-navigation/native';
+
 
 const NewEvent = () => {
 
   const { pullMe } = useContext(NewContext);
+  const navigation = useNavigation();
 
-  const handleSubmit = (values  ) => {
+  const confirmModalClose = () => {
+    Alert.alert(
+        "Discard Create ?",
+        "Are you sure you want to discard Create ?",
+        [
+            {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+            },
+            { text: "OK", onPress: () =>  navigation.goBack()}
+        ],
+        { cancelable: false }
+    );
+};
+
+
+
+  const handleSubmit = (values) => {
 
     const formData = {
       event: values.event,
@@ -34,8 +58,10 @@ const NewEvent = () => {
 
     }
 
+    
+
     axios.post(`${BASE_URL}futureevents/post`, formData)
-    .then(data => {
+      .then(data => {
         console.log(" success ")
         pullMe();
       }
@@ -79,7 +105,18 @@ const NewEvent = () => {
 
   return (
     <>
+<Modal visible={true} animationType="slide"
 
+    onRequestClose={() => {
+      confirmModalClose();
+    }}
+>
+      <View style={styles.title}>
+        <Text style={styles.titleText}>Create Event</Text>
+      </View>
+
+
+<ScrollView>
       <View style={styles.container}>
         <View style={styles.signupContainer}>
 
@@ -191,6 +228,8 @@ const NewEvent = () => {
 
         </View>
       </View>
+      </ScrollView>
+      </Modal>
     </>
   )
 }
@@ -201,6 +240,7 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0,
     justifyContent: 'center',
     alignItems: 'center',
+
   },
   signupContainer: {
     width: Dimensions.get('window').width * 0.9,
@@ -221,6 +261,27 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     elevation: 8
 
-  }
+  },
+  title: {
+    backgroundColor: '#4682B4',
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').width * 0.2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 10,
+},
+
+titleText: {
+  fontSize: 24,
+  color: 'white',
+  fontWeight: 'bold',
+},
+
+lable: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  marginTop: 10,
+  marginBottom: 5,
+},
 })
 export default NewEvent

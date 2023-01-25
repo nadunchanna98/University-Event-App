@@ -68,8 +68,8 @@ const Context = ({ children }) => {
 
     axios.get(`${BASE_URL}latest/`)
       .then(res => {
-        // setDate(res.data[0].date);
-        // setEvent(res.data[0].event);
+        setDate(res.data[0].date);
+        setEvent(res.data[0].event);
       })
       .catch(err => {
         console.log(err);                  //clean up function

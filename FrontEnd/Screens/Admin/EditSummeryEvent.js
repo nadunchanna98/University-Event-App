@@ -22,6 +22,7 @@ import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
 import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
+import moment from "moment";
 
 
 const EditSummeryEvent = ({ route }) => {
@@ -155,7 +156,7 @@ const EditSummeryEvent = ({ route }) => {
 
 
     return (
-        <ScrollView>
+        <View style={{flex: 1}}>
         <Modal visible={true} 
         animationType="slide"
 
@@ -164,9 +165,11 @@ const EditSummeryEvent = ({ route }) => {
         }
         }
         >
+            
             <View style={styles.title}>
                 <Text style={styles.titleText}>Edit Event Summary</Text>
             </View>
+            <ScrollView>
             <View style={styles.container}    >
                 <View style={styles.signupContainer}>
 
@@ -294,7 +297,7 @@ const EditSummeryEvent = ({ route }) => {
                                 <Field
                                     component={CustomInput}
                                     name="date"
-                                    value={date}
+                                    value={moment.utc(date).format('YYYY/MM/DD - hh:mm a')}
                                     onChangeText= {(text) => setDate(text)}
                                 />
 
@@ -345,9 +348,9 @@ const EditSummeryEvent = ({ route }) => {
 
                 </View>
             </View>
-
+            </ScrollView>
         </Modal>
-        </ScrollView>
+        </View>
     )
 }
 

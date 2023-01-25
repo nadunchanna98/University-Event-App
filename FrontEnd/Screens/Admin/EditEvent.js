@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     Dimensions,
     Alert,
-    Modal
+    Modal,
+    ScrollView
 } from 'react-native'
 import { Formik, Field } from 'formik'
 import * as yup from 'yup'
@@ -21,7 +22,7 @@ import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
 import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
-
+import moment from "moment";
 
 const EditEvent = ({ route }) => {
 
@@ -145,9 +146,12 @@ const EditEvent = ({ route }) => {
         }
         }
         >
+            
             <View style={styles.title}>
                 <Text style={styles.titleText}>Edit Event</Text>
             </View>
+
+            <ScrollView>
             <View style={styles.container}    >
                 <View style={styles.signupContainer}>
 
@@ -214,7 +218,7 @@ const EditEvent = ({ route }) => {
                                 <Field
                                     component={CustomInput}
                                     name="date"
-                                    value={date}
+                                    value={moment.utc(date).format('YYYY/MM/DD - hh:mm a')}
                                     onChangeText= {(text) => setDate(text)}
                                 />
 
@@ -265,7 +269,7 @@ const EditEvent = ({ route }) => {
 
                 </View>
             </View>
-
+            </ScrollView>
         </Modal>
         </>
     )

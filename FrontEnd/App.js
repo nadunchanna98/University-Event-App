@@ -7,6 +7,7 @@ import ShareEvent from './Screens/Admin/ShareEvent';
 import UpComingContainer from './Screens/UpComing/UpComingContainer';
 import EditEvent from './Screens/Admin/EditEvent';
 import EditSummeryEvent from './Screens/Admin/EditSummeryEvent';
+import NewEvent from './Screens/Admin/NewEvent';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ const Stack = createNativeStackNavigator();
         <Stack.Screen name="UpComingContainer" component={UpComingContainer} options={{ headerShown: false }}  />
         <Stack.Screen name="EditEvent" component={EditEvent} options={{ headerShown: false }}  />
         <Stack.Screen name="EditSummeryEvent" component={EditSummeryEvent} options={{ headerShown: false }}  />
+        <Stack.Screen name="NewEvent" component={NewEvent} options={{ headerShown: false }}  />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, } from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable, View, TextInput, Button, ScrollView } from 'react-native'
+import { Alert, Modal, StyleSheet, Text, StatusBar, Dimensions, View, TextInput, Button, ScrollView } from 'react-native'
 import { NewContext } from '../../Common/Context';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const ShareEvent = ({ route }) => {
 
-  const {  pullMe, DeletePost } = useContext(NewContext);
+  const { pullMe, DeletePost } = useContext(NewContext);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
 
@@ -41,20 +41,20 @@ const ShareEvent = ({ route }) => {
 
   const confirmModalClose = () => {
     Alert.alert(
-        "Stop Share ?",
-        "Are you sure you want to discard sharing ?",
-        [
-            {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel"
-            },
-            { text: "OK", onPress: () =>  navigation.goBack()}
-        ],
-        { cancelable: false }
+      "Stop Share ?",
+      "Are you sure you want to discard sharing ?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => navigation.goBack() }
+      ],
+      { cancelable: false }
     );
-};
-  
+  };
+
 
   const handleSubmit = (values) => {
 
@@ -108,29 +108,32 @@ const ShareEvent = ({ route }) => {
 
   return (
 
-    <ScrollView style={styles.container}>
-    <View >
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
+    <View style={{flex: 1}}>
+    
+      <View >
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
 
-        onRequestClose={() => { confirmModalClose()
-        }}>
+          onRequestClose={() => {
+            confirmModalClose()
+          }}>
 
-
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Share {selectedEvent.event}</Text>
+          <View style={styles.title}>
+            <Text style={styles.titleText}>Share {selectedEvent.event}</Text>
+          </View>
+          <ScrollView>
+          <View style={styles.container}>
 
             <View style={styles.container}>
               <View style={styles.signupContainer}>
 
-               
+
 
                 <Formik
                   initialValues={{
-                   
+
                     description: '',
                     firstN: '',
                     secondN: '',
@@ -225,14 +228,15 @@ const ShareEvent = ({ route }) => {
               <Text style={styles.textStyle}>Hide Modal</Text>
             </Pressable> */}
 
+
           </View>
-        </View>
 
-
-      </Modal>
-
+          </ScrollView>
+        </Modal>
+        
+      </View>
+   
     </View>
-    </ScrollView>
   );
 }
 
@@ -241,49 +245,47 @@ export default ShareEvent
 
 const styles = StyleSheet.create({
 
-
- 
-
-  centeredView: {
+  container: {
     flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
+  signupContainer: {
+    width: Dimensions.get('window').width * 0.9,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  
+    backgroundColor: 'white',
+    padding: 10,
+    elevation: 10,
+    backgroundColor: '#4682B4'
+
   },
+  title: {
+    backgroundColor: '#4682B4',
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').width * 0.2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 10,
+  },
+
+  titleText: {
+    fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+
+  lable: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 10,
+    marginBottom: 5,
+  },
+
   button: {
     borderRadius: 20,
     padding: 10,
     elevation: 2,
   },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
+
 });
