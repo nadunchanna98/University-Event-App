@@ -5,6 +5,7 @@ import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
 import BASE_URL from '../../Common/BaseURL';
 import axios from 'axios';
+import {  FontAwesome ,MaterialIcons } from '@expo/vector-icons';
 
 const AllPostContainer = () => {
 
@@ -75,16 +76,15 @@ const AllPostContainer = () => {
               
 
               <View style={styles.buttons} >
-                <Button
-                  style={[styles.buttons]}
-                  color='green'
-                  onPress={() => navigation.navigate('EditSummeryEvent', { ID: item._id })}
-                  title="Edit"
-                />
+              <FontAwesome name="edit" size={50} color="#1947a3"
+              onPress={() => navigation.navigate('EditSummeryEvent', { ID: item._id })}
+              />
               </View>
 
               <View style={styles.buttons} >
-                <Button title="Delete" color='red' onPress={() => confirmDelete(item._id)} />
+              <MaterialIcons name="delete-outline" size={50} color="#1947a3"
+              onPress={() => confirmDelete(item._id)}
+              />
               </View>
 
             </View>

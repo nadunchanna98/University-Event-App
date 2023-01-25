@@ -7,6 +7,7 @@ import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import {  FontAwesome ,MaterialIcons } from '@expo/vector-icons';
 
 const UpComingContainer = () => {
 
@@ -65,24 +66,22 @@ const UpComingContainer = () => {
             <View style={styles.buttonpanel} >
 
               <View style={styles.buttons} >
-                  <Button
-                    style={[styles.buttons]}
-                    onPress={() => navigation.navigate('ShareEvent', {ID: item._id})    }
-                    title="Share"
-                  />
+              <FontAwesome name="share-square-o" size={50} color="#1947a3"  
+              onPress={() => navigation.navigate('ShareEvent', {ID: item._id})    }
+              />
               </View>
 
               <View style={styles.buttons} >
-                  <Button
-                    style={[styles.buttons]}
-                    color='green'
-                    onPress={() => navigation.navigate('EditEvent', {ID: item._id})    }
-                    title="Edit"
-                  />
+
+              <FontAwesome name="edit" size={50} color="#1947a3"
+              onPress={() => navigation.navigate('EditEvent', {ID: item._id})    }
+              />
               </View>
 
               <View style={styles.buttons} >
-                <Button title="Delete" color='red' onPress={() => confirmDelete(item._id)} />
+              <MaterialIcons name="delete-outline" size={50} color="#1947a3"
+              onPress={() => confirmDelete(item._id)}
+              />
               </View>
 
             </View>
@@ -164,7 +163,10 @@ const styles = StyleSheet.create({
     
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     width: Dimensions.get('window').width * 0.7,
+    marginEnd: Dimensions.get('window').width * 0.0,
+    marginStart: Dimensions.get('window').width * 0.08,
 
   },
 
@@ -172,6 +174,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.2,
     height: Dimensions.get('window').height * 0.05,
     margin:Dimensions.get('window').width * 0.01,
+
   },
 
 
