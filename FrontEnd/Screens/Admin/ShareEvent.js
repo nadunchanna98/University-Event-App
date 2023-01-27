@@ -72,6 +72,7 @@ const ShareEvent = ({ route }) => {
       gender: selectedEvent.gender,
       type: selectedEvent.type,
       date: selectedEvent.date,
+      image : selectedEvent.image,
 
     }
 
@@ -141,10 +142,6 @@ const ShareEvent = ({ route }) => {
                     firstT: '',
                     secondT: '',
                     thirdT: '',
-                    setFieldValue: '',
-                    setFieldTouched: '',
-                    errors: '',
-                    touched: '',
                   }}
                   onSubmit={values => handleSubmit(values)}
                   validationSchema={signUpValidationSchema}

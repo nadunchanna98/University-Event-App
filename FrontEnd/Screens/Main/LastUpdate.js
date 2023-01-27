@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, RefreshControl ,Dimensions } from 'react-native'
+import { View, Text, StyleSheet, RefreshControl, Dimensions } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import Chart from './Chart'
 import Moment from 'moment';
@@ -34,14 +34,14 @@ const LastUpdate = () => {
 
             <View style={styles.newteventpanel}       >
                 <Text style={styles.newtevent} >Add New Event</Text>
-                <Ionicons name="add-circle" size={50} color='#336699' 
-                style={{ alignSelf: 'center' }
-            } onPress = {() => navigation.navigate('NewEvent')}
+                <Ionicons name="add-circle" size={50} color='#336699'
+                    style={{ alignSelf: 'center' }
+                    } onPress={() => navigation.navigate('NewEvent')}
                 />
             </View>
 
 
-            
+
 
         </View>
     )
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         borderWidth: 3,
         borderColor: '#336699',
-        
+
     },
 
     newtevent: {

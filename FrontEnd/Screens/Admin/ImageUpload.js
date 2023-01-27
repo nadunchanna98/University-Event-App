@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 
@@ -107,23 +107,23 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     imageContainer: {
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        borderWidth:1,
-        borderColor:'#d9d6d6',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#d9d6d6',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
-        shadowRadius: 2,  
+        shadowRadius: 2,
         elevation: 5,
     },
     titleContainer: {
-        alignItems:'center',
-        marginBottom:30,
+        alignItems: 'center',
+        marginBottom: 30,
     },
     title: {
-        fontSize:23,
-        fontWeight:'bold',
+        fontSize: 23,
+        fontWeight: 'bold',
     },
 });
 
