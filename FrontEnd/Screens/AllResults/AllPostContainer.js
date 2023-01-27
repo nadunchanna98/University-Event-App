@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import BASE_URL from '../../Common/BaseURL';
 import axios from 'axios';
 import {  FontAwesome ,MaterialIcons } from '@expo/vector-icons';
+import Moment from 'moment';
 
 const AllPostContainer = () => {
 
@@ -63,12 +64,46 @@ const AllPostContainer = () => {
         renderItem={({ item }) =>
 
           <View style={styles.post}>
-            <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} />
-            <Text style={styles.event}>{item.event} {item.gender}  {item.type}</Text>
+
+            <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png'  }} />
+            <Text style={styles.event}>{item.event} </Text>
+
+            <View style={styles.genderType} >
+
+              <View>
+                {item.gender || item.type ? <Text style={styles.gender} > ( </Text> : null
+                }
+              </View>
+
+              <View>
+                {item.gender ? <Text style={styles.gender} >  {item.gender}  </Text> : null
+                }
+              </View>
+              <View>
+                {item.gender && item.type ? <Text style={styles.gender} > /  </Text> : null
+                }
+              </View>
+
+
+              <View>
+                {item.type ? <Text style={styles.gender} >{item.type} </Text> : null
+                }
+              </View>
+
+
+              <View>
+                {item.gender || item.type ? <Text style={styles.gender} > ) </Text> : null
+                }
+              </View>
+
+            </View>
+          
+
             <Text style={styles.firstN}><FontAwesome5 name="medal" size={20} color="gold" />  {item.firstN} {item.firstT}</Text>
             <Text style={styles.secondN}><FontAwesome5 name="medal" size={20} color="#B2B2B2" />  {item.secondN} {item.secondT}</Text>
             <Text style={styles.thirdN}><FontAwesome5 name="medal" size={20} color="#CD7F32" />  {item.thirdN} {item.thirdT}</Text>
-            {/* <Text style={styles.date}>{Moment(item.date).format('LLLL')}</Text> */}
+          
+            <Text style={styles.date}  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
             <Text style={styles.date}>{item.description}</Text>
 
             <View style={styles.buttonpanel} >
@@ -140,8 +175,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: Dimensions.get('window').width * 0.7,
-    height: Dimensions.get('window').height * 0.33,
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').width *0.75*3/4,
     borderRadius: 20,
     borderWidth: 1,
     marginBottom: 10,
@@ -156,40 +191,65 @@ const styles = StyleSheet.create({
 
   event: {
     textTransform: 'capitalize',
-    fontSize: 20,
+    fontSize: 26,
     fontWeight: "700",
     marginBottom: 10
 
   },
 
-  firstN: {
+  genderType: {
+
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+
+  gender: {
     textTransform: 'capitalize',
     fontSize: 17,
-    padding: 3,
+    fontWeight: "800",
+    marginBottom: 5,
+    textAlign: 'center',
+  },
+
+
+  location: {
+    textTransform: 'capitalize',
+    fontSize: 18,
     fontWeight: "700",
+    marginBottom: 5,
+    textAlign: 'center',
+  },
+
+  firstN: {
+    textTransform: 'capitalize',
+    fontSize: 20,
+    padding: 3,
+    fontWeight: "500",
     marginBottom: 5
   },
 
   secondN: {
     textTransform: 'capitalize',
-    fontSize: 17,
+    fontSize: 20,
     padding: 3,
-    fontWeight: "700",
+    fontWeight: "500",
     marginBottom: 5
   },
 
   thirdN: {
     textTransform: 'capitalize',
-    fontSize: 17,
+    fontSize: 20,
     padding: 3,
-    fontWeight: "700",
+    fontWeight: "500",
     marginBottom: 13
   },
 
   date: {
     padding: 3,
     fontSize: 15,
-    fontWeight: "400",
+    fontWeight: "500",
     textAlign: "center"
   },
 

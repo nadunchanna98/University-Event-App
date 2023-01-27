@@ -21,6 +21,10 @@ const FutureEventsSchema = mongoose.Schema({
         type: Date,
         required: true
     },
+    time : {
+        type: Date,
+        required: true
+    },
     image: {
         type: String,
         default: ''

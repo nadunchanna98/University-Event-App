@@ -7,12 +7,12 @@ import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import {  FontAwesome ,MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
 const UpComingContainer = () => {
 
-  const { newPost, refresh, pullMe, getNewPost ,DeletePost } = useContext(NewContext);
-  const navigation = useNavigation(); 
+  const { newPost, refresh, pullMe, getNewPost, DeletePost } = useContext(NewContext);
+  const navigation = useNavigation();
 
   const confirmDelete = (id) => {
     Alert.alert(
@@ -29,6 +29,7 @@ const UpComingContainer = () => {
       { cancelable: false }
     );
   };
+
 
 
 
@@ -57,31 +58,67 @@ const UpComingContainer = () => {
           <View style={styles.post}>
 
             <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} />
-            <Text style={styles.event}>{item.event} {item.gender}  {item.type}</Text>
-            <Text style={styles.date}  > {Moment(item.date).format('LLLL')} </Text>
-            <Text style={styles.description}>{item.description}</Text>
-            <Text style={styles.date}>{item.location}</Text>
+            <Text style={styles.event}>{item.event} </Text>
 
+            <View style={styles.genderType} >
+
+              <View>
+                {item.gender || item.type ? <Text style={styles.gender} > ( </Text> : null
+                }
+              </View>
+
+              <View>
+                {item.gender ? <Text style={styles.gender} >  {item.gender}  </Text> : null
+                }
+              </View>
+              <View>
+                {item.gender && item.type ? <Text style={styles.gender} > /  </Text> : null
+                }
+              </View>
+
+
+              <View>
+                {item.type ? <Text style={styles.gender} >{item.type} </Text> : null
+                }
+              </View>
+
+
+              <View>
+                {item.gender || item.type ? <Text style={styles.gender} > ) </Text> : null
+                }
+              </View>
+
+            </View>
+
+            <Text style={styles.date}  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
+
+
+            <View>
+              {item.location ? <Text style={styles.location}>At {item.location}</Text> : null
+              }
+            </View>
+
+            <Text style={styles.description}>{item.description}</Text>
 
             <View style={styles.buttonpanel} >
 
               <View style={styles.buttons} >
-              <FontAwesome name="share-square-o" size={50} color="#1947a3"  
-              onPress={() => navigation.navigate('ShareEvent', {ID: item._id})    }
-              />
+                <FontAwesome name="share-square-o" size={50} color="#1947a3"
+                  onPress={() => navigation.navigate('ShareEvent', { ID: item._id })}
+                />
               </View>
 
               <View style={styles.buttons} >
 
-              <FontAwesome name="edit" size={50} color="#1947a3"
-              onPress={() => navigation.navigate('EditEvent', {ID: item._id})    }
-              />
+                <FontAwesome name="edit" size={50} color="#1947a3"
+                  onPress={() => navigation.navigate('EditEvent', { ID: item._id })}
+                />
               </View>
 
               <View style={styles.buttons} >
-              <MaterialIcons name="delete-outline" size={50} color="#1947a3"
-              onPress={() => confirmDelete(item._id)}
-              />
+                <MaterialIcons name="delete-outline" size={50} color="#1947a3"
+                  onPress={() => confirmDelete(item._id)}
+                />
               </View>
 
             </View>
@@ -103,8 +140,6 @@ export default UpComingContainer
 
 const styles = StyleSheet.create({
 
- 
-
   AllPostContainer: {
     width: Dimensions.get('window').width * 0.9,
     height: Dimensions.get('window').height * 0.9,
@@ -113,11 +148,26 @@ const styles = StyleSheet.create({
 
   event: {
     textTransform: 'capitalize',
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: "700",
     marginBottom: 10,
     textAlign: 'center',
 
+  },
+
+  genderType: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+
+  gender: {
+    textTransform: 'capitalize',
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 5,
+    textAlign: 'center',
   },
 
 
@@ -133,6 +183,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "700",
     marginBottom: 5
+  },
+
+  location: {
+    textTransform: 'capitalize',
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 5,
+    textAlign: 'center',
   },
 
   post: {
@@ -152,15 +210,14 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: Dimensions.get('window').width * 0.7,
-    height: Dimensions.get('window').height * 0.33,
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').width * 0.75 * 3 / 4,
     borderRadius: 20,
-    borderWidth: 1,
     marginBottom: 10,
   },
 
   buttonpanel: {
-    
+
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -173,7 +230,7 @@ const styles = StyleSheet.create({
   buttons: {
     width: Dimensions.get('window').width * 0.2,
     height: Dimensions.get('window').height * 0.05,
-    margin:Dimensions.get('window').width * 0.01,
+    margin: Dimensions.get('window').width * 0.01,
 
   },
 

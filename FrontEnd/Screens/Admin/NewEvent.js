@@ -21,8 +21,9 @@ import axios from 'axios';
 import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import Moment from 'moment';
 
-
+//image upload for aws
 import { Amplify, Storage } from 'aws-amplify';
 import awsconfig from '../../src/aws-exports';
 Amplify.configure(awsconfig);
@@ -123,12 +124,6 @@ const NewEvent = () => {
     let localUri1 = result.uri;
     setLocalUri(localUri1);
     setPhotoShow(localUri1);
-    // let filename = localUri1.split('/').pop();
-
-    // let match = /\.(\w+)$/.exec(filename);
-    // let type = match ? `image/${match[1]}` : `image`;
-
-
   }
 
 
@@ -138,11 +133,13 @@ const NewEvent = () => {
 
     const formData = {
       event: values.event,
-      date: "2027-12-12 19:10:00",
+      date: Moment(mydate).format('YYYY-MM-DD'),
+      time: mytime,
       description: values.description,
       type: values.type,
       gender: values.gender,
-      image: localUri
+      image: localUri,
+      location: values.location,
     }
 
 
@@ -158,23 +155,54 @@ const NewEvent = () => {
       .catch(err => console.log(err))
   }
 
-  // const [mydate, setDate] = useState(new Date());
-  // const [displaymode, setMode] = useState('date');
-  // const [isDisplayDate, setShow] = useState(false);
-  // const changeSelectedDate = (event, selectedDate) => {
-  //   const currentDate = selectedDate || mydate;
-  //   setDate(currentDate);
-  // };
 
-  // const showMode = (currentMode) => {
-  //   setShow(true);
-  //   setMode(currentMode);
+  //date picker
+  const [mydate, setMyDate] = useState(new Date());
+  const [displaymode, setDisplayMode] = useState('date');
+  const [isDisplayDate, setShow] = useState(false);
 
-  // };
+  const changeSelectedDate = (event, selectedDate) => {
 
-  // const displayDatepicker = () => {
-  //   showMode('date');
-  // };
+    const currentDate = selectedDate || mydate;
+    setMyDate(currentDate);
+    setShow(false);
+
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setDisplayMode(currentMode);
+
+  };
+
+  const displayDatepicker = () => {
+    showMode('date');
+  };
+
+  //time picker
+  const [mytime, setMyTime] = useState(new Date());
+  const [displaymode1, setDisplayMode1] = useState('time');
+  const [isDisplayTime, setShow1] = useState(false);
+
+  const changeSelectedTime = (event, selectedTime) => {
+
+    const currentTime = selectedTime || mytime;
+    setMyTime(currentTime);
+    setShow1(false);
+
+  };
+
+  const showMode1 = (currentMode) => {
+    setShow1(true);
+    setDisplayMode1(currentMode);
+
+  };
+
+  const displayTimepicker = () => {
+    showMode1('time');
+  };
+
+
 
   const signUpValidationSchema = yup.object().shape({
     event: yup
@@ -219,7 +247,6 @@ const NewEvent = () => {
                   location: '',
                   gender: '',
                   type: '',
-                  date: '',
                   description: '',
                   image: ''
                 }}
@@ -265,25 +292,55 @@ const NewEvent = () => {
                     />
 
                     <Text style={styles.lable}  >Date</Text>
-                    <Field
-                      component={CustomInput}
-                      name="date"
-                      placeholder="12/12/2027"
-                    />
+                    <View style={styles.dateContainer}>
+                      <Text style={styles.dateText}>{mydate.toDateString()}</Text>
 
-                    {/* <View>
-                  <Button onPress={displayDatepicker} title="Show date picker!" />
-                </View>
-                {isDisplayDate && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={mydate}
-                    mode={displaymode}
-                    is24Hour={true}
-                    display="default"
-                    onChange={changeSelectedDate}
-                  />
-                )} */}
+                      <Text style={styles.dateText}  > {Moment(mytime).format('LT')}</Text>
+                    </View>
+
+
+                    <View style={styles.buttonContainer2}>
+
+                      <TouchableOpacity
+                        style={styles.button2}
+                        onPress={displayDatepicker}
+
+                      >
+                        <Text style={styles.buttonTextStyle}>Select Date</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        onPress={displayTimepicker}
+                        style={styles.button2}
+                      >
+                        <Text style={styles.buttonTextStyle}>Select Time</Text>
+                      </TouchableOpacity>
+
+
+                    </View>
+
+                    {isDisplayDate && (
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={mydate}
+                        mode={displaymode}
+                        is24Hour={true}
+                        display="default"
+                        onChange={changeSelectedDate}
+                      />
+                    )}
+
+                    {isDisplayTime && (
+                      <DateTimePicker
+
+                        testID="dateTimePicker"
+                        value={mytime}
+                        mode={displaymode1}
+                        is24Hour={true}
+                        display="default"
+                        onChange={changeSelectedTime}
+                      />
+                    )}
 
 
                     <View style={styles.mainBody}>
@@ -296,29 +353,30 @@ const NewEvent = () => {
                         <View style={styles.imageContainer}>
                           <Image
                             source={{ uri: photoShow }}
-                            style={{ width: '100%', height: "100%" }}
+                            style={{ width: '100%', height: '100%' }}
                           />
                         </View>
                       }
 
+
                       <View style={styles.buttonContainer}>
-                      <TouchableOpacity
-                        style={styles.buttonStyle}
-                        activeOpacity={0.5}
-                        onPress={takePhotoAndUpload}
-                      >
-                        <Text style={styles.buttonTextStyle}>Upload Image</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.buttonStyle}
+                          activeOpacity={0.5}
+                          onPress={takePhotoAndUpload}
+                        >
+                          <Text style={styles.buttonTextStyle}>Upload Image</Text>
+                        </TouchableOpacity>
 
 
-                      <TouchableOpacity
-                        style={styles.buttonStyle}
-                        activeOpacity={0.5}
-                        onPress={dicardImage}
-                      >
-                        <Text style={styles.buttonTextStyle}>Discard Image</Text>
-                      </TouchableOpacity>
-                    </View>
+                        <TouchableOpacity
+                          style={styles.buttonStyle}
+                          activeOpacity={0.5}
+                          onPress={dicardImage}
+                        >
+                          <Text style={styles.buttonTextStyle}>Discard Image</Text>
+                        </TouchableOpacity>
+                      </View>
 
                     </View>
 
@@ -341,6 +399,45 @@ const NewEvent = () => {
 }
 
 const styles = StyleSheet.create({
+
+  buttonContainer2 : {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin : 10,
+    width: Dimensions.get('window').width * 0.9,
+    marginVertical: 10,
+  },
+
+  button2: {
+    backgroundColor: '#307ecc',
+    padding: 2,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    width: Dimensions.get('window').width * 0.4,
+    alignItems: 'center',
+  },
+
+  dateContainer: {
+
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
+    elevation: 10,
+    shadowColor: '#E67E22',
+    elevation: 8,
+    flexDirection: 'row',
+
+  },
+
+  dateText: {
+    fontSize: 18,
+    color: '#000',
+    textAlign: 'center',
+    marginLeft: 10,
+  },
+
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
@@ -397,8 +494,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 80,
     marginBottom: 150,
-    width: Dimensions.get('window').width * 0.9,
-    
+    width: Dimensions.get('window').width * 0.85,
+    height: Dimensions.get('window').width * 0.85 * 3 / 4,
+
   },
   buttonStyle: {
     backgroundColor: '#307ecc',
@@ -425,7 +523,7 @@ const styles = StyleSheet.create({
     marginRight: 35,
     textAlign: 'center',
   },
-  
+
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -436,6 +534,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5,
+
   },
   titleContainer: {
     alignItems: 'center',
@@ -445,6 +544,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 23,
     fontWeight: 'bold',
+  },
+
+  buttonpanel: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '100%',
+
+    alignItems: 'center',
   },
 })
 export default NewEvent

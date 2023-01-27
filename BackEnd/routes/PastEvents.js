@@ -46,6 +46,7 @@ router.post('/post/', async (req, res) => {
         thirdT: req.body.thirdT,
         description: req.body.description,
         date: req.body.date,
+        time: req.body.time,
         image: req.body.image,
 
     })

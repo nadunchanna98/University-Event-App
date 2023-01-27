@@ -18,6 +18,7 @@ const ShareEvent = ({ route }) => {
   // console.log(ID)
 
   const [selectedEvent, setSelectedEvent] = useState('');
+  const [description, setDescription] = useState('');
 
   // console.log(selectedEvent)
 
@@ -26,6 +27,7 @@ const ShareEvent = ({ route }) => {
       .then(res => {
         // console.log(res.data);
         setSelectedEvent(res.data);
+        setDescription(res.data.description)
       })
       .catch(err => {
         console.log(err);
@@ -72,7 +74,9 @@ const ShareEvent = ({ route }) => {
       gender: selectedEvent.gender,
       type: selectedEvent.type,
       date: selectedEvent.date,
+      time : selectedEvent.time,
       image : selectedEvent.image,
+      description: description,
 
     }
 
@@ -201,9 +205,10 @@ const ShareEvent = ({ route }) => {
                       <Field
                         component={CustomInput}
                         name="description"
-                        placeholder="Write about Event.."
+                        value={description}
+                        onChangeText= {(text) => setDescription(text)}
                         multiline
-                        numberOfLines={2}
+                        numberOfLines={3}
                       />
 
                       <Button

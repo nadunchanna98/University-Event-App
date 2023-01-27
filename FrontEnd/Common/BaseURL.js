@@ -22,11 +22,21 @@ let BASE_URL = "";
 // }
 
 
-
+//inoj
 if (Platform.OS === "android") {
     BASE_URL = "http://192.168.8.129:3000/api/v1/" // for android emulator
 } else {
     BASE_URL = "http://192.168.8.129:3000/api/v1/" // for ios emulator
 }
+
+
+
+//faculy
+// if (Platform.OS === "android") {
+//     BASE_URL = "http://10.102.10.77:3000/api/v1/" // for android emulator
+// } else {
+//     BASE_URL = "http://10.102.10.77:3000/api/v1/" // for ios emulator
+// }
+
 
 export default BASE_URL;

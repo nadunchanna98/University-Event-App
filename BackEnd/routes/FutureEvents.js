@@ -52,9 +52,12 @@ router.post('/post/', async (req, res) => {
         location: req.body.location,
         description: req.body.description,
         date: req.body.date,
+        time: req.body.time,
         image: req.body.image,
 
     })
+
+    console.log(newspost.location);
 
     newspost = await newspost.save();
 
