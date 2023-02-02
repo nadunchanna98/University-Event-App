@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, RefreshControl, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, RefreshControl, Dimensions, Button } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import Chart from './Chart'
 import Moment from 'moment';
@@ -10,16 +10,27 @@ import { useNavigation } from '@react-navigation/native';
 const LastUpdate = () => {
 
     const { date, fetchDate, event } = useContext(NewContext);
+
+
+
+
     const navigation = useNavigation();
 
-    useEffect(() => { fetchDate(); }, []);
+
+
+    useEffect(() => {
+
+        fetchDate();
+
+
+    }, []);
 
 
     return (
 
         <View >
             <View>
-                
+
 
                 {
                     event === '' ? <Text style={styles.wait}  >Loading...</Text>
@@ -39,7 +50,6 @@ const LastUpdate = () => {
                     } onPress={() => navigation.navigate('NewEvent')}
                 />
             </View>
-
 
 
 
@@ -92,4 +102,6 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         fontFamily: 'sans-serif-light',
     },
-})    
+})
+
+

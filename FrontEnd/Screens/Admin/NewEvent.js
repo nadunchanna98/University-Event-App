@@ -345,10 +345,6 @@ const NewEvent = () => {
 
                     <View style={styles.mainBody}>
 
-                      {/* <View style={styles.titleContainer}>
-                        <Text style={styles.title}>React Native Image Upload Axios</Text>
-                      </View> */}
-
                       {photoShow &&
                         <View style={styles.imageContainer}>
                           <Image
@@ -400,11 +396,11 @@ const NewEvent = () => {
 
 const styles = StyleSheet.create({
 
-  buttonContainer2 : {
+  buttonContainer2: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    margin : 10,
+    margin: 10,
     width: Dimensions.get('window').width * 0.9,
     marginVertical: 10,
   },

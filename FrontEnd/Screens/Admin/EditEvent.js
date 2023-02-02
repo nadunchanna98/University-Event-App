@@ -22,7 +22,7 @@ import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
 import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
-import moment from "moment";
+import Moment from "moment";
 
 const EditEvent = ({ route }) => {
 
@@ -32,7 +32,6 @@ const EditEvent = ({ route }) => {
     const ID = route.params.ID;
 
     const [event, setEvent] = useState('');
-    const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
     const [gender, setGender] = useState('');
@@ -45,7 +44,8 @@ const EditEvent = ({ route }) => {
             .then(res => {
 
                 setEvent(res.data.event);
-                setDate(res.data.date);
+                setMyDate(res.data.date);
+                setMyTime(res.data.time);
                 setDescription(res.data.description);
                 setType(res.data.type);
                 setGender(res.data.gender);
@@ -72,7 +72,7 @@ const EditEvent = ({ route }) => {
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
                 },
-                { text: "OK", onPress: () =>  navigation.goBack()}
+                { text: "OK", onPress: () => navigation.goBack() }
             ],
             { cancelable: false }
         );
@@ -83,7 +83,8 @@ const EditEvent = ({ route }) => {
 
         const formData = {
             event: event,
-            date: date,
+            date: Moment(mydate).format('YYYY-MM-DD'),
+            time: Moment(mytime).format('hh:mm'),
             description: description,
             type: type,
             gender: gender,
@@ -91,8 +92,6 @@ const EditEvent = ({ route }) => {
 
         }
 
-        // console.log(formData)
-        // console.log(ID)
 
         axios.put(`${BASE_URL}futureevents/update/${ID}`, formData)
             .then(data => {
@@ -104,23 +103,57 @@ const EditEvent = ({ route }) => {
             .catch(err => console.log(err))
     }
 
-    // const [mydate, setDate] = useState(new Date());
-    // const [displaymode, setMode] = useState('date');
-    // const [isDisplayDate, setShow] = useState(false);
-    // const changeSelectedDate = (event, selectedDate) => {
-    //   const currentDate = selectedDate || mydate;
-    //   setDate(currentDate);
-    // };
 
-    // const showMode = (currentMode) => {
-    //   setShow(true);
-    //   setMode(currentMode);
+    //date picker
+    
+    const [displaymode, setDisplayMode] = useState('date');
+    const [isDisplayDate, setShow] = useState(false);
+    const [mydate, setMyDate] = useState(new Date());
 
-    // };
 
-    // const displayDatepicker = () => {
-    //   showMode('date');
-    // };
+    const changeSelectedDate = (event, selectedDate) => {
+
+        const currentDate = selectedDate || mydate;
+        setMyDate(currentDate);
+        setShow(false);
+
+
+    };
+
+    const showMode = (currentMode) => {
+        setShow(true);
+        setDisplayMode(currentMode);
+
+    };
+
+    const displayDatepicker = () => {
+        showMode('date');
+    };
+
+
+    //time picker
+    const [mytime, setMyTime] = useState(new Date());
+    const [displaymode1, setDisplayMode1] = useState('time');
+    const [isDisplayTime, setShow1] = useState(false);
+
+    const changeSelectedTime = (event, selectedTime) => {
+
+        const currentTime = selectedTime || mytime;
+        setMyTime(currentTime);
+        setShow1(false);
+        
+
+    };
+
+    const showMode1 = (currentMode) => {
+        setShow1(true);
+        setDisplayMode1(currentMode);
+
+    };
+
+    const displayTimepicker = () => {
+        showMode1('time');
+    };
 
     const signUpValidationSchema = yup.object().shape({
         event: yup
@@ -132,150 +165,197 @@ const EditEvent = ({ route }) => {
         description: yup
             .string()
             .min(0, ({ min, value }) => `${min - value.length} characters to go`),
-        // photo: yup.object().required('Photo is required'),
+      
     })
 
 
     return (
         <>
-        <Modal visible={true} 
-        animationType="slide"
+            <Modal visible={true}
+                animationType="slide"
 
-        onRequestClose={() => {
-            confirmModalClose();   
-        }
-        }
-        >
-            
-            <View style={styles.title}>
-                <Text style={styles.titleText}>Edit Event</Text>
-            </View>
+                onRequestClose={() => {
+                    confirmModalClose();
+                }
+                }
+            >
 
-            <ScrollView>
-            <View style={styles.container}    >
-                <View style={styles.signupContainer}>
-
-                    <Formik
-                        initialValues={{
-                            event: event,
-                            location: '',
-                            gender: '',
-                            type: '',
-                            date: '',
-                            description: '',
-                            setFieldValue: '',
-                            setFieldTouched: '',
-                            errors: '',
-                            touched: '',
-                        }}
-                        onSubmit={values => handleSubmit(values)}
-                        validationSchema={signUpValidationSchema}
-                    >
-                        {({ handleSubmit, isValid }) => (
-                            <>
-                                <Text style={styles.lable}  >Event Name</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="event"
-                                    value={event}
-                                    onChangeText= {(text) => setEvent(text)}
-                                />
-                                <Text style={styles.lable}  >Type</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="type"
-                                    value={type}
-                                    onChangeText= {(text) => setType(text)}
-                                />
-
-                                <Text style={styles.lable}  >Gender</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="gender"
-                                    value={gender}
-                                    onChangeText= {(text) => setGender(text)}
-                                />
-                                <Text style={styles.lable}  >Location</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="location"
-                                    value={location}
-                                    onChangeText= {(text) => setLocation(text)}
-                                    keyboardType="email-address"
-                                />
-
-                                <Text style={styles.lable}  >Description</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="description"
-                                    value={description}
-                                    onChangeText= {(text) => setDescription(text)}
-                                    multiline
-                                    numberOfLines={3}
-                                />
-
-                                <Text style={styles.lable}  >Date</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="date"
-                                    value={moment.utc(date).format('YYYY/MM/DD - hh:mm a')}
-                                    onChangeText= {(text) => setDate(text)}
-                                />
-
-                                {/* <View>
-                  <Button onPress={displayDatepicker} title="Show date picker!" />
+                <View style={styles.title}>
+                    <Text style={styles.titleText}>Edit Event</Text>
                 </View>
-                {isDisplayDate && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={mydate}
-                    mode={displaymode}
-                    is24Hour={true}
-                    display="default"
-                    onChange={changeSelectedDate}
-                  />
-                )} */}
 
-                                {/* <TouchableOpacity
-                  style={styles.photoButton}
-                  onPress={() => {
-                    ImagePicker.showImagePicker(options, (response) => {
-                      if (response.uri) {
-                        let data = {
-                          name: response.fileName,
-                          type: response.type,
-                          uri:
-                            Platform.OS === 'android'
-                            ? response.uri
-                            : response.uri.replace('file://', ''),
-                        };
-                        formProps.setFieldValue('image1', data);
-                      }
-                    });
-                  }}
-                >
-                  <Text>Add Image</Text>
-                </TouchableOpacity> */}
+                <ScrollView>
+                    <View style={styles.container}    >
+                        <View style={styles.signupContainer}>
+
+                            <Formik
+                                initialValues={{
+                                    event: '',
+                                    location: '',
+                                    gender: '',
+                                    type: '',
+                                    description: '',
+                                }}
+                                onSubmit={values => handleSubmit(values)}
+                                validationSchema={signUpValidationSchema}
+                            >
+                                {({ handleSubmit, isValid }) => (
+                                    <>
+                                        <Text style={styles.lable}  >Event Name</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="event"
+                                            value={event}
+                                            onChangeText={(text) => setEvent(text)}
+                                        />
+                                        <Text style={styles.lable}  >Type</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="type"
+                                            value={type}
+                                            onChangeText={(text) => setType(text)}
+                                        />
+
+                                        <Text style={styles.lable}  >Gender</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="gender"
+                                            value={gender}
+                                            onChangeText={(text) => setGender(text)}
+                                        />
+                                        <Text style={styles.lable}  >Location</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="location"
+                                            value={location}
+                                            onChangeText={(text) => setLocation(text)}
+                                            keyboardType="email-address"
+                                        />
+
+                                        <Text style={styles.lable}  >Description</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="description"
+                                            value={description}
+                                            onChangeText={(text) => setDescription(text)}
+                                            multiline
+                                            numberOfLines={3}
+                                        />
+
+                                        <Text style={styles.lable}  >Date</Text>
+                                        <View style={styles.dateContainer}>
+                                            {/* <Text style={styles.dateText}>{Moment(mydate).format('LL')}</Text>
+                                            <Text style={styles.dateText}  > {Moment(mytime).format('LT')}</Text>
+                                         */}
+                                        </View>
+
+                                        <View style={styles.buttonContainer2}>
+
+                                            <TouchableOpacity
+                                                style={styles.button2}
+                                                onPress={displayDatepicker}
+
+                                            >
+                                                <Text style={styles.buttonTextStyle}>Select Date</Text>
+                                            </TouchableOpacity>
+
+                                            <TouchableOpacity
+                                                onPress={displayTimepicker}
+                                                style={styles.button2}
+                                            >
+                                                <Text style={styles.buttonTextStyle}>Select Time</Text>
+                                            </TouchableOpacity>
 
 
-                                <Button
-                                    onPress={handleSubmit}
-                                    title="Save Changes"
-                                    disabled={!isValid}
-                                />
-                            </>
-                        )}
-                    </Formik>
+                                        </View>
 
-                </View>
-            </View>
-            </ScrollView>
-        </Modal>
+                                        {isDisplayDate && (
+                                            <DateTimePicker
+                                                testID="dateTimePicker"
+                                                value={mydate}
+                                                mode={displaymode}
+                                                is24Hour={true}
+                                                display="default"
+                                                onChange={changeSelectedDate}
+                                            />
+                                        )}
+
+                                        {isDisplayTime && (
+                                            <DateTimePicker
+
+                                                testID="dateTimePicker"
+                                                value={mytime}
+                                                mode={displaymode1}
+                                                is24Hour={true}
+                                                display="default"
+                                                onChange={changeSelectedTime}
+                                            />
+                                        )}
+
+
+                                        <Button
+                                            onPress={handleSubmit}
+                                            title="Save Changes"
+                                            disabled={!isValid}
+                                        />
+                                    </>
+                                )}
+                            </Formik>
+
+                        </View>
+                    </View>
+                </ScrollView>
+            </Modal>
         </>
     )
 }
 
 const styles = StyleSheet.create({
+
+    buttonContainer2: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 10,
+        width: Dimensions.get('window').width * 0.9,
+        marginVertical: 10,
+    },
+
+    button2: {
+        backgroundColor: '#307ecc',
+        padding: 2,
+        borderRadius: 10,
+        marginHorizontal: 10,
+        width: Dimensions.get('window').width * 0.4,
+        alignItems: 'center',
+    },
+
+    buttonTextStyle: {
+        color: '#FFFFFF',
+        paddingVertical: 10,
+        fontSize: 16,
+    },
+
+    dateContainer: {
+
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 10,
+        elevation: 10,
+        shadowColor: '#E67E22',
+        elevation: 8,
+        flexDirection: 'row',
+
+    },
+
+    dateText: {
+        fontSize: 18,
+        color: '#000',
+        textAlign: 'center',
+        marginLeft: 10,
+    },
+
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight || 0,
