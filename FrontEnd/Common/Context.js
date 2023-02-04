@@ -16,6 +16,7 @@ const Context = ({ children }) => {
   const [newPost, setNewPost] = useState([]);  //for the upcoming events
   const [date, setDate] = useState();
   const [event, setEvent] = useState("");
+  const [darkTheme, setDarkTheme] = useState(true);
 
   //refresh
   const pullMe = () => {
@@ -115,6 +116,8 @@ const Context = ({ children }) => {
     <NewContext.Provider value={
       {
 
+        darkTheme,
+        setDarkTheme,
         index,
         setIndex,
         fetchMarks,

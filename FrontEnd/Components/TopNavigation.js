@@ -1,21 +1,27 @@
-import {  SimpleLineIcons, AntDesign } from '@expo/vector-icons';
+import { SimpleLineIcons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image ,StatusBar } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image, StatusBar } from 'react-native'
 import Eweek from '../assets/icon.png';
+import { NewContext } from '../Common/Context';
 
 function TopNavigation({ index, setIndex }) {
+
+    const {setDarkTheme , darkTheme } = React.useContext(NewContext);
 
     return (
         <View style={{ ...styles.container, backgroundColor: "#4682B4" }}>
 
-            {index === 0 ? (
+            {index === 0 ?
+                (
 
-                <TouchableOpacity style={styles.logo}>
-                    <Image source={Eweek} style={styles.logo} />
+                    <TouchableOpacity style={styles.logo}
+                    onPress={() => setDarkTheme(!darkTheme)}
                     
+                    >
+                        <MaterialCommunityIcons name="theme-light-dark" size={30} color="white" />
+                    </TouchableOpacity>
 
-
-                </TouchableOpacity>) : (index === 1 ? (
+                ) : (index === 1 ? (
                     <TouchableOpacity
                         style={styles.left}
                         onPress={() => setIndex(index === 0 ? 1 : 0)}
@@ -38,7 +44,7 @@ function TopNavigation({ index, setIndex }) {
                     </TouchableOpacity>
 
                 )
-            )
+                )
             }
 
             <Text style={{ ...styles.center, color: "white" }}>
@@ -71,8 +77,8 @@ function TopNavigation({ index, setIndex }) {
                     <Text style={{ ...styles.text, color: "white" }}>
 
 
-                        <AntDesign name="infocirlce" size={24} color="white"   
-                        onPress={() => alert("E-week 2K22 Faculty of Engineering \nUniversity of Jaffna.\nCreated by Nadun Channa.")}
+                        <AntDesign name="infocirlce" size={24} color="white"
+                            onPress={() => alert("E-week 2K22 Faculty of Engineering \nUniversity of Jaffna.\nCreated by Nadun Channa.")}
                         />
 
                     </Text>
@@ -95,10 +101,11 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         marginTop: 0,
         marginBottom: 0,
+        padding: 10,
     },
 
     container: {
-        
+
         width: Dimensions.get('window').width * 0.9,
         height: Dimensions.get('window').height * 0.09,
         flexDirection: "row",

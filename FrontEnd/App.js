@@ -9,10 +9,15 @@ import EditEvent from './Screens/Admin/EditEvent';
 import EditSummeryEvent from './Screens/Admin/EditSummeryEvent';
 import NewEvent from './Screens/Admin/NewEvent';
 
+
+
 function App() {
+
+
+
   return (
 
-      <View style={styles.container}  >
+      <View style={{...styles.container, backgroundColor: '#282C35'}}   >
         <StatusBar backgroundColor="#000" barStyle="default" />
         <InshortTabs />
       </View>
@@ -58,6 +63,7 @@ export default () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
     // marginTop:StatusBar.currentHeight *0.01,
     alignItems: 'center', // aligns items horizontally in the center of the screen 
     justifyContent: 'center',  // This is the important line for vertical centering of the content in the container 

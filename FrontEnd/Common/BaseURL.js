@@ -15,19 +15,21 @@ let BASE_URL = "";
 //     BASE_URL = "http://192.168.8.129:3000/api/v1/" // for ios emulator
 // }
 
-if (Platform.OS === "android") {
-    BASE_URL = "http://192.168.8.129:3000/api/v1/" // for android emulator
-} else {
-    BASE_URL = "http://192.168.8.129:3000/api/v1/" // for ios emulator
-}
 
-
-// // inoj
+////myrouter
 // if (Platform.OS === "android") {
 //     BASE_URL = "http://192.168.8.129:3000/api/v1/" // for android emulator
 // } else {
 //     BASE_URL = "http://192.168.8.129:3000/api/v1/" // for ios emulator
 // }
+
+
+// // inoj
+if (Platform.OS === "android") {
+    BASE_URL = "http://192.168.8.129:3000/api/v1/" // for android emulator
+} else {
+    BASE_URL = "http://192.168.8.129:3000/api/v1/" // for ios emulator
+}
 
 
 
