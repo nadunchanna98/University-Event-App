@@ -17,7 +17,7 @@ function App() {
 
   return (
 
-      <View style={{...styles.container, backgroundColor: '#282C35'}}   >
+      <View style={{...styles.container, backgroundColor: "red"}}   >
         <StatusBar backgroundColor="#000" barStyle="default" />
         <InshortTabs />
       </View>

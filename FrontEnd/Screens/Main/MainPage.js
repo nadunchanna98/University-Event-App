@@ -8,17 +8,14 @@ import { useNavigation } from '@react-navigation/native';
 
 const MainPage = () => {
 
-  const { marks, refresh, pullMe, fetchMarks } = useContext(NewContext);
-
+  const { marks, refresh, pullMe, fetchMarks , darkTheme } = useContext(NewContext);
   const navigation = useNavigation();
-
 
   useEffect(() => { fetchMarks(); }, []);
 
-
   return (
 
-    <ScrollView style={styles.container}
+    <ScrollView style={{...styles.container, backgroundColor: darkTheme ? '#282C35' : '#fff'}}
 
       refreshControl={
         <RefreshControl
@@ -34,7 +31,7 @@ const MainPage = () => {
         <LastUpdate />
 
         <View style={styles.newteventpanel}       >
-          <Text style={styles.newtevent} >Add New Event</Text>
+          <Text style={{...styles.newtevent, color: darkTheme ? "white" : "black"  }} >Add New Event</Text>
           <Ionicons name="add-circle" size={50} color='#336699'
             style={styles.plus} onPress={() => navigation.navigate('NewEvent')}
           />
@@ -65,10 +62,6 @@ const MainPage = () => {
 
       </View>
 
-
-
-
-
     </ScrollView>
   )
 }
@@ -79,8 +72,16 @@ const styles = StyleSheet.create({
 
 
   container: {
+    flex: 1,
+    backgroundColor: '#282C35',
+  },
+
+  items: {
+
+    width: Dimensions.get('window').width,
+    alignItems: 'center',
+    justifyContent: 'center',
     textAlign: 'center',
-    width: Dimensions.get('window').width ,
 
   },
 
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: Dimensions.get('window').width * 0.9,
     height: Dimensions.get('window').height * 0.18,
-    backgroundColor: '#F9F9F9',
+    // backgroundColor: '#F9F9F9',
     marginTop: 16,
     marginBottom: 16,
     borderRadius: 15,
@@ -183,15 +184,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEED30'
   },
 
-  items: {
-
-    width: Dimensions.get('window').width  ,
-    alignItems: 'center',
-    justifyContent: 'center',
-
-
-
-  }
+  
 
 
 })

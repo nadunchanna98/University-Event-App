@@ -11,7 +11,7 @@ import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
 const UpComingContainer = () => {
 
-  const { newPost, refresh, pullMe, getNewPost, DeletePost } = useContext(NewContext);
+  const { newPost, refresh, pullMe, getNewPost, DeletePost , darkTheme } = useContext(NewContext);
   const navigation = useNavigation();
 
   const confirmDelete = (id) => {
@@ -40,7 +40,9 @@ const UpComingContainer = () => {
 
   return (
 
-    <View style={styles.AllPostContainer}  >
+    <View 
+    style={{...styles.AllPostContainer, backgroundColor: darkTheme ? '#282C35' : '#fff'}}
+     >
 
       <FlatList
 
@@ -55,46 +57,46 @@ const UpComingContainer = () => {
         data={newPost}
         renderItem={({ item, index }) =>
 
-          <View style={styles.post}>
+          <View style={{...styles.post,backgroundColor: darkTheme ? "#282C35" : "white"}}>
 
             <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} />
-            <Text style={styles.event}>{item.event} </Text>
+            <Text style={{...styles.event, color: darkTheme ? "white" : "black" } }  >{item.event} </Text>
 
-            <View style={styles.genderType} >
+            <View style={{...styles.genderType, color: darkTheme ? "white" : "black" } } >
 
               <View>
-                {item.gender || item.type ? <Text style={styles.gender} > ( </Text> : null
+                {item.gender || item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } > ( </Text> : null
                 }
               </View>
 
               <View>
-                {item.gender ? <Text style={styles.gender} >  {item.gender}  </Text> : null
+                {item.gender ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } >  {item.gender}  </Text> : null
                 }
               </View>
               <View>
-                {item.gender && item.type ? <Text style={styles.gender} > /  </Text> : null
-                }
-              </View>
-
-
-              <View>
-                {item.type ? <Text style={styles.gender} >{item.type} </Text> : null
+                {item.gender && item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } > /  </Text> : null
                 }
               </View>
 
 
               <View>
-                {item.gender || item.type ? <Text style={styles.gender} > ) </Text> : null
+                {item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } >{item.type} </Text> : null
+                }
+              </View>
+
+
+              <View>
+                {item.gender || item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } > ) </Text> : null
                 }
               </View>
 
             </View>
 
-            <Text style={styles.date}  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
+            <Text style={{...styles.date, color: darkTheme ? "white" : "black" } }  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
 
 
             <View>
-              {item.location ? <Text style={styles.location}>At {item.location}</Text> : null
+              {item.location ? <Text style={{...styles.location, color: darkTheme ? "white" : "black" } }>At {item.location}</Text> : null
               }
             </View>
 
@@ -206,12 +208,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 4,
     borderColor: '#3d6ecf',
-    padding: Dimensions.get('window').width * 0.05,
+    padding: Dimensions.get('window').width * 0.01,
   },
 
   image: {
-    width: Dimensions.get('window').width * 0.75,
-    height: Dimensions.get('window').width * 0.75 * 3 / 4,
+    width: Dimensions.get('window').width * 0.85,
+    height: Dimensions.get('window').width * 0.85 * 3 / 4,
     borderRadius: 20,
     marginBottom: 10,
   },

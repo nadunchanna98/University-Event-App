@@ -8,7 +8,7 @@ import * as Notifications from 'expo-notifications';
 
 const LastUpdate = () => {
 
-    const { date, fetchDate, event } = useContext(NewContext);
+    const { date, fetchDate, event , darkTheme} = useContext(NewContext);
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -46,13 +46,13 @@ const LastUpdate = () => {
 
     return (
 
-        <View >
+        <View style={{...styles.container,}} >
             <View>
 
 
                 {
-                    event === '' ? <Text style={styles.wait}  >Loading...</Text>
-                        : <Text style={styles.date} >Last updated {event} {"\n"} At {Moment(date).format('LLL')} </Text>
+                    event === '' ? <Text style={{...styles.wait, color: darkTheme ? "white" : "black" } } >Loading...</Text>
+                        : <Text style={{...styles.date, color: darkTheme ? "white" : "black" } } >Last updated {event} {"\n"} At {Moment(date).format('LLL')} </Text>
                 }
 
             </View>
@@ -77,6 +77,10 @@ export default LastUpdate
 
 const styles = StyleSheet.create({
 
+    container: {
+        flex: 1,
+    },
+
    
     date: {
         textAlign: 'center',
@@ -91,7 +95,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         fontWeight: "700",
-        color: '#1947a3',
         marginTop: 16,
         marginBottom: 16,
         fontFamily: 'sans-serif-light',

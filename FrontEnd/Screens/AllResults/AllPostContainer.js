@@ -10,7 +10,7 @@ import Moment from 'moment';
 
 const AllPostContainer = () => {
 
-  const { post, refresh, pullMe, getPost } = useContext(NewContext);
+  const { post, refresh, pullMe, getPost , darkTheme} = useContext(NewContext);
   const navigation = useNavigation(); 
 
   useEffect(() => { getPost(); }, []);
@@ -47,7 +47,7 @@ const AllPostContainer = () => {
 
   return (
 
-    <View style={styles.AllPostContainer} >
+    <View style={{...styles.AllPostContainer, backgroundColor: darkTheme ? '#282C35' : '#fff'}} >
 
 
       <FlatList
@@ -63,48 +63,48 @@ const AllPostContainer = () => {
         data={post}
         renderItem={({ item }) =>
 
-          <View style={styles.post}>
+          <View style={{...styles.post,backgroundColor: darkTheme ? "#282C35" : "white"}}>
 
             <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png'  }} />
-            <Text style={styles.event}>{item.event} </Text>
+            <Text style={{...styles.event, color: darkTheme ? "white" : "black" } } >{item.event} </Text>
 
             <View style={styles.genderType} >
 
               <View>
-                {item.gender || item.type ? <Text style={styles.gender} > ( </Text> : null
+                {item.gender || item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } }> ( </Text> : null
                 }
               </View>
 
               <View>
-                {item.gender ? <Text style={styles.gender} >  {item.gender}  </Text> : null
+                {item.gender ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } }>  {item.gender}  </Text> : null
                 }
               </View>
               <View>
-                {item.gender && item.type ? <Text style={styles.gender} > /  </Text> : null
-                }
-              </View>
-
-
-              <View>
-                {item.type ? <Text style={styles.gender} >{item.type} </Text> : null
+                {item.gender && item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } > /  </Text> : null
                 }
               </View>
 
 
               <View>
-                {item.gender || item.type ? <Text style={styles.gender} > ) </Text> : null
+                {item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } >{item.type} </Text> : null
+                }
+              </View>
+
+
+              <View>
+                {item.gender || item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } > ) </Text> : null
                 }
               </View>
 
             </View>
           
 
-            <Text style={styles.firstN}><FontAwesome5 name="medal" size={20} color="gold" />  {item.firstN} {item.firstT}</Text>
-            <Text style={styles.secondN}><FontAwesome5 name="medal" size={20} color="#B2B2B2" />  {item.secondN} {item.secondT}</Text>
-            <Text style={styles.thirdN}><FontAwesome5 name="medal" size={20} color="#CD7F32" />  {item.thirdN} {item.thirdT}</Text>
+            <Text style={{...styles.firstN, color: darkTheme ? "white" : "black" } }><FontAwesome5 name="medal" size={20} color="gold" />  {item.firstN} {item.firstT}</Text>
+            <Text style={{...styles.secondN, color: darkTheme ? "white" : "black" } }><FontAwesome5 name="medal" size={20} color="#B2B2B2" />  {item.secondN} {item.secondT}</Text>
+            <Text style={{...styles.thirdN, color: darkTheme ? "white" : "black" } }><FontAwesome5 name="medal" size={20} color="#CD7F32" />  {item.thirdN} {item.thirdT}</Text>
           
-            <Text style={styles.date}  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
-            <Text style={styles.date}>{item.description}</Text>
+            <Text style={{...styles.date, color: darkTheme ? "white" : "black" } }  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
+            <Text style={{...styles.date, color: darkTheme ? "white" : "black" } } >{item.description}</Text>
 
             <View style={styles.buttonpanel} >
 
@@ -146,7 +146,6 @@ const styles = StyleSheet.create({
 
   post: {
     flexDirection: 'column',
-    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 4,
     borderColor: '#3d6ecf',
-    padding: Dimensions.get('window').width * 0.05,
+    padding: Dimensions.get('window').width * 0.01,
   },
 
   
@@ -176,8 +175,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: Dimensions.get('window').width * 0.75,
-    height: Dimensions.get('window').width *0.75*3/4,
+    width: Dimensions.get('window').width * 0.85,
+    height: Dimensions.get('window').width * 0.85 * 3 / 4,
     borderRadius: 20,
     borderWidth: 1,
     marginBottom: 10,
