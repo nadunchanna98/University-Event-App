@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import Chart from './Chart'
 import Moment from 'moment';
 import { NewContext } from '../../Common/Context';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 
@@ -33,7 +32,7 @@ const LastUpdate = () => {
         await notification.present();
     }
 
-    const navigation = useNavigation();
+    
 
 
 
@@ -62,13 +61,7 @@ const LastUpdate = () => {
                 event === '' ? <Text style={styles.wait}  >Loading...</Text> : <Chart />
             } */}
 
-            <View style={styles.newteventpanel}       >
-                <Text style={styles.newtevent} >Add New Event</Text>
-                <Ionicons name="add-circle" size={50} color='#336699'
-                    style={{ alignSelf: 'center' }
-                    } onPress={() => navigation.navigate('NewEvent')}
-                />
-            </View>
+            
 
             <View>
                 <Button onPress={handleSubmit} title="Submit" />
@@ -84,28 +77,7 @@ export default LastUpdate
 
 const styles = StyleSheet.create({
 
-    newteventpanel: {
-        alignItems: 'center',
-        width: Dimensions.get('window').width * 0.9,
-        height: Dimensions.get('window').height * 0.13,
-        backgroundColor: '#F9F9F9',
-        marginTop: 16,
-        marginBottom: 16,
-        borderRadius: 15,
-        borderWidth: 3,
-        borderColor: '#336699',
-
-    },
-
-    newtevent: {
-        textAlign: 'center',
-        fontSize: 20,
-        fontWeight: "700",
-        color: '#336699',
-        marginTop: 16,
-        marginBottom: 1,
-        fontFamily: 'sans-serif-light',
-    },
+   
     date: {
         textAlign: 'center',
         fontSize: 14,

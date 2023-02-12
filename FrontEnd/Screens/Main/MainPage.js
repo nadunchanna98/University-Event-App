@@ -1,14 +1,19 @@
 import { View, Text, StyleSheet, ScrollView, Dimensions, RefreshControl } from 'react-native'
-import React, { useEffect , useContext  } from 'react'
+import React, { useEffect, useContext } from 'react'
 import LastUpdate from './LastUpdate';
 import { NewContext } from '../../Common/Context';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 
 const MainPage = () => {
 
-  const { marks ,refresh ,pullMe ,fetchMarks  } = useContext(NewContext);
+  const { marks, refresh, pullMe, fetchMarks } = useContext(NewContext);
 
-  useEffect(() => {  fetchMarks(); } , []);
+  const navigation = useNavigation();
+
+
+  useEffect(() => { fetchMarks(); }, []);
 
 
   return (
@@ -23,29 +28,45 @@ const MainPage = () => {
       }
     >
 
-      <LastUpdate />
+      <View style={styles.items} >
 
-      {/* <View style={styles.topic} >
-        <Text style={styles.latest} >Total Marks</Text>
+
+        <LastUpdate />
+
+        <View style={styles.newteventpanel}       >
+          <Text style={styles.newtevent} >Add New Event</Text>
+          <Ionicons name="add-circle" size={50} color='#336699'
+            style={styles.plus} onPress={() => navigation.navigate('NewEvent')}
+          />
+        </View>
+
+
+        {/* <View style={styles.topic} >
+  <Text style={styles.latest} >Total Marks</Text>
+</View>
+
+<View style={styles.post} >
+
+  {marks.map((item, index) => {
+
+    return (
+
+      <View style={styles.bag} key={index}>
+        <Text style={styles.team}> {item.team}</Text>
+        <Text style={styles.marks}>  {item.total}</Text>
+        <Text style={styles.text}> ( Up to now ) </Text>
+
+      </View>
+    )
+  })
+  }
+
+</View> */}
+
       </View>
 
-      <View style={styles.post} >
 
-        {marks.map((item, index) => {
 
-          return (
-
-            <View style={styles.bag} key={index}>
-              <Text style={styles.team}> {item.team}</Text>
-              <Text style={styles.marks}>  {item.total}</Text>
-              <Text style={styles.text}> ( Up to now ) </Text>
-
-            </View>
-          )
-        })
-        }
-
-      </View> */}
 
 
     </ScrollView>
@@ -58,10 +79,41 @@ const styles = StyleSheet.create({
 
 
   container: {
-    paddingTop: 6,
     textAlign: 'center',
+    width: Dimensions.get('window').width ,
+
+  },
+
+  newteventpanel: {
+    alignItems: 'center',
     width: Dimensions.get('window').width * 0.9,
-    
+    height: Dimensions.get('window').height * 0.18,
+    backgroundColor: '#F9F9F9',
+    marginTop: 16,
+    marginBottom: 16,
+    borderRadius: 15,
+    borderWidth: 3,
+    borderColor: '#336699',
+
+  },
+
+  plus: {
+    alignSelf: 'center',
+    marginTop: 0,
+    alignContent: 'center',
+    justifyContent: 'center',
+
+  },
+
+  newtevent: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: "700",
+    color: '#336699',
+    marginTop: 16,
+    marginBottom: 1,
+    fontFamily: 'sans-serif-light',
+
   },
 
 
@@ -84,7 +136,7 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: '#FF1E1E',
     padding: 10,
-    
+
   },
 
   topic: {
@@ -129,5 +181,17 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 4,
     backgroundColor: '#FEED30'
+  },
+
+  items: {
+
+    width: Dimensions.get('window').width  ,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+
+
   }
+
+
 })

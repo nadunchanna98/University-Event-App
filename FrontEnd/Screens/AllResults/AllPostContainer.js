@@ -165,12 +165,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     width: Dimensions.get('window').width * 0.7,
+    height: Dimensions.get('window').height * 0.1,
 
   },
 
   buttons: {
     width: Dimensions.get('window').width * 0.2,
-    height: Dimensions.get('window').height * 0.05,
+    height: Dimensions.get('window').height * 0.07,
     margin:Dimensions.get('window').width * 0.01,
   },
 
@@ -184,8 +185,8 @@ const styles = StyleSheet.create({
 
 
   AllPostContainer: {
-    width: Dimensions.get('window').width * 0.9,
-    height: Dimensions.get('window').height * 0.9,
+    width: Dimensions.get('window').width ,
+    height: Dimensions.get('window').height ,
     backgroundColor: '#F9F9F9',
   },
 

@@ -141,8 +141,8 @@ export default UpComingContainer
 const styles = StyleSheet.create({
 
   AllPostContainer: {
-    width: Dimensions.get('window').width * 0.9,
-    height: Dimensions.get('window').height * 0.9,
+    width: Dimensions.get('window').width ,
+    height: Dimensions.get('window').height ,
     backgroundColor: '#F9F9F9',
   },
 
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
 
   buttons: {
     width: Dimensions.get('window').width * 0.2,
-    height: Dimensions.get('window').height * 0.05,
+    height: Dimensions.get('window').height * 0.07,
     margin: Dimensions.get('window').width * 0.01,
 
   },

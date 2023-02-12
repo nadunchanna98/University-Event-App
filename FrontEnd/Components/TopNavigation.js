@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
 
     container: {
 
-        width: Dimensions.get('window').width * 0.9,
-        height: Dimensions.get('window').height * 0.09,
+        width: Dimensions.get('window').width ,
+        height: Dimensions.get('window').height * 0.1,
         flexDirection: "row",
         justifyContent: "space-between",
         paddingLeft: 10,
