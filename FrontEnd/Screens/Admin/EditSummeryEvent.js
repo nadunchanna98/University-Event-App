@@ -27,7 +27,7 @@ import moment from "moment";
 
 const EditSummeryEvent = ({ route }) => {
 
-    const { pullMe } = useContext(NewContext);
+    const { pullMe , darkTheme } = useContext(NewContext);
 
     const navigation = useNavigation();
     const ID = route.params.ID;
@@ -169,8 +169,12 @@ const EditSummeryEvent = ({ route }) => {
             <View style={styles.title}>
                 <Text style={styles.titleText}>Edit Event Summary</Text>
             </View>
+
+            <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
+                </View>
+
             <ScrollView>
-            <View style={styles.container}    >
+            <View style={{...styles.container , backgroundColor: darkTheme ? "#282C35" : "white" }}    >
                 <View style={styles.signupContainer}>
 
                     <Formik
@@ -348,6 +352,9 @@ const EditSummeryEvent = ({ route }) => {
 
                 </View>
             </View>
+
+            <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
+                </View>
             </ScrollView>
         </Modal>
         </View>
@@ -355,9 +362,12 @@ const EditSummeryEvent = ({ route }) => {
 }
 
 const styles = StyleSheet.create({
+
+    contai: {
+        padding: 5,
+    },
     container: {
         flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
         justifyContent: 'center',
         alignItems: 'center',
     },

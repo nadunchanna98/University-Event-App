@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const ShareEvent = ({ route }) => {
 
-  const { pullMe, DeletePost } = useContext(NewContext);
+  const { pullMe, DeletePost, darkTheme } = useContext(NewContext);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
 
@@ -128,8 +128,12 @@ const ShareEvent = ({ route }) => {
           <View style={styles.title}>
             <Text style={styles.titleText}>Share {selectedEvent.event}</Text>
           </View>
+
+          <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
+                </View>
+
           <ScrollView>
-          <View style={styles.container}>
+          <View style={{...styles.container , backgroundColor: darkTheme ? "#282C35" : "white" }} >
 
             <View style={styles.container}>
               <View style={styles.signupContainer}>
@@ -233,7 +237,15 @@ const ShareEvent = ({ route }) => {
 
           </View>
 
+          <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
+                </View>
+
+
           </ScrollView>
+
+         
+
+
         </Modal>
         
       </View>
@@ -247,9 +259,12 @@ export default ShareEvent
 
 const styles = StyleSheet.create({
 
+  contai: {
+    padding: 5,
+},
+
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
     justifyContent: 'center',
     alignItems: 'center',
   },

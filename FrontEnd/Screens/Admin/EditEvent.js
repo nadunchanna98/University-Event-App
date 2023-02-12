@@ -26,7 +26,7 @@ import Moment from "moment";
 
 const EditEvent = ({ route }) => {
 
-    const { pullMe } = useContext(NewContext);
+    const { pullMe , darkTheme } = useContext(NewContext);
 
     const navigation = useNavigation();
     const ID = route.params.ID;
@@ -170,7 +170,7 @@ const EditEvent = ({ route }) => {
 
 
     return (
-        <>
+        < >
             <Modal visible={true}
                 animationType="slide"
 
@@ -184,8 +184,12 @@ const EditEvent = ({ route }) => {
                     <Text style={styles.titleText}>Edit Event</Text>
                 </View>
 
-                <ScrollView>
-                    <View style={styles.container}    >
+
+                <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
+                </View>
+
+                <ScrollView  >
+                    <View style={{...styles.container , backgroundColor: darkTheme ? "#282C35" : "white" }}    >
                         <View style={styles.signupContainer}>
 
                             <Formik
@@ -304,6 +308,9 @@ const EditEvent = ({ route }) => {
 
                         </View>
                     </View>
+
+                    <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
+                </View>
                 </ScrollView>
             </Modal>
         </>
@@ -311,6 +318,10 @@ const EditEvent = ({ route }) => {
 }
 
 const styles = StyleSheet.create({
+
+    contai: {
+        padding: 5,
+    },
 
     buttonContainer2: {
         flexDirection: 'row',
@@ -358,7 +369,6 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -389,6 +399,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 10,
+        
     },
 
     titleText: {
