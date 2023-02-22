@@ -41,20 +41,20 @@ const EditEvent = ({ route }) => {
 
     const getEvent = () => {
         axios.get(`${BASE_URL}futureevents/${ID}`)
-            .then(res => {
-
-                setEvent(res.data.event);
-                setMyDate(res.data.date);
-                setMyTime(res.data.time);
-                setDescription(res.data.description);
-                setType(res.data.type);
-                setGender(res.data.gender);
-                setLocation(res.data.location);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
+          .then(res => {
+            const { event, date, time, description, type, gender, location } = res.data;
+            setEvent(event);
+            setMyDate(Moment(date, 'YYYY-MM-DD').toDate());
+            setMyTime(Moment(date, 'hh:mm').toDate());
+            setDescription(description);
+            setType(type);
+            setGender(gender);
+            setLocation(location);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }
 
     useEffect(() => {
         getEvent(ID);
@@ -81,10 +81,14 @@ const EditEvent = ({ route }) => {
 
     const handleSubmit = (e) => {
 
+        // console.log(mydate);
+
         const formData = {
+
+            
             event: event,
-            date: Moment(mydate).format('YYYY-MM-DD'),
-            time: Moment(mytime).format('hh:mm'),
+            date:  Moment(mydate).format('YYYY-MM-DD'),
+            time:  mytime,
             description: description,
             type: type,
             gender: gender,
@@ -95,7 +99,7 @@ const EditEvent = ({ route }) => {
 
         axios.put(`${BASE_URL}futureevents/update/${ID}`, formData)
             .then(data => {
-                console.log(" successfull update")
+                console.log(" successfull update",formData.time)
                 pullMe();
                 navigation.goBack();
             }
@@ -115,6 +119,7 @@ const EditEvent = ({ route }) => {
 
         const currentDate = selectedDate || mydate;
         setMyDate(currentDate);
+        console.log(currentDate);
         setShow(false);
 
 
@@ -132,13 +137,14 @@ const EditEvent = ({ route }) => {
 
 
     //time picker
-    const [mytime, setMyTime] = useState(new Date());
+    const [mytime, setMyTime] = useState(new Date().getTime());
     const [displaymode1, setDisplayMode1] = useState('time');
     const [isDisplayTime, setShow1] = useState(false);
 
     const changeSelectedTime = (event, selectedTime) => {
 
         const currentTime = selectedTime || mytime;
+        console.log(currentTime);
         setMyTime(currentTime);
         setShow1(false);
         
@@ -248,9 +254,9 @@ const EditEvent = ({ route }) => {
 
                                         <Text style={styles.lable}  >Date</Text>
                                         <View style={styles.dateContainer}>
-                                            {/* <Text style={styles.dateText}>{Moment(mydate).format('LL')}</Text>
-                                            <Text style={styles.dateText}  > {Moment(mytime).format('LT')}</Text>
-                                         */}
+                                            <Text style={styles.dateText}>{mydate.toDateString()}</Text>
+                                            <Text style={styles.dateText}  >{Moment(mytime).format('LT')}</Text>
+                                        
                                         </View>
 
                                         <View style={styles.buttonContainer2}>

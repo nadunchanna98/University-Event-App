@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Event App",
-    "slug": "Event App",
+    "name": "Event-App",
+    "slug": "Event-App",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,9 +19,17 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "Eweek"
+      "bundleIdentifier": "Event-app"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
+
+
+
+
+
+
+
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -33,7 +41,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "2a40210a-8ba2-4c09-ad9a-7b57b09f68d3"
+        "projectId": "5af3fdcb-5b16-4ce6-8d9d-991ef70e890e"
       }
     }
   }

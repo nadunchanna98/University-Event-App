@@ -6,19 +6,26 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "aws-export": "echo 'Update Expo AWS_EXPORTS secret with value: \n\n' && cat aws-exports.js |base64",
+    "eas-build-pre-install": "echo $AWS_EXPORTS | base64 -d > ./aws-exports.js"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-community/datetimepicker": "6.5.2",
     "@react-native-community/netinfo": "9.3.5",
+    "@react-native-firebase/app": "^17.1.0",
+    "@react-native-firebase/auth": "^17.1.0",
+    "@react-native-firebase/messaging": "^17.1.0",
     "@react-navigation/material-top-tabs": "^6.5.1",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
     "aws-amplify": "^5.0.11",
     "axios": "^1.2.1",
     "expo": "~47.0.9",
-    "expo-image-picker": "^14.0.2",
+    "expo-dev-client": "~2.0.1",
+    "expo-image-picker": "~14.0.2",
+    "expo-notifications": "~0.17.0",
     "expo-status-bar": "~1.4.2",
     "expo-system-ui": "~2.0.1",
     "formik": "^2.2.9",
@@ -34,8 +41,7 @@
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "13.4.0",
     "react-native-tab-view": "^3.3.4",
-    "yup": "^0.32.11",
-    "expo-notifications": "~0.17.0"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3"

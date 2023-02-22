@@ -24,9 +24,9 @@ import * as ImagePicker from 'expo-image-picker';
 import Moment from 'moment';
 
 //image upload for aws
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../../src/aws-exports';
-Amplify.configure(awsconfig);
+
+
+
 
 
 

@@ -80,6 +80,7 @@ router.put('/update/:id', async (req, res) => {
             gender: req.body.gender,
             location: req.body.location,
             description: req.body.description,
+            time: req.body.time,
             date: req.body.date,
             image: req.body.image,
         },

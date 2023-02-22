@@ -43,9 +43,9 @@ if (Platform.OS === "android") {
 
 // //edurome
 // if (Platform.OS === "android") {
-//     BASE_URL = "http://10.102.10.142:3000/api/v1/" // for android emulator
+//     BASE_URL = "http://10.102.11.39:3000/api/v1/" // for android emulator
 // } else {
-//     BASE_URL = "http://10.102.10.142:3000/api/v1/" // for ios emulator
+//     BASE_URL = "http://10.102.11.39:3000/api/v1/" // for ios emulator
 // }
 
 
