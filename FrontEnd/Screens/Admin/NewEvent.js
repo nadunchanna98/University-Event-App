@@ -25,7 +25,9 @@ import Moment from 'moment';
 
 //image upload for aws
 
-
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../../src/aws-exports';
+Amplify.configure(awsconfig);
 
 
 
@@ -41,6 +43,8 @@ const NewEvent = () => {
 
   const [localUri, setLocalUri] = useState();
 
+  
+
   //upload image
   const fetchImage = async (uri) => {
     const response = await fetch(uri);
@@ -49,28 +53,33 @@ const NewEvent = () => {
   }
 
   const uploadFile = async (file) => {
+
+
+    console.log("file--", file);
+
     const img = await fetchImage(file.uri);
     return Storage.put(`my-image-filenames/${Math.random()}.jpg`, img, {
       level: 'public',
       contentType: file.type,
       progressCallback(uploadProgress) {
-        // console.log("progress--", uploadProgress.loaded + ' / ' + uploadProgress.total);
+      console.log("progress--", uploadProgress.loaded + ' / ' + uploadProgress.total);
       }
     })
       .then(result => {
         Storage.get(result.key)
           .then(data => {
-            // console.log("Results--", data);
+          console.log("Results--", data);
 
             let awsImageUri = data.substring(0, data.indexOf('?'));
-            console.log("awsImageUri--", awsImageUri);
+             console.log("awsImageUri--", awsImageUri);
             setLocalUri(awsImageUri);
+            console.log("globalUri--", localUri);
           }
           )
-          .catch(err => console.log(err));
+          .catch(err => console.log("err1 : "));
 
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log("err2 : "));
 
 
   }
@@ -86,8 +95,10 @@ const NewEvent = () => {
           alert('Permission denied!');
         }
       }
+
+      console.log('localUri has been updated:', localUri);
     })();
-  }, []);
+  }, [localUri]);
 
 
   const confirmModalClose = () => {
@@ -108,6 +119,8 @@ const NewEvent = () => {
 
   const takePhotoAndUpload = async () => {
 
+
+
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
@@ -120,16 +133,21 @@ const NewEvent = () => {
 
     uploadFile(result);
 
+    // console.log("result--", result);
+
 
     let localUri1 = result.uri;
     setLocalUri(localUri1);
     setPhotoShow(localUri1);
+
+    // console.log("localUri1--", localUri1);
   }
 
 
+  // console.log("localUri--", localUri);
 
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
 
     const formData = {
       event: values.event,
@@ -142,7 +160,7 @@ const NewEvent = () => {
       location: values.location,
     }
 
-
+     
 
     axios.post(`${BASE_URL}futureevents/post`, formData)
       .then(data => {
@@ -394,6 +412,9 @@ const NewEvent = () => {
   )
 }
 
+
+export default NewEvent 
+
 const styles = StyleSheet.create({
 
   buttonContainer2: {
@@ -550,4 +571,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
-export default NewEvent

@@ -4,6 +4,24 @@ const router = express.Router();
 require('dotenv/config');
 
 
+const admin = require("firebase-admin");
+const serviceAccount = require("../path/serviceAccountKey.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+
+
+const sendNotification = async (message) => {
+    try {
+      const response = await admin.messaging().send(message);
+      console.log(`Successfully sent notification: ${response}`);
+    } catch (error) {
+      console.log(`Error sending notification: ${error}`);
+    }
+  };
+
+
 // Get all FuturePost 
 router.get(`/`, async (req, res) => {
 
@@ -23,7 +41,16 @@ router.get(`/:id`, async (req, res) => {
     if (!post) {
         res.status(500).json({ success: false })
     }
-    res.send(post);
+   
+    
+
+
+  res.send(post);
+
+
+
+
+
 
 })
 
@@ -36,6 +63,9 @@ router.get(`/latest/`, async (req, res) => {
         res.status(500).json({ success: false })
         console.log('error')
     }
+
+     
+
     res.send(post);
 
 })
@@ -57,13 +87,25 @@ router.post('/post/', async (req, res) => {
 
     })
 
-    console.log(newspost.location);
-
     newspost = await newspost.save();
 
     if (!newspost)
         return res.status(400).send('the new post cannot be add!')
-
+    
+      const message = {
+        notification: {
+          title: "New Event Added",
+          body: "Check out the latest Event on our app!",
+        },
+        android: {
+          notification: {
+            sound: "default",
+          },
+        },
+        topic: "new_Event",
+      };
+    
+      await sendNotification(message);
     res.send(newspost);
 })
 

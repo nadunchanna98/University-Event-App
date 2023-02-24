@@ -4,38 +4,14 @@ import Chart from './Chart'
 import Moment from 'moment';
 import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
-import * as Notifications from 'expo-notifications';
+
 
 const LastUpdate = () => {
 
     const { date, fetchDate, event , darkTheme} = useContext(NewContext);
 
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleSubmit = async () => {
-        setIsLoading(true);
-        try {
-            // await insertDataToDatabase();
-            showNotification();
-        } catch (error) {
-            console.error("error - ", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    async function showNotification() {
-        const notification = new Notifications.Notification({
-            title: 'New Data Added',
-            body: 'A new data has been added to the database',
-        });
-        await notification.present();
-    }
 
     
-
-
-
     useEffect(() => {
 
         fetchDate();
@@ -62,10 +38,6 @@ const LastUpdate = () => {
             } */}
 
             
-
-            <View>
-                <Button onPress={handleSubmit} title="Submit" />
-            </View>
 
 
         </View>
