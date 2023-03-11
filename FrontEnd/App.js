@@ -1,4 +1,4 @@
-import { StyleSheet, View, StatusBar , Alert } from 'react-native';
+import { StyleSheet, View, StatusBar, Alert } from 'react-native';
 import Context from './Common/Context';
 import InshortTabs from './Components/InshortTabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,82 +7,94 @@ import ShareEvent from './Screens/Admin/ShareEvent';
 import UpComingContainer from './Screens/UpComing/UpComingContainer';
 import EditEvent from './Screens/Admin/EditEvent';
 import EditSummeryEvent from './Screens/Admin/EditSummeryEvent';
-import NewEvent from './Screens/Admin/NewEvent';
+import NewEvent from './Screens/Admin/NewEvent'; 
+import React, { useEffect , useState } from 'react';
 
 import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
+import BASE_URL from './Common/BaseURL'
 
-
-import React, { useEffect } from 'react';
 
 function App() {
 
-  // useEffect(() => {
+  const [permissionGranted, setPermissionGranted] = useState(false);
 
-  //   if (requestUserPermission()) {
-  //     messaging().getToken().then(token => {
-  //       console.log("token : ",token);
-  //     }
-  //     );
-  
-  
-  //   }
-  //   else {
-  //     console.log("no permission", authStatus);
-  //   }
-  
-  //   // Check whether an initial notification is available
-  //   messaging()
-  //     .getInitialNotification()
-  //     .then( async (remoteMessage) => {
-  //       if (remoteMessage) {
-  //         console.log(
-  //           'Notification caused app to open from quit state:',
-  //           remoteMessage.notification,
-  //         );
-  
-  //       }
-  
-  //     });
-  
-  //   messaging().onNotificationOpenedApp(remoteMessage => {
-  //     console.log(
-  //       'Notification caused app to open from background state:',
-  //       remoteMessage.notification,
-  //     );
-  
-  //   });
-  
-  
-  //   // Register background handler
-  //   messaging().setBackgroundMessageHandler(async remoteMessage => {
-  //     console.log('Message handled in the background!', remoteMessage);
-  //   });
-  
-  //   const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  //   });
-  
-  //   return unsubscribe;
-  
-  
-  // }, []);
 
-  // async function requestUserPermission() {
-  //   const authStatus = await messaging().requestPermission();
-  //   const enabled =
-  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  useEffect(() => {
+    const requestUserPermission = async () => {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-  //   if (enabled) {
-  //     console.log('Authorization status:', authStatus);
-  //   }
-  // }
+      setPermissionGranted(enabled);
+
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+        await messaging().subscribeToTopic('EventApp');
+        const token = await messaging().getToken();
+        console.log("token : ", token);
+
+        const newUser = {
+          token: token
+        }
+
+        axios.post(`${BASE_URL}users/token`, newUser)
+          .then(res => {
+            console.log("token added to database");
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        console.log("no permission", authStatus);
+      }
+    };
+
+    requestUserPermission();
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage) => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+        }
+      });
+
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+    });
+
+    // Register background handler
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
+
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
+
+
 
   return (
 
     <View style={{ ...styles.container, backgroundColor: "red" }}   >
       <StatusBar backgroundColor="#000" barStyle="default" />
       <InshortTabs />
+
+      {/* <Button title="send notification" onPress={() => sendNotification() } /> */}
+
+
     </View>
 
 

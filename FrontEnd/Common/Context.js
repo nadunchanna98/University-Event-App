@@ -17,6 +17,21 @@ const Context = ({ children }) => {
   const [date, setDate] = useState();
   const [event, setEvent] = useState("");
   const [darkTheme, setDarkTheme] = useState(true);
+  const [tokens, setTokens] = useState([]);
+
+  const getTokens = () => {
+    axios.get(`${BASE_URL}users/token`)
+      .then(res => {
+        setTokens(res.data.map(item => item.token));
+        // console.log("tokens--", tokens);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    return () => {
+      setTokens([]);
+    }
+  }
 
   //refresh
   const pullMe = () => {
@@ -31,7 +46,6 @@ const Context = ({ children }) => {
       setRefresh(false);
     }, 4000);
   }
-
 
 
   const DeletePost = (id) => {
@@ -132,8 +146,11 @@ const Context = ({ children }) => {
         post,
         getNewPost,
         newPost,
-        DeletePost
-
+        DeletePost,
+        getTokens,
+        tokens,
+ 
+      
       }}>
 
       {children}

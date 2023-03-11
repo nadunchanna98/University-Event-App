@@ -25,16 +25,41 @@ import Moment from 'moment';
 
 //image upload for aws
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../../src/aws-exports';
-Amplify.configure(awsconfig);
+// import { Amplify, Storage } from 'aws-amplify';
+// import awsconfig from '../../src/aws-exports';
+// Amplify.configure(awsconfig);
 
+  
+import NotificationServer2 from '../../NotificationServer2'
 
 
 
 const NewEvent = () => {
 
-  const { pullMe } = useContext(NewContext);
+  const { pullMe, getTokens, tokens } = useContext(NewContext);
+
+  useEffect(() => {
+    getTokens();
+  }, [])
+
+
+  const sendNotification = async (data) => {
+
+    // console.log("data--", data);
+
+    let notificationData = {
+      title: "New Event is added",
+      body: "Event Name :  " + data.event + " " + data.type + " " + data.gender,
+      token: tokens
+    }
+
+    // console.log("notificationData--", notificationData);
+
+    await NotificationServer2.sendSingleNotification(notificationData);
+    // NotificationServer(notificationData);
+  };
+
+
   const navigation = useNavigation();
 
   const [photo, setPhoto] = React.useState(null);
@@ -43,7 +68,7 @@ const NewEvent = () => {
 
   const [localUri, setLocalUri] = useState();
 
-  
+
 
   //upload image
   const fetchImage = async (uri) => {
@@ -62,16 +87,16 @@ const NewEvent = () => {
       level: 'public',
       contentType: file.type,
       progressCallback(uploadProgress) {
-      console.log("progress--", uploadProgress.loaded + ' / ' + uploadProgress.total);
+        console.log("progress--", uploadProgress.loaded + ' / ' + uploadProgress.total);
       }
     })
       .then(result => {
         Storage.get(result.key)
           .then(data => {
-          console.log("Results--", data);
+            console.log("Results--", data);
 
             let awsImageUri = data.substring(0, data.indexOf('?'));
-             console.log("awsImageUri--", awsImageUri);
+            console.log("awsImageUri--", awsImageUri);
             setLocalUri(awsImageUri);
             console.log("globalUri--", localUri);
           }
@@ -160,13 +185,14 @@ const NewEvent = () => {
       location: values.location,
     }
 
-     
+
 
     axios.post(`${BASE_URL}futureevents/post`, formData)
       .then(data => {
         console.log(" success ")
         pullMe();
         setPhoto(data.image);
+        sendNotification(data.data);
         navigation.goBack();
       }
       )
@@ -413,7 +439,7 @@ const NewEvent = () => {
 }
 
 
-export default NewEvent 
+export default NewEvent
 
 const styles = StyleSheet.create({
 

@@ -24,12 +24,14 @@ const postRoutes = require('./routes/PastEvents');
 const futureEventRoutes = require('./routes/FutureEvents');
 const teamsRoutes = require('./routes/Teams');
 const LatestRoutes = require('./routes/Latest');
+const UsersRoutes = require('./routes/Users');
 
 //api routes  
 app.use(`${api}/pastevents`, postRoutes);
 app.use(`${api}/futureevents`, futureEventRoutes);
 app.use(`${api}/teams`, teamsRoutes);
 app.use(`${api}/latest`, LatestRoutes);
+app.use(`${api}/users`, UsersRoutes);
 
 //server
 app.listen(3000, ()=>{
