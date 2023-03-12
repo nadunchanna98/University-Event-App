@@ -22,20 +22,17 @@ import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import Moment from 'moment';
-
-//image upload for aws
-
-// import { Amplify, Storage } from 'aws-amplify';
-// import awsconfig from '../../src/aws-exports';
-// Amplify.configure(awsconfig);
-
-  
-import NotificationServer2 from '../../NotificationServer2'
-
+import { firebase } from '../../src/config'  // for image upload for firebase
+import NotificationServer2 from '../../NotificationServer2'   // for notification for firebase
 
 
 const NewEvent = () => {
 
+  const [imagef, setImagef] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [photoShow, setPhotoShow] = React.useState(null);
+
+  const navigation = useNavigation();
   const { pullMe, getTokens, tokens } = useContext(NewContext);
 
   useEffect(() => {
@@ -60,57 +57,6 @@ const NewEvent = () => {
   };
 
 
-  const navigation = useNavigation();
-
-  const [photo, setPhoto] = React.useState(null);
-  const [photoShow, setPhotoShow] = React.useState(null);
-
-
-  const [localUri, setLocalUri] = useState();
-
-
-
-  //upload image
-  const fetchImage = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  }
-
-  const uploadFile = async (file) => {
-
-
-    console.log("file--", file);
-
-    const img = await fetchImage(file.uri);
-    return Storage.put(`my-image-filenames/${Math.random()}.jpg`, img, {
-      level: 'public',
-      contentType: file.type,
-      progressCallback(uploadProgress) {
-        console.log("progress--", uploadProgress.loaded + ' / ' + uploadProgress.total);
-      }
-    })
-      .then(result => {
-        Storage.get(result.key)
-          .then(data => {
-            console.log("Results--", data);
-
-            let awsImageUri = data.substring(0, data.indexOf('?'));
-            console.log("awsImageUri--", awsImageUri);
-            setLocalUri(awsImageUri);
-            console.log("globalUri--", localUri);
-          }
-          )
-          .catch(err => console.log("err1 : "));
-
-      })
-      .catch(err => console.log("err2 : "));
-
-
-  }
-
-
-
 
   useEffect(() => {
     (async () => {
@@ -121,9 +67,8 @@ const NewEvent = () => {
         }
       }
 
-      console.log('localUri has been updated:', localUri);
     })();
-  }, [localUri]);
+  }, [imagef]);
 
 
   const confirmModalClose = () => {
@@ -144,9 +89,8 @@ const NewEvent = () => {
 
   const takePhotoAndUpload = async () => {
 
-
-
     let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
@@ -156,20 +100,42 @@ const NewEvent = () => {
       return;
     }
 
-    uploadFile(result);
+    const source = { uri: result.uri };
 
-    // console.log("result--", result);
+    setImagef(source);
 
+    // console.log("source--", source);
+    // console.log("imagef--", imagef);
 
-    let localUri1 = result.uri;
-    setLocalUri(localUri1);
-    setPhotoShow(localUri1);
+    uploadImage(source.uri);
+    setPhotoShow(source.uri);
 
-    // console.log("localUri1--", localUri1);
   }
 
 
-  // console.log("localUri--", localUri);
+  //firebase image upload
+  const uploadImage = async (uri) => {
+
+    // console.log("im from uploadimage--", uri);
+
+    setUploading(true);
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const filename = uri.substring(uri.lastIndexOf('/') + 1);
+    var ref = firebase.storage().ref().child(filename).put(blob);
+
+    try {
+      await ref;
+    } catch (e) {
+      console.log(e);
+    }
+
+    const abc = await ref.snapshot.ref.getDownloadURL();
+    console.log("url--", abc);
+    setImagef(abc);
+
+
+  };
 
 
   const handleSubmit = async (values) => {
@@ -181,7 +147,7 @@ const NewEvent = () => {
       description: values.description,
       type: values.type,
       gender: values.gender,
-      image: localUri,
+      image: imagef,
       location: values.location,
     }
 
@@ -191,7 +157,6 @@ const NewEvent = () => {
       .then(data => {
         console.log(" success ")
         pullMe();
-        setPhoto(data.image);
         sendNotification(data.data);
         navigation.goBack();
       }
@@ -265,6 +230,7 @@ const NewEvent = () => {
 
   const dicardImage = () => {
     setPhotoShow(null);
+    setImagef(null);
   }
 
 

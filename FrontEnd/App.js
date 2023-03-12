@@ -20,69 +20,69 @@ function App() {
   const [permissionGranted, setPermissionGranted] = useState(false);
 
 
-  useEffect(() => {
-    const requestUserPermission = async () => {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  // useEffect(() => {
+  //   const requestUserPermission = async () => {
+  //     const authStatus = await messaging().requestPermission();
+  //     const enabled =
+  //       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-      setPermissionGranted(enabled);
+  //     setPermissionGranted(enabled);
 
-      if (enabled) {
-        console.log('Authorization status:', authStatus);
-        await messaging().subscribeToTopic('EventApp');
-        const token = await messaging().getToken();
-        console.log("token : ", token);
+  //     if (enabled) {
+  //       console.log('Authorization status:', authStatus);
+  //       await messaging().subscribeToTopic('EventApp');
+  //       const token = await messaging().getToken();
+  //       console.log("token : ", token);
 
-        const newUser = {
-          token: token
-        }
+  //       const newUser = {
+  //         token: token
+  //       }
 
-        axios.post(`${BASE_URL}users/token`, newUser)
-          .then(res => {
-            console.log("token added to database");
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      } else {
-        console.log("no permission", authStatus);
-      }
-    };
+  //       axios.post(`${BASE_URL}users/token`, newUser)
+  //         .then(res => {
+  //           console.log("token added to database");
+  //         })
+  //         .catch(err => {
+  //           console.log(err);
+  //         });
+  //     } else {
+  //       console.log("no permission", authStatus);
+  //     }
+  //   };
 
-    requestUserPermission();
+  //   requestUserPermission();
 
-    // Check whether an initial notification is available
-    messaging()
-      .getInitialNotification()
-      .then(async (remoteMessage) => {
-        if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.notification,
-          );
-        }
-      });
+  //   // Check whether an initial notification is available
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then(async (remoteMessage) => {
+  //       if (remoteMessage) {
+  //         console.log(
+  //           'Notification caused app to open from quit state:',
+  //           remoteMessage.notification,
+  //         );
+  //       }
+  //     });
 
-    messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.notification,
-      );
-    });
+  //   messaging().onNotificationOpenedApp(remoteMessage => {
+  //     console.log(
+  //       'Notification caused app to open from background state:',
+  //       remoteMessage.notification,
+  //     );
+  //   });
 
-    // Register background handler
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
-    });
+  //   // Register background handler
+  //   messaging().setBackgroundMessageHandler(async remoteMessage => {
+  //     console.log('Message handled in the background!', remoteMessage);
+  //   });
 
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
+  //   const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
 
 
