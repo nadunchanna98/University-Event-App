@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react'
-import { View, Text, StyleSheet, FlatList, Image, Dimensions, TextInput, RefreshControl, Button, Alert, Modal, Pressable } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, Dimensions, RefreshControl, Button, Alert } from 'react-native'
 import Moment from 'moment';
 import { NewContext } from '../../Common/Context';
 import BASE_URL from '../../Common/BaseURL'
@@ -100,7 +100,7 @@ const UpComingContainer = () => {
               }
             </View>
 
-            <Text style={styles.description}>{item.description}</Text>
+            <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }}>{item.description}</Text>
 
             <View style={styles.buttonpanel} >
 
@@ -143,9 +143,10 @@ export default UpComingContainer
 const styles = StyleSheet.create({
 
   AllPostContainer: {
-    width: Dimensions.get('window').width ,
-    height: Dimensions.get('window').height ,
+    width: Dimensions.get('window').width  ,
+    height: Dimensions.get('window').height  ,
     backgroundColor: '#F9F9F9',
+    paddingBottom: Dimensions.get('window').height * 0.1,
   },
 
   event: {
@@ -226,15 +227,19 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.7,
     marginEnd: Dimensions.get('window').width * 0.0,
     marginStart: Dimensions.get('window').width * 0.08,
-
+    paddingBottom: Dimensions.get('window').height * 0.01,
+    marginTop: Dimensions.get('window').height * 0.01,
   },
 
   buttons: {
     width: Dimensions.get('window').width * 0.2,
-    height: Dimensions.get('window').height * 0.07,
+    height: Dimensions.get('window').height * 0.1,
     margin: Dimensions.get('window').width * 0.01,
 
   },
+
+  //when the user click on the button, the button will change color
+ 
 
 
 })

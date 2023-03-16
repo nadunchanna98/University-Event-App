@@ -1,4 +1,4 @@
-import { StyleSheet, View, StatusBar, Alert } from 'react-native';
+import { StyleSheet, View, StatusBar, Alert, ToastAndroid } from 'react-native';
 import Context from './Common/Context';
 import InshortTabs from './Components/InshortTabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,82 +7,142 @@ import ShareEvent from './Screens/Admin/ShareEvent';
 import UpComingContainer from './Screens/UpComing/UpComingContainer';
 import EditEvent from './Screens/Admin/EditEvent';
 import EditSummeryEvent from './Screens/Admin/EditSummeryEvent';
-import NewEvent from './Screens/Admin/NewEvent'; 
-import React, { useEffect , useState } from 'react';
+import NewEvent from './Screens/Admin/NewEvent';
+import NetInfo from '@react-native-community/netinfo'; //for checking internet connection
+import React, { useEffect, useState , useContext } from 'react';
+//import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NewContext } from './Common/Context';
 
+
+import NotificationServer2 from './NotificationServer2';
 import messaging from '@react-native-firebase/messaging';
+
 import axios from 'axios';
 import BASE_URL from './Common/BaseURL'
 
 
 function App() {
 
+  const { darkTheme, setUserToken , getTheme , pullMe} = useContext(NewContext);
+
+  const [isConnected, setIsConnected] = useState(true);
   const [permissionGranted, setPermissionGranted] = useState(false);
 
 
-  // useEffect(() => {
-  //   const requestUserPermission = async () => {
-  //     const authStatus = await messaging().requestPermission();
-  //     const enabled =
-  //       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-  //       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  const welcomeMessage = async (token) => {
 
-  //     setPermissionGranted(enabled);
+    let notificationData = {
+      title: "Welcome to Event App",
+      body: "Hurry up...! Create your first event ",
+      token: token
+    }
 
-  //     if (enabled) {
-  //       console.log('Authorization status:', authStatus);
-  //       await messaging().subscribeToTopic('EventApp');
-  //       const token = await messaging().getToken();
-  //       console.log("token : ", token);
+    // console.log("notificationData--", notificationData);
 
-  //       const newUser = {
-  //         token: token
-  //       }
+    await NotificationServer2.sendSingleNotification(notificationData);
 
-  //       axios.post(`${BASE_URL}users/token`, newUser)
-  //         .then(res => {
-  //           console.log("token added to database");
-  //         })
-  //         .catch(err => {
-  //           console.log(err);
-  //         });
-  //     } else {
-  //       console.log("no permission", authStatus);
-  //     }
-  //   };
+  }
 
-  //   requestUserPermission();
+  useEffect(() => {
 
-  //   // Check whether an initial notification is available
-  //   messaging()
-  //     .getInitialNotification()
-  //     .then(async (remoteMessage) => {
-  //       if (remoteMessage) {
-  //         console.log(
-  //           'Notification caused app to open from quit state:',
-  //           remoteMessage.notification,
-  //         );
-  //       }
-  //     });
+    // //check internet connection
+    // const unsubscribeNet = NetInfo.addEventListener((state) => {
+    //   setIsConnected(state.isConnected);
+    //   if (!state.isConnected) {
+    //     ToastAndroid.show('No internet connection', ToastAndroid.LONG);
+    //   } else {
+    //     pullMe();
+    //   }
+    // });
 
-  //   messaging().onNotificationOpenedApp(remoteMessage => {
-  //     console.log(
-  //       'Notification caused app to open from background state:',
-  //       remoteMessage.notification,
-  //     );
-  //   });
 
-  //   // Register background handler
-  //   messaging().setBackgroundMessageHandler(async remoteMessage => {
-  //     console.log('Message handled in the background!', remoteMessage);
-  //   });
+    // const requestUserPermission = async () => {
+    //   const authStatus = await messaging().requestPermission();
+    //   const enabled =
+    //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-  //   const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  //   });
+    //   setPermissionGranted(enabled);
 
-  //   return unsubscribe;
-  // }, []);
+    //   if (enabled) {
+    //     console.log('Authorization status:', authStatus);
+    //     await messaging().subscribeToTopic('EventApp');
+    //     const token = await messaging().getToken();
+    //     console.log("token : ", token);
+    //     setUserToken(token);
+       
+
+    //     const newUser = {
+    //       token: token,
+    //       theme: darkTheme    
+    //     }
+
+    //     axios.post(`${BASE_URL}users/user`, newUser)
+    //       .then(res => {
+    //         console.log("token added to database");
+    //         welcomeMessage(token);
+    //       })
+    //       .catch(err => {
+    //         console.log(err);
+    //       });
+
+        getTheme();
+
+    //   } else {
+    //     console.log("no permission", authStatus);
+    //   }
+    // };
+
+    // requestUserPermission();
+
+    // // Check whether an initial notification is available
+    // messaging()
+    //   .getInitialNotification() 
+    //   .then(async (remoteMessage) => {
+    //     if (remoteMessage) {
+    //       console.log(
+    //         'Notification caused app to open from quit state:',
+    //         remoteMessage.notification,
+    //       );
+    //     }
+    //   });
+
+
+    // messaging().onNotificationOpenedApp(remoteMessage => {
+    //   console.log(
+    //     'Notification caused app to open from background state:',
+    //     remoteMessage.notification,
+    //   );
+    // });
+
+
+    // // Register background handler 
+    // messaging().setBackgroundMessageHandler(async remoteMessage => {  
+    //   console.log('Message handled in the background!', remoteMessage);
+    // });
+
+    // const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+
+
+    //   ToastAndroid.show(remoteMessage.notification.title,
+    //      ToastAndroid.LONG
+    //      );
+
+    //   ToastAndroid.show(
+    //     remoteMessage.notification.body,
+    //     ToastAndroid.LONG
+    //   );
+
+    //   // Alert.alert('A new notification arrived!', JSON.stringify(remoteMessage));
+    // });
+
+
+    // return () => {
+    //   unsubscribeNet();
+    //   unsubscribe();
+    // };
+
+  }, []);
 
 
 
@@ -90,10 +150,9 @@ function App() {
 
     <View style={{ ...styles.container, backgroundColor: "red" }}   >
       <StatusBar backgroundColor="#000" barStyle="default" />
+
+      {/* <Text>{isConnected ? 'Connected' : 'Disconnected'}</Text> */}
       <InshortTabs />
-
-      {/* <Button title="send notification" onPress={() => sendNotification() } /> */}
-
 
     </View>
 

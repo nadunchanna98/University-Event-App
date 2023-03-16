@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import {Alert, Modal, StyleSheet, Text, Pressable, View , TextInput} from 'react-native'
+import { ToastAndroid} from 'react-native'
 
 import BASE_URL from './BaseURL';
 import axios from 'axios';
@@ -18,6 +18,7 @@ const Context = ({ children }) => {
   const [event, setEvent] = useState("");
   const [darkTheme, setDarkTheme] = useState(true);
   const [tokens, setTokens] = useState([]);
+  const [userToken, setUserToken] = useState("");
 
   const getTokens = () => {
     axios.get(`${BASE_URL}users/token`)
@@ -54,9 +55,11 @@ const Context = ({ children }) => {
     axios.delete(`${BASE_URL}futureevents/delete/${id}`)
       .then(res => {
         console.log("success");
+        ToastAndroid.show("Event Deleted Successfully", ToastAndroid.LONG);
         getNewPost();
       })
       .catch(err => {
+        ToastAndroid.show("Event Not Deleted!!", ToastAndroid.LONG);
         console.log(err);
       })
   }
@@ -83,8 +86,9 @@ const Context = ({ children }) => {
 
     axios.get(`${BASE_URL}latest/`)
       .then(res => {
-        setDate(res.data[0].date);
-        setEvent(res.data[0].event);
+        setDate(res.data.latestUpdate);
+        console.log(res.data.latestUpdate);
+  
       })
       .catch(err => {
         console.log(err);                  //clean up function
@@ -124,6 +128,22 @@ const Context = ({ children }) => {
     }
   }
 
+  const getTheme = () => {
+    axios.get(`${BASE_URL}users/user/${userToken}`)
+      .then(res => {
+        console.log(res.data);
+        setDarkTheme(res.data.darkTheme);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+
+  }
+
+  
+
+
+
 
   return (
 
@@ -149,6 +169,9 @@ const Context = ({ children }) => {
         DeletePost,
         getTokens,
         tokens,
+        userToken,
+        setUserToken,
+        getTheme
  
       
       }}>

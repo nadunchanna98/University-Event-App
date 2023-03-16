@@ -27,7 +27,7 @@ const LastUpdate = () => {
 
 
                 {
-                    event === '' ? <Text style={{...styles.wait, color: darkTheme ? "white" : "black" } } >Loading...</Text>
+                    date === '' ? <Text style={{...styles.wait, color: darkTheme ? "white" : "black" } } >Loading...</Text>
                         : <Text style={{...styles.date, color: darkTheme ? "white" : "black" } } >Last updated {event} {"\n"} At {Moment(date).format('LLL')} </Text>
                 }
 

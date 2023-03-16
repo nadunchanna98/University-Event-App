@@ -1,12 +1,33 @@
 import { SimpleLineIcons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image, StatusBar } from 'react-native'
-import Eweek from '../assets/icon.png';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ToastAndroid ,Alert ,Linking } from 'react-native'
 import { NewContext } from '../Common/Context';
+import BASE_URL from '../Common/BaseURL';
+import axios from 'axios';
 
 function TopNavigation({ index, setIndex }) {
 
-    const {setDarkTheme , darkTheme } = React.useContext(NewContext);
+    const { setDarkTheme, darkTheme, userToken } = React.useContext(NewContext);
+
+    const themeChange = () => {
+        
+
+        axios.put(`${BASE_URL}users/user/${userToken}`, {
+
+            theme: !darkTheme
+
+        }).then((response) => {
+            console.log("response--", response);
+            setDarkTheme(response.data.darkTheme);
+        }
+        ).catch((error) => {
+
+            ToastAndroid.show("Theme Not Changed!!", ToastAndroid.LONG);
+            console.log("error--", error);
+        }
+        )
+
+    }
 
     return (
         <View style={{ ...styles.container, backgroundColor: "#4682B4" }}>
@@ -15,8 +36,11 @@ function TopNavigation({ index, setIndex }) {
                 (
 
                     <TouchableOpacity style={styles.logo}
-                    onPress={() => setDarkTheme(!darkTheme)}
-                    
+                        onPress={() =>
+                            // setDarkTheme(!darkTheme)
+                            themeChange()
+                        }
+
                     >
                         <MaterialCommunityIcons name="theme-light-dark" size={30} color="white" />
                     </TouchableOpacity>
@@ -27,20 +51,28 @@ function TopNavigation({ index, setIndex }) {
                         onPress={() => setIndex(index === 0 ? 1 : 0)}
                     >
                         <SimpleLineIcons name="arrow-left" size={15} color="white" />
+
                         <Text
                             style={{ ...styles.text, color: "white", textAlignVertical: "center" }}
                         >
-                            <View><Text style={{ ...styles.text, color: "white" }}  >Home</Text></View>
+                            <View><Text style={{ ...styles.textRight, color: "white" }}  >Home</Text></View>
                         </Text>
                     </TouchableOpacity>
                 ) : (
                     <TouchableOpacity style={styles.left}
                         onPress={() => setIndex(index === 2 ? 1 : 2)}
                     >
-                        <SimpleLineIcons name="arrow-left" size={15} color="White" />
-                        <Text style={{ ...styles.text, color: "white" }}>
-                            <View><Text style={{ ...styles.text, color: "white" }}  >All </Text></View>
-                        </Text>
+
+                        <View style={styles.allandarrowRight} >
+                            <View >
+                                <SimpleLineIcons name="arrow-left" size={15} color="white" />
+                            </View>
+
+                            <View>
+                                <Text style={{ ...styles.textRight, color: "white" }}  >All</Text>
+                            </View>
+                        </View>
+
                     </TouchableOpacity>
 
                 )
@@ -48,16 +80,25 @@ function TopNavigation({ index, setIndex }) {
             }
 
             <Text style={{ ...styles.center, color: "white" }}>
-                {index === 0 ? "Home" : (index === 1 ? "Summary " : "Upcoming Events")}
+                {index === 0 ? "Home" : (index === 1 ? "Summary " : "Upcoming")}
             </Text>
 
             {index === 0 ? (
 
-                <TouchableOpacity style={styles.right} onPress={() => setIndex(index === 0 ? 1 : 0)} >
-                    <Text style={{ ...styles.text, color: "white" }}>
-                        All
-                        <SimpleLineIcons name="arrow-right" size={15} color="#fff" />
-                    </Text>
+                <TouchableOpacity style={{ ...styles.right, marginEnd: 10 }} onPress={() => setIndex(index === 0 ? 1 : 0)} >
+
+                    {/* this */}
+                    <View style={styles.allandarrowLeft}>
+
+                        <View style={{ ...styles.textLeft, color: "white" }}>
+                            <Text style={{ ...styles.textLeftAll, color: "white" }}>All</Text>
+                        </View>
+
+                        <View >
+                            <SimpleLineIcons name="arrow-right" size={15} color="#fff" />
+                        </View>
+                    </View>
+
                 </TouchableOpacity>
             ) : (index === 1 ? (
 
@@ -65,7 +106,7 @@ function TopNavigation({ index, setIndex }) {
                     style={{ ...styles.right, marginEnd: 18 }}
                     onPress={() => setIndex(index === 1 ? 2 : 1)}
                 >
-                    <Text style={{ ...styles.text, color: "white" }} >
+                    <Text style={{ ...styles.textLeft, color: "white" }} >
                         <View><Text style={{ ...styles.new, color: "white" }}>New</Text></View>
                     </Text>
 
@@ -77,8 +118,28 @@ function TopNavigation({ index, setIndex }) {
                     <Text style={{ ...styles.text, color: "white" }}>
 
 
-                        <AntDesign name="infocirlce" size={24} color="white"
-                            onPress={() => alert("E-week 2K22 Faculty of Engineering \nUniversity of Jaffna.\nCreated by Nadun Channa.")}
+                        <AntDesign
+                            name="infocirlce"
+                            size={24}
+                            color="white"
+                            onPress={() =>
+                                Alert.alert(
+                                    'Event App',
+                                    'Created by Nadun Channa.',
+                                     
+                                    [
+                                        { text: 'OK', onPress: () => console.log('OK pressed') },
+                                        {
+                                            text: 'Visit Us',
+                                            onPress: () => {
+                                                // Navigate to your website
+                                                Linking.openURL('https://www.evenbees.com');
+                                            },
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                )
+                            }
                         />
 
                     </Text>
@@ -106,7 +167,7 @@ const styles = StyleSheet.create({
 
     container: {
 
-        width: Dimensions.get('window').width ,
+        width: Dimensions.get('window').width,
         height: Dimensions.get('window').height * 0.1,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -121,9 +182,11 @@ const styles = StyleSheet.create({
         borderBottomColor: "#fff",
         borderBottomWidth: 5,
         borderRadius: 10,
-        fontSize: 16,
+        fontSize: Dimensions.get('window').width * 0.04,
         fontWeight: "700",
         alignItems: "center",
+        textAlign: "center",
+        textAlignVertical: "center",
     },
     left: {
         flexDirection: "row",
@@ -132,20 +195,36 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         flexDirection: "row",
 
-
-
     },
-    text: {
-        fontSize: 16,
+    textLeft: {
         fontWeight: "700",
         alignItems: "center",
+        fontSize: Dimensions.get('window').width * 0.04,
+
+        padding: Dimensions.get('window').width * 0.01,
+
+    },
+
+    textLeftAll: {
+        fontWeight: "600",
+        alignItems: "center",
+
+    },
+
+
+    textRight: {
+        fontWeight: "600",
+        alignItems: "center",
+        fontSize: Dimensions.get('window').width * 0.04,
+        width: Dimensions.get('window').width,
+        padding: Dimensions.get('window').width * 0.01,
 
     },
     new: {
-        fontSize: 16,
-        fontWeight: "700",
+
+        fontWeight: "600",
         alignItems: "center",
-        marginRight: 10,
+        fontSize: Dimensions.get('window').width * 0.04,
     },
 
     right: {
@@ -156,6 +235,27 @@ const styles = StyleSheet.create({
         flexDirection: "row",
 
     },
+
+    allandarrowRight: {
+
+        width: Dimensions.get('window').width * 0.1,
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: "row",
+        paddingStart: 0,
+
+    },
+
+    allandarrowLeft: {
+        width: Dimensions.get('window').width * 0.1,
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: "row",
+
+
+
+
+    }
 
 })
 

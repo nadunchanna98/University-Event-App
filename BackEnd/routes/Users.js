@@ -4,7 +4,7 @@ const router = express.Router();
 require('dotenv/config');
 
 
-// Get all Marks 
+// Get all users 
 router.get(`/token/`, async (req, res) => {
 
     const UserList = await Users.find().sort({ $natural: -1 });
@@ -27,19 +27,34 @@ router.get(`/token/:token`, async (req, res) => {
 
 })
 
+//get by token
+router.get(`/user/:token`, async (req, res) => {
+    const User = await Users.findOne({ token: req.params.token });
+
+    if (!User) {
+        return res.status(404).json({ success: false, message: 'Token not found.' });
+    }
+    res.json({ success: true, data: User });
+
+})
+
+
+
 
 
 
 //add  
-router.post('/token/', async (req, res) => {
+router.post('/user/', async (req, res) => {
     const token = req.body.token;
+    const theme = req.body.theme;
+
     const user = await Users.findOne({ token });
 
     if (user) {
         return res.status(400).send('User token already exists!');
     }
 
-    let newUser = new Users({ token });
+    let newUser = new Users({ token , theme });
 
     newUser = await newUser.save();
 
@@ -49,6 +64,27 @@ router.post('/token/', async (req, res) => {
 
     res.send(newUser);
 });
+
+
+//change by token
+router.put('/user/:token', async (req, res) => {
+
+    const User = await Users.findOneAndUpdate(
+        { token: req.params.token },
+        {
+            theme: req.body.theme,
+        },
+        { new: true }  // to get the updated data
+    )
+
+    if (!User)
+        return res.status(400).send('User cannot be edit!')
+
+    res.send(User);
+    console.log(User);
+})
+
+
 
 //update the student
 router.put('/token/:id', async (req, res) => {

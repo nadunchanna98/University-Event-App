@@ -11,7 +11,8 @@ import {
     Dimensions,
     Alert,
     Modal,
-    ScrollView
+    ScrollView,
+    ToastAndroid
 } from 'react-native'
 import { Formik, Field } from 'formik'
 import * as yup from 'yup'
@@ -116,11 +117,14 @@ const EditSummeryEvent = ({ route }) => {
         axios.put(`${BASE_URL}pastevents/update/${ID}`, formData)
             .then(data => {
                 console.log(" successfull update")
+                ToastAndroid.show("Event Updated Successfully", ToastAndroid.LONG);
                 pullMe();
                 navigation.goBack();
             }
             )
-            .catch(err => console.log(err))
+            .catch(err => {
+                ToastAndroid.show("Event Update Failed!!", ToastAndroid.LONG);
+                console.log(err)})
     }
 
     // const [mydate, setDate] = useState(new Date());

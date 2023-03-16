@@ -11,7 +11,8 @@ import {
     Dimensions,
     Alert,
     Modal,
-    ScrollView
+    ScrollView,
+    ToastAndroid
 } from 'react-native'
 import { Formik, Field } from 'formik'
 import * as yup from 'yup'
@@ -26,7 +27,7 @@ import Moment from "moment";
 
 const EditEvent = ({ route }) => {
 
-    const { pullMe , darkTheme } = useContext(NewContext);
+    const { pullMe, darkTheme } = useContext(NewContext);
 
     const navigation = useNavigation();
     const ID = route.params.ID;
@@ -41,20 +42,20 @@ const EditEvent = ({ route }) => {
 
     const getEvent = () => {
         axios.get(`${BASE_URL}futureevents/${ID}`)
-          .then(res => {
-            const { event, date, time, description, type, gender, location } = res.data;
-            setEvent(event);
-            setMyDate(Moment(date, 'YYYY-MM-DD').toDate());
-            setMyTime(Moment(date, 'hh:mm').toDate());
-            setDescription(description);
-            setType(type);
-            setGender(gender);
-            setLocation(location);
-          })
-          .catch(err => {
-            console.log(err);
-          })
-      }
+            .then(res => {
+                const { event, date, time, description, type, gender, location } = res.data;
+                setEvent(event);
+                setMyDate(Moment(date, 'YYYY-MM-DD').toDate());
+                setMyTime(Moment(date, 'hh:mm').toDate());
+                setDescription(description);
+                setType(type);
+                setGender(gender);
+                setLocation(location);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 
     useEffect(() => {
         getEvent(ID);
@@ -85,10 +86,10 @@ const EditEvent = ({ route }) => {
 
         const formData = {
 
-            
+
             event: event,
-            date:  Moment(mydate).format('YYYY-MM-DD'),
-            time:  mytime,
+            date: Moment(mydate).format('YYYY-MM-DD'),
+            time: mytime,
             description: description,
             type: type,
             gender: gender,
@@ -99,17 +100,24 @@ const EditEvent = ({ route }) => {
 
         axios.put(`${BASE_URL}futureevents/update/${ID}`, formData)
             .then(data => {
-                console.log(" successfull update",formData.time)
+                console.log(" successfull update", formData.time)
+                ToastAndroid.show("Event Updated Successfully", ToastAndroid.LONG);
                 pullMe();
                 navigation.goBack();
             }
             )
-            .catch(err => console.log(err))
+            .catch(err => {
+                ToastAndroid.show("Event Update Failed!!", ToastAndroid.LONG);
+                console.log(err)
+            }
+
+
+            )
     }
 
 
     //date picker
-    
+
     const [displaymode, setDisplayMode] = useState('date');
     const [isDisplayDate, setShow] = useState(false);
     const [mydate, setMyDate] = useState(new Date());
@@ -147,7 +155,7 @@ const EditEvent = ({ route }) => {
         console.log(currentTime);
         setMyTime(currentTime);
         setShow1(false);
-        
+
 
     };
 
@@ -171,7 +179,7 @@ const EditEvent = ({ route }) => {
         description: yup
             .string()
             .min(0, ({ min, value }) => `${min - value.length} characters to go`),
-      
+
     })
 
 
@@ -191,11 +199,11 @@ const EditEvent = ({ route }) => {
                 </View>
 
 
-                <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
+                <View style={{ ...styles.contai, backgroundColor: darkTheme ? "#282C35" : "white" }}>
                 </View>
 
                 <ScrollView  >
-                    <View style={{...styles.container , backgroundColor: darkTheme ? "#282C35" : "white" }}    >
+                    <View style={{ ...styles.container, backgroundColor: darkTheme ? "#282C35" : "white" }}    >
                         <View style={styles.signupContainer}>
 
                             <Formik
@@ -256,7 +264,7 @@ const EditEvent = ({ route }) => {
                                         <View style={styles.dateContainer}>
                                             <Text style={styles.dateText}>{mydate.toDateString()}</Text>
                                             <Text style={styles.dateText}  >{Moment(mytime).format('LT')}</Text>
-                                        
+
                                         </View>
 
                                         <View style={styles.buttonContainer2}>
@@ -315,8 +323,8 @@ const EditEvent = ({ route }) => {
                         </View>
                     </View>
 
-                    <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
-                </View>
+                    <View style={{ ...styles.contai, backgroundColor: darkTheme ? "#282C35" : "white" }}>
+                    </View>
                 </ScrollView>
             </Modal>
         </>
@@ -405,7 +413,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 10,
-        
+
     },
 
     titleText: {

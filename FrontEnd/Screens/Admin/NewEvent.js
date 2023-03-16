@@ -10,7 +10,8 @@ import {
   Modal,
   Alert,
   ScrollView,
-  Image
+  Image,
+  ToastAndroid
 } from 'react-native'
 import { Formik, Field } from 'formik'
 import * as yup from 'yup'
@@ -52,7 +53,7 @@ const NewEvent = () => {
 
     // console.log("notificationData--", notificationData);
 
-    await NotificationServer2.sendSingleNotification(notificationData);
+    await NotificationServer2.sendMultipleNotification(notificationData);
     // NotificationServer(notificationData);
   };
 
@@ -156,13 +157,22 @@ const NewEvent = () => {
     axios.post(`${BASE_URL}futureevents/post`, formData)
       .then(data => {
         console.log(" success ")
+        ToastAndroid.show("Event Added Successfully", ToastAndroid.LONG);
         pullMe();
         sendNotification(data.data);
         navigation.goBack();
       }
       )
-      .catch(err => console.log(err))
+      .catch(err => {
+
+        console.log("error--", err);
+        ToastAndroid.show("Event Not Added!!", ToastAndroid.LONG);
+      }
+      )
+
   }
+
+
 
 
   //date picker

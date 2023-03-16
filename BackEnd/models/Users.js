@@ -7,6 +7,11 @@ const UsersSchema = mongoose.Schema({
         required: true,
     },
 
+    theme: {
+        type: Boolean,
+        required: true,
+    },
+
 })
 
 exports.Users = mongoose.model('Users-Details', UsersSchema);

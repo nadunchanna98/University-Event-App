@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, } from 'react';
-import { Alert, Modal, StyleSheet, Text, StatusBar, Dimensions, View, TextInput, Button, ScrollView } from 'react-native'
+import { Alert, Modal, StyleSheet, Text, StatusBar, Dimensions, View, TextInput, Button, ScrollView ,  ToastAndroid } from 'react-native'
 import { NewContext } from '../../Common/Context';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
@@ -87,10 +87,15 @@ const ShareEvent = ({ route }) => {
         pullMe();
         setModalVisible(!modalVisible);
         DeletePost(ID)
+
+        ToastAndroid.show("Event Shared Successfully", ToastAndroid.LONG);
+
         navigation.goBack()
       }
       )
-      .catch(err => console.log(err))
+      .catch(err => {
+        ToastAndroid.show("Event Sharing Failed", ToastAndroid.LONG);
+        console.log(err)})
 
   }
 
