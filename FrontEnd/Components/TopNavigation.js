@@ -10,7 +10,7 @@ function TopNavigation({ index, setIndex }) {
     const { setDarkTheme, darkTheme, userToken } = React.useContext(NewContext);
 
     const themeChange = () => {
-        
+        // setDarkTheme(!darkTheme);
 
         axios.put(`${BASE_URL}users/user/${userToken}`, {
 

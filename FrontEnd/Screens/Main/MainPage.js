@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Dimensions, RefreshControl } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Dimensions, RefreshControl ,TouchableOpacity } from 'react-native'
 import React, { useEffect, useContext } from 'react'
 import LastUpdate from './LastUpdate';
 import { NewContext } from '../../Common/Context';
@@ -30,12 +30,14 @@ const MainPage = () => {
 
         <LastUpdate />
 
-        <View style={styles.newteventpanel}       >
+        <TouchableOpacity style={styles.newteventpanel}   
+        
+         onPress={() => navigation.navigate('NewEvent')}
+        
+        >
           <Text style={{...styles.newtevent, color: darkTheme ? "white" : "black"  }} >Add New Event</Text>
-          <Ionicons name="add-circle" size={50} color='#336699'
-            style={styles.plus} onPress={() => navigation.navigate('NewEvent')}
-          />
-        </View>
+          <Ionicons name="add-circle" size={50} color='#336699'    style={styles.plus}  />
+        </TouchableOpacity>
 
 
         {/* <View style={styles.topic} >

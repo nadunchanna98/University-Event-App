@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const LastUpdate = () => {
 
-    const { date, fetchDate, event , darkTheme} = useContext(NewContext);
+    const { date, fetchDate, darkTheme} = useContext(NewContext);
 
 
     
@@ -28,7 +28,7 @@ const LastUpdate = () => {
 
                 {
                     date === '' ? <Text style={{...styles.wait, color: darkTheme ? "white" : "black" } } >Loading...</Text>
-                        : <Text style={{...styles.date, color: darkTheme ? "white" : "black" } } >Last updated {event} {"\n"} At {Moment(date).format('LLL')} </Text>
+                        : <Text style={{...styles.date, color: darkTheme ? "white" : "black" } } >Last updated at{"\n"}{Moment(date).format('LLL')} </Text>
                 }
 
             </View>

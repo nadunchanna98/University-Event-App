@@ -14,8 +14,7 @@ const Context = ({ children }) => {
   const [marks, setMarks] = useState([]);   // total marks
   const [post, setPost] = useState([]);   //for the summary
   const [newPost, setNewPost] = useState([]);  //for the upcoming events
-  const [date, setDate] = useState();
-  const [event, setEvent] = useState("");
+  const [date, setDate] = useState();  //for the latest updated date
   const [darkTheme, setDarkTheme] = useState(true);
   const [tokens, setTokens] = useState([]);
   const [userToken, setUserToken] = useState("");
@@ -160,7 +159,6 @@ const Context = ({ children }) => {
         pullMe,
         date,
         setDate,
-        event,
         fetchDate,
         getPost,
         post,
