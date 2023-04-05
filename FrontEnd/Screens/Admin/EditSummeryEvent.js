@@ -4,8 +4,7 @@ import {
     StyleSheet,
     View,
     Text,
-    StatusBar,
-    TextInput,
+    Image,
     Button,
     TouchableOpacity,
     Dimensions,
@@ -17,34 +16,40 @@ import {
 import { Formik, Field } from 'formik'
 import * as yup from 'yup'
 import CustomInput from './CustomInput'
-import * as ImagePicker from "react-native-image-picker"
-import DateTimePicker from '@react-native-community/datetimepicker';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
 import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
 import moment from "moment";
+import { firebase } from '../../src/config'  // for image upload for firebase
+import * as ImagePicker from 'expo-image-picker'
 
 
 const EditSummeryEvent = ({ route }) => {
 
-    const { pullMe , darkTheme } = useContext(NewContext);
+    const { pullMe, darkTheme } = useContext(NewContext);
 
     const navigation = useNavigation();
     const ID = route.params.ID;
 
-    const [firstN , setFirstN] = useState('');
-    const [secondN , setSecondN] = useState('');
-    const [thirdN , setThirdN] = useState('');
-    const [firstT , setFirstT] = useState('');
-    const [secondT , setSecondT] = useState('');
-    const [thirdT , setThirdT] = useState('');
+    const [firstN, setFirstN] = useState('');
+    const [secondN, setSecondN] = useState('');
+    const [thirdN, setThirdN] = useState('');
+    const [firstT, setFirstT] = useState('');
+    const [secondT, setSecondT] = useState('');
+    const [thirdT, setThirdT] = useState('');
     const [event, setEvent] = useState('');
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
     const [gender, setGender] = useState('');
     const [location, setLocation] = useState('');
+    const [image, setImage] = useState(null);
+    const [photoShow, setPhotoShow] = React.useState(null);
+    const [imagef, setImagef] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+
 
     // console.log(selectedEvent)
 
@@ -64,6 +69,7 @@ const EditSummeryEvent = ({ route }) => {
                 setFirstT(res.data.firstT);
                 setSecondT(res.data.secondT);
                 setThirdT(res.data.thirdT);
+                setPhotoShow(res.data.image);
             })
             .catch(err => {
                 console.log(err);
@@ -86,7 +92,7 @@ const EditSummeryEvent = ({ route }) => {
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
                 },
-                { text: "OK", onPress: () =>  navigation.goBack()}
+                { text: "OK", onPress: () => navigation.goBack() }
             ],
             { cancelable: false }
         );
@@ -108,6 +114,7 @@ const EditSummeryEvent = ({ route }) => {
             firstT: firstT,
             secondT: secondT,
             thirdT: thirdT,
+            image: imagef
 
         }
 
@@ -124,7 +131,8 @@ const EditSummeryEvent = ({ route }) => {
             )
             .catch(err => {
                 ToastAndroid.show("Event Update Failed!!", ToastAndroid.LONG);
-                console.log(err)})
+                console.log(err)
+            })
     }
 
     // const [mydate, setDate] = useState(new Date());
@@ -159,157 +167,213 @@ const EditSummeryEvent = ({ route }) => {
     })
 
 
+    const takePhotoAndUpload = async () => {
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (result.cancelled) {
+            return;
+        }
+
+        const source = { uri: result.uri };
+
+        setImagef(source);
+
+        // console.log("source--", source);
+        // console.log("imagef--", imagef);
+
+        uploadImage(source.uri);
+        setPhotoShow(source.uri);
+
+    }
+
+    //firebase image upload
+    const uploadImage = async (uri) => {
+
+        // console.log("im from uploadimage--", uri);
+
+        setUploading(true);
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const filename = uri.substring(uri.lastIndexOf('/') + 1);
+        var ref = firebase.storage().ref().child(filename).put(blob);
+
+        try {
+            await ref;
+        } catch (e) {
+            console.log(e);
+        }
+
+        const abc = await ref.snapshot.ref.getDownloadURL();
+        console.log("url--", abc);
+        setImagef(abc);
+
+
+    };
+
+    const dicardImage = () => {
+        setPhotoShow(null);
+        setImagef(null);
+    }
+
+
+
     return (
-        <View style={{flex: 1}}>
-        <Modal visible={true} 
-        animationType="slide"
+        <View style={{ flex: 1 }}>
+            <Modal visible={true}
+                animationType="slide"
 
-        onRequestClose={() => {
-            confirmModalClose();   
-        }
-        }
-        >
-            
-            <View style={styles.title}>
-                <Text style={styles.titleText}>Edit Event Summary</Text>
-            </View>
+                onRequestClose={() => {
+                    confirmModalClose();
+                }
+                }
+            >
 
-            <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
+                <View style={styles.title}>
+                    <Text style={styles.titleText}>Edit Event Summary</Text>
                 </View>
 
-            <ScrollView>
-            <View style={{...styles.container , backgroundColor: darkTheme ? "#282C35" : "white" }}    >
-                <View style={styles.signupContainer}>
+                <View style={{ ...styles.contai, backgroundColor: darkTheme ? "#282C35" : "white" }}>
+                </View>
 
-                    <Formik
-                        initialValues={{
-                            firstN: '',
-                            secondN: '',
-                            thirdN: '',
-                            firstT: '',
-                            secondT: '',
-                            thirdT: '',
-                            event: event,
-                            location: '',
-                            gender: '',
-                            type: '',
-                            date: '',
-                            description: '',
-                            setFieldValue: '',
-                            setFieldTouched: '',
-                            errors: '',
-                            touched: '',
-                        }}
-                        onSubmit={values => handleSubmit(values)}
-                        validationSchema={signUpValidationSchema}
-                    >
-                        {({ handleSubmit, isValid }) => (
-                            <>
-                                <Text style={styles.lable}  >Event Name</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="event"
-                                    value={event}
-                                    onChangeText= {(text) => setEvent(text)}
-                                />
-                                <Text style={styles.lable}  >Type</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="type"
-                                    value={type}
-                                    onChangeText= {(text) => setType(text)}
-                                />
+                <ScrollView>
+                    <View style={{ ...styles.container, backgroundColor: darkTheme ? "#282C35" : "white" }}    >
+                        <View style={styles.signupContainer}>
 
-                                <Text style={styles.lable}  >Gender</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="gender"
-                                    value={gender}
-                                    onChangeText= {(text) => setGender(text)}
-                                />
+                            <Formik
+                                initialValues={{
+                                    firstN: '',
+                                    secondN: '',
+                                    thirdN: '',
+                                    firstT: '',
+                                    secondT: '',
+                                    thirdT: '',
+                                    event: event,
+                                    location: '',
+                                    gender: '',
+                                    type: '',
+                                    date: '',
+                                    description: '',
+                                    setFieldValue: '',
+                                    setFieldTouched: '',
+                                    errors: '',
+                                    touched: '',
+                                }}
+                                onSubmit={values => handleSubmit(values)}
+                                validationSchema={signUpValidationSchema}
+                            >
+                                {({ handleSubmit, isValid }) => (
+                                    <>
+                                        <Text style={styles.lable}  >Event Name</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="event"
+                                            value={event}
+                                            onChangeText={(text) => setEvent(text)}
+                                        />
+                                        <Text style={styles.lable}  >Type</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="type"
+                                            value={type}
+                                            onChangeText={(text) => setType(text)}
+                                        />
 
-                                <Text style={styles.lable}  >First Name</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="firstN"
-                                    value={firstN}
-                                    onChangeText= {(text) => setFirstN(text)}
-                                />
+                                        <Text style={styles.lable}  >Gender</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="gender"
+                                            value={gender}
+                                            onChangeText={(text) => setGender(text)}
+                                        />
 
-                                <Text style={styles.lable}  >Second Name</Text>
-                                <Field
+                                        <Text style={styles.lable}  >First Name</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="firstN"
+                                            value={firstN}
+                                            onChangeText={(text) => setFirstN(text)}
+                                        />
 
-                                    component={CustomInput}
-                                    name="secondN"
-                                    value={secondN}
-                                    onChangeText= {(text) => setSecondN(text)}
-                                />
+                                        <Text style={styles.lable}  >Second Name</Text>
+                                        <Field
 
-                                <Text style={styles.lable}  >Third Name</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="thirdN"
-                                    value={thirdN}
-                                    onChangeText= {(text) => setThirdN(text)}
-                                />
+                                            component={CustomInput}
+                                            name="secondN"
+                                            value={secondN}
+                                            onChangeText={(text) => setSecondN(text)}
+                                        />
 
-                                <Text style={styles.lable}  >First Team</Text>
-                                <Field
+                                        <Text style={styles.lable}  >Third Name</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="thirdN"
+                                            value={thirdN}
+                                            onChangeText={(text) => setThirdN(text)}
+                                        />
 
-                                    component={CustomInput}
-                                    name="firstT"
-                                    value={firstT}
-                                    onChangeText= {(text) => setFirstT(text)}
-                                />
+                                        <Text style={styles.lable}  >First Team</Text>
+                                        <Field
 
-                                <Text style={styles.lable}  >Second Team</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="secondT"
-                                    value={secondT}
-                                    onChangeText= {(text) => setSecondT(text)}
-                                />
+                                            component={CustomInput}
+                                            name="firstT"
+                                            value={firstT}
+                                            onChangeText={(text) => setFirstT(text)}
+                                        />
 
-                                <Text style={styles.lable}  >Third Team</Text>
-                                <Field
+                                        <Text style={styles.lable}  >Second Team</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="secondT"
+                                            value={secondT}
+                                            onChangeText={(text) => setSecondT(text)}
+                                        />
 
-                                    component={CustomInput}
-                                    name="thirdT"
-                                    value={thirdT}
-                                    onChangeText= {(text) => setThirdT(text)}
-                                />
+                                        <Text style={styles.lable}  >Third Team</Text>
+                                        <Field
+
+                                            component={CustomInput}
+                                            name="thirdT"
+                                            value={thirdT}
+                                            onChangeText={(text) => setThirdT(text)}
+                                        />
 
 
 
 
-                                <Text style={styles.lable}  >Location</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="location"
-                                    value={location}
-                                    onChangeText= {(text) => setLocation(text)}
-                                    keyboardType="email-address"
-                                />
+                                        <Text style={styles.lable}  >Location</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="location"
+                                            value={location}
+                                            onChangeText={(text) => setLocation(text)}
+                                            keyboardType="email-address"
+                                        />
 
-                                <Text style={styles.lable}  >Description</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="description"
-                                    value={description}
-                                    onChangeText= {(text) => setDescription(text)}
-                                    multiline
-                                    numberOfLines={3}
-                                />
+                                        <Text style={styles.lable}  >Description</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="description"
+                                            value={description}
+                                            onChangeText={(text) => setDescription(text)}
+                                            multiline
+                                            numberOfLines={3}
+                                        />
 
-                                <Text style={styles.lable}  >Date</Text>
-                                <Field
-                                    component={CustomInput}
-                                    name="date"
-                                    value={moment.utc(date).format('YYYY/MM/DD - hh:mm a')}
-                                    onChangeText= {(text) => setDate(text)}
-                                />
+                                        <Text style={styles.lable}  >Date</Text>
+                                        <Field
+                                            component={CustomInput}
+                                            name="date"
+                                            value={moment.utc(date).format('YYYY/MM/DD - hh:mm a')}
+                                            onChangeText={(text) => setDate(text)}
+                                        />
 
-                                {/* <View>
+                                        {/* <View>
                   <Button onPress={displayDatepicker} title="Show date picker!" />
                 </View>
                 {isDisplayDate && (
@@ -323,7 +387,7 @@ const EditSummeryEvent = ({ route }) => {
                   />
                 )} */}
 
-                                {/* <TouchableOpacity
+                                        {/* <TouchableOpacity
                   style={styles.photoButton}
                   onPress={() => {
                     ImagePicker.showImagePicker(options, (response) => {
@@ -344,23 +408,56 @@ const EditSummeryEvent = ({ route }) => {
                   <Text>Add Image</Text>
                 </TouchableOpacity> */}
 
+                                        <View style={styles.mainBody}>
 
-                                <Button
-                                    onPress={handleSubmit}
-                                    title="Save Changes"
-                                    disabled={!isValid}
-                                />
-                            </>
-                        )}
-                    </Formik>
+                                            {photoShow &&
+                                                <View style={styles.imageContainer}>
+                                                    <Image
+                                                        source={{ uri: photoShow }}
+                                                        style={{ width: '100%', height: '100%' }}
+                                                    />
+                                                </View>
+                                            }
 
-                </View>
-            </View>
 
-            <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
-                </View>
-            </ScrollView>
-        </Modal>
+                                            <View style={styles.buttonContainer}>
+                                                <TouchableOpacity
+                                                    style={styles.buttonStyle}
+                                                    activeOpacity={0.5}
+                                                    onPress={takePhotoAndUpload}
+                                                >
+                                                    <Text style={styles.buttonTextStyle}>Upload Image</Text>
+                                                </TouchableOpacity>
+
+
+                                                <TouchableOpacity
+                                                    style={styles.buttonStyle}
+                                                    activeOpacity={0.5}
+                                                    onPress={dicardImage}
+                                                >
+                                                    <Text style={styles.buttonTextStyle}>Discard Image</Text>
+                                                </TouchableOpacity>
+                                            </View>
+
+                                        </View>
+
+
+                                        <Button
+                                            onPress={handleSubmit}
+                                            title="Save Changes"
+                                            disabled={!isValid}
+                                        />
+                                    </>
+                                )}
+                            </Formik>
+
+                        </View>
+                    </View>
+
+                    <View style={{ ...styles.contai, backgroundColor: darkTheme ? "#282C35" : "white" }}>
+                    </View>
+                </ScrollView>
+            </Modal>
         </View>
     )
 }
@@ -416,5 +513,48 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 5,
     },
+
+    imageContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#d9d6d6',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+
+    },
+
+    buttonStyle: {
+        backgroundColor: '#307ecc',
+        borderWidth: 0,
+        color: '#FFFFFF',
+        borderColor: '#307ecc',
+        height: 40,
+        alignItems: 'center',
+        borderRadius: 30,
+        marginLeft: 35,
+        marginRight: 35,
+        marginTop: 15,
+    },
+
+    mainBody: {
+        flex: 1,
+        justifyContent: 'center',
+        marginTop: 80,
+        marginBottom: 150,
+        width: Dimensions.get('window').width * 0.85,
+        height: Dimensions.get('window').width * 0.85 * 3 / 4,
+
+    },
+
+    buttonTextStyle: {
+        color: '#FFFFFF',
+        paddingVertical: 10,
+        fontSize: 16,
+    },
+
 })
 export default EditSummeryEvent;

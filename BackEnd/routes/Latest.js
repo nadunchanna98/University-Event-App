@@ -20,37 +20,84 @@ require('dotenv/config');
 
 // get latest Post and FuturePost update date
 router.get('/', async (req, res) => {
-    try {
-      const [latestPost, latestFuturePost] = await Promise.all([
-        Post.aggregate([
-          {
-            $group: {
-              _id: null,
-              latestUpdate: { $max: '$dateCreated' }
-            }
+  try {
+    const [latestPost, latestFuturePost] = await Promise.all([
+      Post.aggregate([
+        {
+          $group: {
+            _id: null,
+            latestUpdate: { $max: '$dateCreated' }
           }
-        ]),
-        FuturePost.aggregate([
-          {
-            $group: {
-              _id: null,
-              latestUpdate: { $max: '$dateCreated' }
-            }
+        }
+      ]),
+      FuturePost.aggregate([
+        {
+          $group: {
+            _id: null,
+            latestUpdate: { $max: '$dateCreated' }
           }
-        ])
-      ]);
-  
-      // find the latest update date between Post and FuturePost
-      const latestUpdate = latestPost[0].latestUpdate > latestFuturePost[0].latestUpdate
+        }
+      ])
+    ]);
+
+    // find the latest update date between Post and FuturePost
+    let latestUpdate = null;
+    if (latestPost.length > 0 && latestFuturePost.length > 0) {
+      latestUpdate = latestPost[0].latestUpdate > latestFuturePost[0].latestUpdate
         ? latestPost[0].latestUpdate
         : latestFuturePost[0].latestUpdate;
-  
-      res.send({ latestUpdate });
-      console.log(latestUpdate);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ success: false });
+    } else if (latestPost.length > 0) {
+      latestUpdate = latestPost[0].latestUpdate;
+    } else if (latestFuturePost.length > 0) {
+      latestUpdate = latestFuturePost[0].latestUpdate;
     }
-  });
+
+    if (latestUpdate !== null) {
+      res.send({ latestUpdate });
+    } else {
+      res.status(404).json({ message: 'No updated times found' });
+    }
+    
+    // console.log(latestUpdate);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false });
+  }
+});
+
+
+// router.get('/', async (req, res) => {
+//     try {
+//       const [latestPost, latestFuturePost] = await Promise.all([
+//         Post.aggregate([
+//           {
+//             $group: {
+//               _id: null,
+//               latestUpdate: { $max: '$dateCreated' }
+//             }
+//           }
+//         ]),
+//         FuturePost.aggregate([
+//           {
+//             $group: {
+//               _id: null,
+//               latestUpdate: { $max: '$dateCreated' }
+//             }
+//           }
+//         ])
+//       ]);
+  
+//       // find the latest update date between Post and FuturePost
+//       const latestUpdate = latestPost[0].latestUpdate > latestFuturePost[0].latestUpdate
+//         ? latestPost[0].latestUpdate
+//         : latestFuturePost[0].latestUpdate;
+  
+//       res.send({ latestUpdate });
+//       // console.log(latestUpdate);
+//     } catch (error) {
+//       console.log(error);
+//       res.status(500).json({ success: false });
+//     }
+//   });
 
 module.exports = router;

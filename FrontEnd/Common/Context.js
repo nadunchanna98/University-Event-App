@@ -19,6 +19,20 @@ const Context = ({ children }) => {
   const [tokens, setTokens] = useState([]);
   const [userToken, setUserToken] = useState("");
 
+  const getTheme = () => {
+    axios.get(`${BASE_URL}users/user/${userToken}`)
+      .then(res => {
+        console.log("get theme function ",res.data.theme);
+
+        setDarkTheme(res.data.theme);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+
+  }
+
+
   const getTokens = () => {
     axios.get(`${BASE_URL}users/token`)
       .then(res => {
@@ -41,6 +55,7 @@ const Context = ({ children }) => {
     fetchDate();
     getPost();
     getNewPost();
+    getTheme();
 
     setTimeout(() => {
       setRefresh(false);
@@ -86,7 +101,7 @@ const Context = ({ children }) => {
     axios.get(`${BASE_URL}latest/`)
       .then(res => {
         setDate(res.data.latestUpdate);
-        console.log(res.data.latestUpdate);
+        // console.log(res.data.latestUpdate);
   
       })
       .catch(err => {
@@ -126,21 +141,6 @@ const Context = ({ children }) => {
       setNewPost([]);
     }
   }
-
-  const getTheme = () => {
-    axios.get(`${BASE_URL}users/user/${userToken}`)
-      .then(res => {
-        console.log(res.data);
-        setDarkTheme(res.data.darkTheme);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-
-  }
-
-  
-
 
 
 

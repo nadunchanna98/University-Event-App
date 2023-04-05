@@ -34,7 +34,7 @@ const NewEvent = () => {
   const [photoShow, setPhotoShow] = React.useState(null);
 
   const navigation = useNavigation();
-  const { pullMe, getTokens, tokens } = useContext(NewContext);
+  const { pullMe, getTokens, tokens , darkTheme } = useContext(NewContext);
 
   useEffect(() => {
     getTokens();
@@ -47,7 +47,7 @@ const NewEvent = () => {
 
     let notificationData = {
       title: "New Event is added",
-      body: "Event Name :  " + data.event + " " + data.type + " " + data.gender,
+      body: "Event : " + data.event + " " + data.type + " " + data.gender,
       token: tokens
     }
 
@@ -245,20 +245,27 @@ const NewEvent = () => {
 
 
   return (
-    <>
-      <Modal visible={true} animationType="slide"
 
-        onRequestClose={() => {
+    <View style={{ flex: 1 }}>
+   
+      <Modal 
+      visible={true} 
+      animationType="slide"
+       onRequestClose={() => {
           confirmModalClose();
         }}
       >
         <View style={styles.title}>
-          <Text style={styles.titleText}>Create Event</Text>
-        </View>
+            <Text style={styles.titleText}>Add new Event</Text>
+          </View>
 
+          <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
+                </View>
 
         <ScrollView>
-          <View style={styles.container}>
+
+        
+          <View style={{...styles.container, backgroundColor: darkTheme ? "#282C35" : "white"}} >
             <View style={styles.signupContainer}>
 
               <Formik
@@ -408,9 +415,11 @@ const NewEvent = () => {
 
             </View>
           </View>
+       
         </ScrollView>
       </Modal>
-    </>
+    
+  </View>
   )
 }
 
@@ -418,6 +427,11 @@ const NewEvent = () => {
 export default NewEvent
 
 const styles = StyleSheet.create({
+
+  contai: {
+    padding: 5,
+},
+
 
   buttonContainer2: {
     flexDirection: 'row',
@@ -459,11 +473,10 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
     justifyContent: 'center',
     alignItems: 'center',
-
   },
+
   signupContainer: {
     width: Dimensions.get('window').width * 0.9,
     alignItems: 'center',
@@ -484,6 +497,7 @@ const styles = StyleSheet.create({
     elevation: 8
 
   },
+
   title: {
     backgroundColor: '#4682B4',
     width: Dimensions.get('window').width,
@@ -560,11 +574,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     marginTop: 30,
   },
-  title: {
-    fontSize: 23,
-    fontWeight: 'bold',
-  },
-
+  
   buttonpanel: {
     flexDirection: 'row',
     justifyContent: 'center',

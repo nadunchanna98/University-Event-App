@@ -4,7 +4,6 @@ const router = express.Router();
 require('dotenv/config');
  
 
-
 // const admin = require("firebase-admin");
 // const serviceAccount = require("../path/serviceAccountKey.json");
 
@@ -22,7 +21,6 @@ require('dotenv/config');
 //   }
 
 // };
-
 
 
 //add new post according to the catogory 

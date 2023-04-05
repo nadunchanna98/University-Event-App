@@ -9,13 +9,10 @@ import { useNavigation } from '@react-navigation/native';
 const LastUpdate = () => {
 
     const { date, fetchDate, darkTheme} = useContext(NewContext);
-
-
     
     useEffect(() => {
 
         fetchDate();
-
 
     }, []);
 
@@ -36,8 +33,6 @@ const LastUpdate = () => {
             {/* {
                 event === '' ? <Text style={styles.wait}  >Loading...</Text> : <Chart />
             } */}
-
-            
 
 
         </View>

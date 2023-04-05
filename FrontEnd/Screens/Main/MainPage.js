@@ -30,13 +30,20 @@ const MainPage = () => {
 
         <LastUpdate />
 
-        <TouchableOpacity style={styles.newteventpanel}   
-        
-         onPress={() => navigation.navigate('NewEvent')}
-        
+        <TouchableOpacity style={styles.newteventpanel}    
+         onPress={() => navigation.navigate('NewEvent')}   
         >
           <Text style={{...styles.newtevent, color: darkTheme ? "white" : "black"  }} >Add New Event</Text>
           <Ionicons name="add-circle" size={50} color='#336699'    style={styles.plus}  />
+          
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.newteventpanel}    
+         onPress={() => navigation.navigate('NewCompletedEvent')}   
+        >
+          <Text style={{...styles.newtevent, color: darkTheme ? "white" : "black"  }} >Add Completed Event</Text>
+          <Ionicons name="add-circle" size={50} color='#336699'    style={styles.plus}  />
+          
         </TouchableOpacity>
 
 

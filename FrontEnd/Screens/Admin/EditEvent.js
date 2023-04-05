@@ -1,11 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react'
 import {
-    SafeAreaView,
     StyleSheet,
     View,
     Text,
-    StatusBar,
-    TextInput,
+    Image,
     Button,
     TouchableOpacity,
     Dimensions,
@@ -17,13 +15,14 @@ import {
 import { Formik, Field } from 'formik'
 import * as yup from 'yup'
 import CustomInput from './CustomInput'
-import * as ImagePicker from "react-native-image-picker"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
 import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
 import Moment from "moment";
+import { firebase } from '../../src/config'  // for image upload for firebase
+import * as ImagePicker from 'expo-image-picker'
 
 const EditEvent = ({ route }) => {
 
@@ -37,13 +36,17 @@ const EditEvent = ({ route }) => {
     const [type, setType] = useState('');
     const [gender, setGender] = useState('');
     const [location, setLocation] = useState('');
+    const [photoShow, setPhotoShow] = React.useState(null);
+    const [imagef, setImagef] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
 
     // console.log(selectedEvent)
 
     const getEvent = () => {
         axios.get(`${BASE_URL}futureevents/${ID}`)
             .then(res => {
-                const { event, date, time, description, type, gender, location } = res.data;
+                const { event, date, time, description, type, gender, location, image } = res.data;
                 setEvent(event);
                 setMyDate(Moment(date, 'YYYY-MM-DD').toDate());
                 setMyTime(Moment(date, 'hh:mm').toDate());
@@ -51,6 +54,8 @@ const EditEvent = ({ route }) => {
                 setType(type);
                 setGender(gender);
                 setLocation(location);
+                setPhotoShow(image);
+
             })
             .catch(err => {
                 console.log(err);
@@ -93,7 +98,8 @@ const EditEvent = ({ route }) => {
             description: description,
             type: type,
             gender: gender,
-            location: location
+            location: location,
+            image: imagef
 
         }
 
@@ -121,6 +127,7 @@ const EditEvent = ({ route }) => {
     const [displaymode, setDisplayMode] = useState('date');
     const [isDisplayDate, setShow] = useState(false);
     const [mydate, setMyDate] = useState(new Date());
+
 
 
     const changeSelectedDate = (event, selectedDate) => {
@@ -181,6 +188,60 @@ const EditEvent = ({ route }) => {
             .min(0, ({ min, value }) => `${min - value.length} characters to go`),
 
     })
+
+    const takePhotoAndUpload = async () => {
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        if (result.cancelled) {
+          return;
+        }
+    
+        const source = { uri: result.uri };
+    
+        setImagef(source);
+    
+        // console.log("source--", source);
+        // console.log("imagef--", imagef);
+    
+        uploadImage(source.uri);
+        setPhotoShow(source.uri);
+    
+      }
+
+      //firebase image upload
+  const uploadImage = async (uri) => {
+
+    // console.log("im from uploadimage--", uri);
+
+    setUploading(true);
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const filename = uri.substring(uri.lastIndexOf('/') + 1);
+    var ref = firebase.storage().ref().child(filename).put(blob);
+
+    try {
+      await ref;
+    } catch (e) {
+      console.log(e);
+    }
+
+    const abc = await ref.snapshot.ref.getDownloadURL();
+    console.log("url--", abc);
+    setImagef(abc);
+
+
+  };
+
+  const dicardImage = () => {
+    setPhotoShow(null);
+    setImagef(null);
+  }
 
 
     return (
@@ -311,6 +372,42 @@ const EditEvent = ({ route }) => {
                                         )}
 
 
+                                        <View style={styles.mainBody}>
+
+                                            {photoShow &&
+                                                <View style={styles.imageContainer}>
+                                                    <Image
+                                                        source={{ uri: photoShow }}
+                                                        style={{ width: '100%', height: '100%' }}
+                                                    />
+                                                </View>
+                                            }
+
+
+                                            <View style={styles.buttonContainer}>
+                                                <TouchableOpacity
+                                                    style={styles.buttonStyle}
+                                                    activeOpacity={0.5}
+                                                    onPress={takePhotoAndUpload}
+                                                >
+                                                    <Text style={styles.buttonTextStyle}>Upload Image</Text>
+                                                </TouchableOpacity>
+
+
+                                                <TouchableOpacity
+                                                    style={styles.buttonStyle}
+                                                    activeOpacity={0.5}
+                                                    onPress={dicardImage}
+                                                >
+                                                    <Text style={styles.buttonTextStyle}>Discard Image</Text>
+                                                </TouchableOpacity>
+                                            </View>
+
+                                        </View>
+
+
+
+
                                         <Button
                                             onPress={handleSubmit}
                                             title="Save Changes"
@@ -428,5 +525,45 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 5,
     },
+
+    imageContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#d9d6d6',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+    
+      },
+
+      buttonStyle: {
+        backgroundColor: '#307ecc',
+        borderWidth: 0,
+        color: '#FFFFFF',
+        borderColor: '#307ecc',
+        height: 40,
+        alignItems: 'center',
+        borderRadius: 30,
+        marginLeft: 35,
+        marginRight: 35,
+        marginTop: 15,
+      },
+
+      mainBody: {
+        flex: 1,
+        justifyContent: 'center',
+        marginTop: 80,
+        marginBottom: 150,
+        width: Dimensions.get('window').width * 0.85,
+        height: Dimensions.get('window').width * 0.85 * 3 / 4,
+    
+      },
+
+
+
+
 })
 export default EditEvent

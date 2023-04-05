@@ -86,7 +86,7 @@ router.put('/user/:token', async (req, res) => {
 
 
 
-//update the student
+//update the user
 router.put('/token/:id', async (req, res) => {
 
     const User = await Users.findByIdAndUpdate(
