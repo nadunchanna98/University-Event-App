@@ -11,6 +11,7 @@ import { firebase } from '../../src/config'  // for image upload for firebase
 import * as ImagePicker from 'expo-image-picker'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Moment from "moment";
+import NotificationServer2 from '../../NotificationServer2'   // for notification for firebase
 
 const NewCompleteEvent = ({ route }) => {
 
@@ -37,10 +38,10 @@ const NewCompleteEvent = ({ route }) => {
         // console.log("data--", data);
 
         let notificationData = {
-            title: "View the results of " + data.event + " .",
-            body: "First place : " + data.firstN + " Second place : " + data.secondN + " Third place : " + data.thirdN,
+            title: `Check out the winners of ${data.event}!`,
+            body: ` 🥇 Top spot: ${data.firstN}\n 🥈 Second spot: ${data.secondN}\n 🥉 Third spot: ${data.thirdN}`,
             token: tokens
-        }
+          }
 
         // console.log("notificationData--", notificationData);
 

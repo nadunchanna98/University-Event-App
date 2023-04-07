@@ -40,7 +40,7 @@ if (Platform.OS === "android") {
 //     BASE_URL = "http://192.168.204.74:3000/api/v1/" // for ios emulator
 // }
 
-//host my other phone
+// //host my other phone
 // if (Platform.OS === "android") {
 //     BASE_URL = "http://192.168.43.3:3000/api/v1/" // for android emulator
 // } else {

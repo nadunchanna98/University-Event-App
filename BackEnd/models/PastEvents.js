@@ -45,7 +45,7 @@ const postSchema = mongoose.Schema({
         required: true
     },
     time : {
-        type: Date,
+        type: String,
         required: true
     },
     image: {

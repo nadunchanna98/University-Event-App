@@ -9,6 +9,7 @@ import CustomInput from './CustomInput'
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../../src/config'  // for image upload for firebase
 import * as ImagePicker from 'expo-image-picker'
+import NotificationServer2 from '../../NotificationServer2'   // for notification for firebase
 
 const ShareEvent = ({ route }) => {
 
@@ -64,18 +65,20 @@ const ShareEvent = ({ route }) => {
 
   const sendNotification = async (data) => {
 
-    // console.log("data--", data);
+    // console.log("data2--", data);
+    // console.log("tokens--", tokens);
+
 
     let notificationData = {
-      title: "View the results of " + data.event + " .",
-      body: "First place : " + data.firstN + " Second place : " + data.secondN + " Third place : " + data.thirdN,
+      title: `Check out the winners of ${data.event}!`,
+      body: ` 🥇 Top spot: ${data.firstN}\n 🥈 Second spot: ${data.secondN}\n 🥉 Third spot: ${data.thirdN}`,
       token: tokens
     }
 
     // console.log("notificationData--", notificationData);
 
     await NotificationServer2.sendMultipleNotification(notificationData);
-    // NotificationServer(notificationData);
+     
   };
 
 
@@ -122,11 +125,12 @@ const ShareEvent = ({ route }) => {
 
     axios.post(`${BASE_URL}pastevents/post`, formData)
       .then(data => {
-        pullMe();
+        
         setModalVisible(!modalVisible);
         DeletePostByAuto(ID)
         sendNotification(data.data);
         ToastAndroid.show("Event Shared Successfully", ToastAndroid.LONG);
+        pullMe();
         navigation.goBack()
       }
       )

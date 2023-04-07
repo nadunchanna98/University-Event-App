@@ -20,9 +20,10 @@ import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
 import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
-import moment from "moment";
+import Moment from "moment";
 import { firebase } from '../../src/config'  // for image upload for firebase
 import * as ImagePicker from 'expo-image-picker'
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 const EditSummeryEvent = ({ route }) => {
@@ -57,8 +58,11 @@ const EditSummeryEvent = ({ route }) => {
         axios.get(`${BASE_URL}pastevents/${ID}`)
             .then(res => {
 
+                const  date  = res.data.date;
+
                 setEvent(res.data.event);
-                setDate(res.data.date);
+                setMyDate(Moment(date, 'YYYY-MM-DD').toDate());
+                setMyTime(Moment(date, 'hh:mm').toDate());
                 setDescription(res.data.description);
                 setType(res.data.type);
                 setGender(res.data.gender);
@@ -70,6 +74,7 @@ const EditSummeryEvent = ({ route }) => {
                 setSecondT(res.data.secondT);
                 setThirdT(res.data.thirdT);
                 setPhotoShow(res.data.image);
+
             })
             .catch(err => {
                 console.log(err);
@@ -103,7 +108,10 @@ const EditSummeryEvent = ({ route }) => {
 
         const formData = {
             event: event,
-            date: date,
+
+            date: Moment(mydate).format('YYYY-MM-DD'),
+            time: mytime,
+            
             description: description,
             type: type,
             gender: gender,
@@ -135,23 +143,6 @@ const EditSummeryEvent = ({ route }) => {
             })
     }
 
-    // const [mydate, setDate] = useState(new Date());
-    // const [displaymode, setMode] = useState('date');
-    // const [isDisplayDate, setShow] = useState(false);
-    // const changeSelectedDate = (event, selectedDate) => {
-    //   const currentDate = selectedDate || mydate;
-    //   setDate(currentDate);
-    // };
-
-    // const showMode = (currentMode) => {
-    //   setShow(true);
-    //   setMode(currentMode);
-
-    // };
-
-    // const displayDatepicker = () => {
-    //   showMode('date');
-    // };
 
     const signUpValidationSchema = yup.object().shape({
         event: yup
@@ -163,7 +154,7 @@ const EditSummeryEvent = ({ route }) => {
         description: yup
             .string()
             .min(0, ({ min, value }) => `${min - value.length} characters to go`),
-        // photo: yup.object().required('Photo is required'),
+        
     })
 
 
@@ -222,6 +213,62 @@ const EditSummeryEvent = ({ route }) => {
     }
 
 
+    //date picker
+
+    const [displaymode, setDisplayMode] = useState('date');
+    const [isDisplayDate, setShow] = useState(false);
+    const [mydate, setMyDate] = useState(new Date());
+
+
+
+    const changeSelectedDate = (event, selectedDate) => {
+
+        const currentDate = selectedDate || mydate;
+        setMyDate(currentDate);
+        console.log(currentDate);
+        setShow(false);
+
+
+    };
+
+    const showMode = (currentMode) => {
+        setShow(true);
+        setDisplayMode(currentMode);
+
+    };
+
+    const displayDatepicker = () => {
+        showMode('date');
+    };
+
+
+    //time picker
+    const [mytime, setMyTime] = useState(new Date().getTime());
+    const [displaymode1, setDisplayMode1] = useState('time');
+    const [isDisplayTime, setShow1] = useState(false);
+
+    const changeSelectedTime = (event, selectedTime) => {
+
+        const currentTime = selectedTime || mytime;
+        console.log(currentTime);
+        setMyTime(currentTime);
+        setShow1(false);
+
+
+    };
+
+    const showMode1 = (currentMode) => {
+        setShow1(true);
+        setDisplayMode1(currentMode);
+
+    };
+
+    const displayTimepicker = () => {
+        showMode1('time');
+    };
+
+
+
 
     return (
         <View style={{ flex: 1 }}>
@@ -257,12 +304,8 @@ const EditSummeryEvent = ({ route }) => {
                                     location: '',
                                     gender: '',
                                     type: '',
-                                    date: '',
                                     description: '',
-                                    setFieldValue: '',
-                                    setFieldTouched: '',
-                                    errors: '',
-                                    touched: '',
+      
                                 }}
                                 onSubmit={values => handleSubmit(values)}
                                 validationSchema={signUpValidationSchema}
@@ -366,47 +409,54 @@ const EditSummeryEvent = ({ route }) => {
                                         />
 
                                         <Text style={styles.lable}  >Date</Text>
-                                        <Field
-                                            component={CustomInput}
-                                            name="date"
-                                            value={moment.utc(date).format('YYYY/MM/DD - hh:mm a')}
-                                            onChangeText={(text) => setDate(text)}
-                                        />
+                                        <View style={styles.dateContainer}>
+                                            <Text style={styles.dateText}>{mydate.toDateString()}</Text>
+                                            <Text style={styles.dateText}  >{Moment(mytime).format('LT')}</Text>
 
-                                        {/* <View>
-                  <Button onPress={displayDatepicker} title="Show date picker!" />
-                </View>
-                {isDisplayDate && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={mydate}
-                    mode={displaymode}
-                    is24Hour={true}
-                    display="default"
-                    onChange={changeSelectedDate}
-                  />
-                )} */}
+                                        </View>
 
-                                        {/* <TouchableOpacity
-                  style={styles.photoButton}
-                  onPress={() => {
-                    ImagePicker.showImagePicker(options, (response) => {
-                      if (response.uri) {
-                        let data = {
-                          name: response.fileName,
-                          type: response.type,
-                          uri:
-                            Platform.OS === 'android'
-                            ? response.uri
-                            : response.uri.replace('file://', ''),
-                        };
-                        formProps.setFieldValue('image1', data);
-                      }
-                    });
-                  }}
-                >
-                  <Text>Add Image</Text>
-                </TouchableOpacity> */}
+                                        <View style={styles.buttonContainer2}>
+
+                                            <TouchableOpacity
+                                                style={styles.button2}
+                                                onPress={displayDatepicker}
+
+                                            >
+                                                <Text style={styles.buttonTextStyle}>Select Date</Text>
+                                            </TouchableOpacity>
+
+                                            <TouchableOpacity
+                                                onPress={displayTimepicker}
+                                                style={styles.button2}
+                                            >
+                                                <Text style={styles.buttonTextStyle}>Select Time</Text>
+                                            </TouchableOpacity>
+
+
+                                        </View>
+
+                                        {isDisplayDate && (
+                                            <DateTimePicker
+                                                testID="dateTimePicker"
+                                                value={mydate}
+                                                mode={displaymode}
+                                                is24Hour={true}
+                                                display="default"
+                                                onChange={changeSelectedDate}
+                                            />
+                                        )}
+
+                                        {isDisplayTime && (
+                                            <DateTimePicker
+
+                                                testID="dateTimePicker"
+                                                value={mytime}
+                                                mode={displaymode1}
+                                                is24Hour={true}
+                                                display="default"
+                                                onChange={changeSelectedTime}
+                                            />
+                                        )}
 
                                         <View style={styles.mainBody}>
 
@@ -555,6 +605,45 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         fontSize: 16,
     },
+
+    buttonContainer2: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 10,
+        width: Dimensions.get('window').width * 0.9,
+        marginVertical: 10,
+    },
+
+    button2: {
+        backgroundColor: '#307ecc',
+        padding: 2,
+        borderRadius: 10,
+        marginHorizontal: 10,
+        width: Dimensions.get('window').width * 0.4,
+        alignItems: 'center',
+    },
+
+    dateContainer: {
+
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 10,
+        elevation: 10,
+        shadowColor: '#E67E22',
+        elevation: 8,
+        flexDirection: 'row',
+
+    },
+
+    dateText: {
+        fontSize: 18,
+        color: '#000',
+        textAlign: 'center',
+        marginLeft: 10,
+    },
+
 
 })
 export default EditSummeryEvent;

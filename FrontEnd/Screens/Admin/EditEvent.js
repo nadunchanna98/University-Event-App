@@ -46,7 +46,7 @@ const EditEvent = ({ route }) => {
     const getEvent = () => {
         axios.get(`${BASE_URL}futureevents/${ID}`)
             .then(res => {
-                const { event, date, time, description, type, gender, location, image } = res.data;
+                const { event, date, description, type, gender, location, image } = res.data;
                 setEvent(event);
                 setMyDate(Moment(date, 'YYYY-MM-DD').toDate());
                 setMyTime(Moment(date, 'hh:mm').toDate());

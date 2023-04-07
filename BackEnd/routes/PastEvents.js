@@ -78,6 +78,7 @@ router.put('/update/:id', async (req, res) => {
             secondT: req.body.secondT,
             thirdT: req.body.thirdT,
             description: req.body.description,
+            time: req.body.time,
             date: req.body.date,
             image: req.body.image
         },
