@@ -1,9 +1,8 @@
 import { createContext, useState } from "react";
 import { ToastAndroid} from 'react-native'
-
 import BASE_URL from './BaseURL';
 import axios from 'axios';
-import ShareEvent from "../Screens/Admin/ShareEvent";
+
 
 export const NewContext = createContext();
 
