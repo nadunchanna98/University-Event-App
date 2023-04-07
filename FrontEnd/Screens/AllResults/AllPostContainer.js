@@ -8,6 +8,7 @@ import axios from 'axios';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Moment from 'moment';
 
+
 const AllPostContainer = () => {
 
   const { post, refresh, pullMe, getPost, darkTheme } = useContext(NewContext);
@@ -67,7 +68,20 @@ const AllPostContainer = () => {
 
           <View style={{ ...styles.post, backgroundColor: darkTheme ? "#282C35" : "white" }}>
 
-            <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} />
+            {/* <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} />
+           */}
+
+            <Image
+              style={styles.image}
+              source={
+                item.image
+                  ? { uri: item.image }
+                  : darkTheme
+                    ? require('../../Components/completedB.jpg')
+                    : require('../../Components/completedW.jpg')
+              }
+            />
+
             <Text style={{ ...styles.event, color: darkTheme ? "white" : "black" }} >{item.event} </Text>
 
             <View style={styles.genderType} >
@@ -169,7 +183,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.1,
     marginTop: Dimensions.get('window').height * 0.02,
     paddingBottom: Dimensions.get('window').height * 0.01,
-  
+
   },
 
   buttons: {

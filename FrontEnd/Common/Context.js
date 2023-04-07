@@ -55,7 +55,7 @@ const Context = ({ children }) => {
     fetchDate();
     getPost();
     getNewPost();
-    getTheme();
+    // getTheme();
 
     setTimeout(() => {
       setRefresh(false);

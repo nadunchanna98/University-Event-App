@@ -8,10 +8,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+// import newB from '../../Components/newB.jpg';
+// import newW from '../../Components/newW.jpg';
+
 
 const UpComingContainer = () => {
 
-  const { newPost, refresh, pullMe, getNewPost, DeletePost , darkTheme } = useContext(NewContext);
+  const { newPost, refresh, pullMe, getNewPost, DeletePost, darkTheme } = useContext(NewContext);
   const navigation = useNavigation();
 
   const confirmDelete = (id) => {
@@ -40,9 +43,9 @@ const UpComingContainer = () => {
 
   return (
 
-    <View 
-    style={{...styles.AllPostContainer, backgroundColor: darkTheme ? '#282C35' : '#fff'}}
-     >
+    <View
+      style={{ ...styles.AllPostContainer, backgroundColor: darkTheme ? '#282C35' : '#fff' }}
+    >
 
       <FlatList
 
@@ -57,46 +60,61 @@ const UpComingContainer = () => {
         data={newPost}
         renderItem={({ item, index }) =>
 
-          <View style={{...styles.post,backgroundColor: darkTheme ? "#282C35" : "white"}}>
+          <View style={{ ...styles.post, backgroundColor: darkTheme ? "#282C35" : "white" }}>
 
-            <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} />
-            <Text style={{...styles.event, color: darkTheme ? "white" : "black" } }  >{item.event} </Text>
+            {/* <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} /> */}
 
-            <View style={{...styles.genderType, color: darkTheme ? "white" : "black" } } >
+            <Image
+              style={styles.image}
+              source={
+                item.image
+                  ? { uri: item.image }
+                  : darkTheme
+                    ? require('../../Components/newB.jpg')
+                    : require('../../Components/newW.jpg')
+              }
+            />
+
+
+
+
+            <Text style={{ ...styles.event, color: darkTheme ? "white" : "black" }}  >{item.event} </Text>
+
+            <View style={{ ...styles.genderType, color: darkTheme ? "white" : "black" }} >
 
               <View>
-                {item.gender || item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } > ( </Text> : null
+                {item.gender || item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} > ( </Text> : null
                 }
               </View>
 
               <View>
-                {item.gender ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } >  {item.gender}  </Text> : null
+                {item.gender ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} >  {item.gender}  </Text> : null
                 }
               </View>
               <View>
-                {item.gender && item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } > /  </Text> : null
-                }
-              </View>
-
-
-              <View>
-                {item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } >{item.type} </Text> : null
+                {item.gender && item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} > /  </Text> : null
                 }
               </View>
 
 
               <View>
-                {item.gender || item.type ? <Text style={{...styles.gender, color: darkTheme ? "white" : "black" } } > ) </Text> : null
+                {item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} >{item.type} </Text> : null
+                }
+              </View>
+
+
+              <View>
+                {item.gender || item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} > ) </Text> : null
                 }
               </View>
 
             </View>
 
-            <Text style={{...styles.date, color: darkTheme ? "white" : "black" } }  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
+            <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }}  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
 
 
             <View>
-              {item.location ? <Text style={{...styles.location, color: darkTheme ? "white" : "black" } }>At {item.location}</Text> : null
+              {item.location ? <Text style={{ ...styles.location, color: darkTheme ? "white" : "black" }}>At {item.location}</Text> : null
               }
             </View>
 
@@ -143,8 +161,8 @@ export default UpComingContainer
 const styles = StyleSheet.create({
 
   AllPostContainer: {
-    width: Dimensions.get('window').width  ,
-    height: Dimensions.get('window').height  ,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
     backgroundColor: '#F9F9F9',
     paddingBottom: Dimensions.get('window').height * 0.1,
   },
@@ -239,7 +257,7 @@ const styles = StyleSheet.create({
   },
 
   //when the user click on the button, the button will change color
- 
+
 
 
 })

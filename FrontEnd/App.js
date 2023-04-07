@@ -24,7 +24,7 @@ import BASE_URL from './Common/BaseURL'
 
 function App() {
 
-  const { darkTheme, setUserToken , getTheme , pullMe} = useContext(NewContext);
+  const { darkTheme, setUserToken  , pullMe} = useContext(NewContext);
 
   const [isConnected, setIsConnected] = useState(true);
   const [permissionGranted, setPermissionGranted] = useState(false);

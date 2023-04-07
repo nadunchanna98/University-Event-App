@@ -12,22 +12,22 @@ function TopNavigation({ index, setIndex }) {
     const themeChange = () => {
     setDarkTheme(!darkTheme);
 
-        axios.put(`${BASE_URL}users/user/${userToken}`, {
+        // axios.put(`${BASE_URL}users/user/${userToken}`, {
 
-            theme: !darkTheme
+        //     theme: !darkTheme
 
-        }).then((response) => {
-            console.log("response--", response);
-            setDarkTheme(response.data.theme);
-        }
-        ).catch((error) => {
+        // }).then((response) => {
+        //     console.log("response--", response);
+        //     setDarkTheme(response.data.theme);
+        // }
+        // ).catch((error) => {
 
-            // ToastAndroid.show("Theme Not Changed!!", ToastAndroid.LONG);
-            // ToastAndroid.show('No internet connection', ToastAndroid.LONG);
-            // ToastAndroid.show('Please check your internet connection', ToastAndroid.LONG);
-            // console.log("error--", error);
-        }
-        )
+        //     // ToastAndroid.show("Theme Not Changed!!", ToastAndroid.LONG);
+        //     // ToastAndroid.show('No internet connection', ToastAndroid.LONG);
+        //     // ToastAndroid.show('Please check your internet connection', ToastAndroid.LONG);
+        //     // console.log("error--", error);
+        // }
+        // )
 
     }
 
