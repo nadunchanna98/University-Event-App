@@ -25,6 +25,7 @@ const futureEventRoutes = require('./routes/FutureEvents');
 const teamsRoutes = require('./routes/Teams');
 const LatestRoutes = require('./routes/Latest');
 const UsersRoutes = require('./routes/Users');
+const NotesRoutes = require('./routes/Notes');
 
 //api routes  
 app.use(`${api}/pastevents`, postRoutes);
@@ -32,6 +33,7 @@ app.use(`${api}/futureevents`, futureEventRoutes);
 app.use(`${api}/teams`, teamsRoutes);
 app.use(`${api}/latest`, LatestRoutes);
 app.use(`${api}/users`, UsersRoutes);
+app.use(`${api}/notes`, NotesRoutes);
 
 //server
 app.listen(3000, ()=>{

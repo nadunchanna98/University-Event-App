@@ -1,21 +1,24 @@
-import { View, Text, StyleSheet, ScrollView, Dimensions, RefreshControl ,TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Dimensions, RefreshControl, TouchableOpacity } from 'react-native'
 import React, { useEffect, useContext } from 'react'
 import LastUpdate from './LastUpdate';
+import Notes from '../Notes/Notes';
+
 import { NewContext } from '../../Common/Context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 
+
 const MainPage = () => {
 
-  const { marks, refresh, pullMe, fetchMarks , darkTheme } = useContext(NewContext);
+  const { marks, refresh, pullMe, fetchMarks, darkTheme } = useContext(NewContext);
   const navigation = useNavigation();
 
   useEffect(() => { fetchMarks(); }, []);
 
   return (
 
-    <ScrollView style={{...styles.container, backgroundColor: darkTheme ? '#282C35' : '#fff'}}
+    <ScrollView style={{ ...styles.container, backgroundColor: darkTheme ? '#282C35' : '#fff' }}
 
       refreshControl={
         <RefreshControl
@@ -30,21 +33,38 @@ const MainPage = () => {
 
         <LastUpdate />
 
-        <TouchableOpacity style={styles.newteventpanel}    
-         onPress={() => navigation.navigate('NewEvent')}   
+
+
+        <TouchableOpacity style={styles.newteventpanel}
+          onPress={() => navigation.navigate('NewEvent')}
         >
-          <Text style={{...styles.newtevent, color: darkTheme ? "white" : "black"  }} >Add New Event</Text>
-          <Ionicons name="add-circle" size={50} color='#336699'    style={styles.plus}  />
-          
+          <Text style={{ ...styles.newtevent, color: darkTheme ? "white" : "black" }} >Add New Event</Text>
+          <Ionicons name="add-circle" size={50} color='#336699' style={styles.plus} />
+
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.newteventpanel}    
-         onPress={() => navigation.navigate('NewCompletedEvent')}   
+        <TouchableOpacity style={styles.newteventpanel}
+          onPress={() => navigation.navigate('NewCompletedEvent')}
         >
-          <Text style={{...styles.newtevent, color: darkTheme ? "white" : "black"  }} >Add Completed Event</Text>
-          <Ionicons name="add-circle" size={50} color='#336699'    style={styles.plus}  />
-          
+          <Text style={{ ...styles.newtevent, color: darkTheme ? "white" : "black" }} >Add Completed Event</Text>
+          <Ionicons name="add-circle" size={50} color='#336699' style={styles.plus} />
+
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.newteventpanel}
+          onPress={() => navigation.navigate('NewNote')}
+        >
+          <Text style={{ ...styles.newtevent, color: darkTheme ? "white" : "black" }} >Add A Note</Text>
+          <Ionicons name="add-circle" size={50} color='#336699' style={styles.plus} />
+
+        </TouchableOpacity>
+
+        {/* notice board */}
+        <View style={styles.notice} >
+          <Notes />
+        </View>
+
+      
 
 
         {/* <View style={styles.topic} >
@@ -83,6 +103,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#282C35',
+
+
   },
 
   items: {
@@ -193,7 +215,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEED30'
   },
 
-  
+
+  notice: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+    marginBottom: 8,
+  },
+
+
 
 
 })

@@ -17,6 +17,7 @@ const Context = ({ children }) => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [tokens, setTokens] = useState([]);
   const [userToken, setUserToken] = useState("");
+  const [notes , setNotes] = useState([]);
 
   const getTheme = () => {
     axios.get(`${BASE_URL}users/user/${userToken}`)
@@ -141,6 +142,20 @@ const Context = ({ children }) => {
     }
   }
 
+  const fetchNotes = () => {
+    axios.get(`${BASE_URL}notes`)
+      .then(res => {
+        setNotes(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    return () => {
+      setNotes([]);
+    }
+  }
+
+
 
 
   return (
@@ -168,7 +183,9 @@ const Context = ({ children }) => {
         tokens,
         userToken,
         setUserToken,
-        getTheme
+        getTheme,
+        fetchNotes,
+        notes
  
       
       }}>
