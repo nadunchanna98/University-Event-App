@@ -1,4 +1,4 @@
-import React, {  useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -17,41 +17,42 @@ import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
 import { NewContext } from '../../Common/Context';
 import { useNavigation } from '@react-navigation/native';
-import NotificationServer2 from '../../NotificationServer2'   // for notification for firebase
 
 
-const AddNote = () => {
+const AddNote = ({ route }) => {
+
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
   const navigation = useNavigation();
-  const { pullMe, getTokens, tokens , darkTheme } = useContext(NewContext);
+  const id = route.params.ID;
+
+
+  const { fetchNotes, darkTheme } = useContext(NewContext);
 
   useEffect(() => {
-    getTokens();
+    getNote();
   }, [])
 
-  
+  const getNote = () => {
+    axios.get(`${BASE_URL}notes/note/${id}`)
+      .then(res => {
 
-  const sendNotification = async (data) => {
+        // console.log("res--", res.data.data);
+        
+      setTitle(res.data.data.title);
+      setBody(res.data.data.body);
 
-    // console.log("data--", data);
-
-    let notificationData = {
-      title: "Special Note is added",
-      body: "Note : " + data.body,
-      token: tokens
-    }
-
-    // console.log("notificationData--", notificationData);
-
-    await NotificationServer2.sendMultipleNotification(notificationData);
-    // NotificationServer(notificationData);
-  };
-
+      })
+      .catch(err => {
+        console.log("err--", err);
+      })
+  }
 
   const confirmModalClose = () => {
     Alert.alert(
-      "Discard Create ?",
-      "Are you sure you want to discard Create ?",
+      "Discard Edit ?",
+      "Are you sure you want to discard Edit ?",
       [
         {
           text: "Cancel",
@@ -65,121 +66,119 @@ const AddNote = () => {
   };
 
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async () => {
 
     const formData = {
-        title : values.title,
-        body : values.body,
+      // title: title,
+      body: body,
+      date: new Date()
     }
 
 
-    axios.post(`${BASE_URL}notes/note`, formData)
-      .then(data => {
-        console.log(" success ")
-        ToastAndroid.show("Note Added Successfully", ToastAndroid.LONG);
-        pullMe();
-        sendNotification(data.data);
-        navigation.goBack();
-      }
-      )
-      .catch(err => {
+    axios.put(`${BASE_URL}notes/note/${id}`, formData)
 
-        console.log("error--", err);
-        ToastAndroid.show("Note not Added!!", ToastAndroid.LONG);
-      }
-      )
+      .then(data => {
+        // console.log("data--", data);
+        ToastAndroid.show("Note is updated", ToastAndroid.SHORT);
+        fetchNotes();
+
+        navigation.goBack();
+      })
+      .catch(err => {
+        console.log("err--", err);
+      })
 
   }
 
 
   const signUpValidationSchema = yup.object().shape({
-    
-    title: yup
-        .string(),
-    body: yup
-        .string()
-        .required('Body is required'),
 
+    title: yup
+      .string(),
+    body: yup
+      .string(),
+      
   })
 
-  
+
   return (
 
     <View style={{ flex: 1 }}>
-   
-      <Modal 
-      visible={true} 
-      animationType="slide"
-       onRequestClose={() => {
+
+      <Modal
+        visible={true}
+        animationType="slide"
+        onRequestClose={() => {
           confirmModalClose();
         }}
       >
 
-        
+
         <View style={styles.title}>
-            <Text style={styles.titleText}>Add new Note</Text>
-          </View>
+          <Text style={styles.titleText}>Add new Note</Text>
+        </View>
 
-          <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
-                </View>
+        <View style={{ ...styles.contai, backgroundColor: darkTheme ? "#282C35" : "white" }}>
+        </View>
 
-        
-                <ScrollView>
-        
-          <View style={{...styles.container, backgroundColor: darkTheme ? "#282C35" : "white"}} >
+
+        <ScrollView>
+
+          <View style={{ ...styles.container, backgroundColor: darkTheme ? "#282C35" : "white" }} >
             <View style={styles.signupContainer}>
 
               <Formik
                 initialValues={{
-                    title: '',
-                    body: '',
+                  title: '',
+                  body: '',
                 }}
                 onSubmit={values => handleSubmit(values)}
                 validationSchema={signUpValidationSchema}
               >
                 {({ handleSubmit, isValid }) => (
                   <>
-                    <Text style={styles.lable}  >Subject</Text>
+                    {/* <Text style={styles.lable}  >Subject</Text>
                     <Field
                       component={CustomInput}
                       name="title"
-                      placeholder="Football practice time changed" 
+                      value={title}
                       multiline={true}
                       numberOfLines={2}
-                    />
+                      onChangeText={(text) => setTitle(text)}
+                    /> */}
 
 
                     <Text style={styles.lable}  >Body *</Text>
-                    
-                    <Field
-                        component={CustomInput}
-                        name="body"
 
-                        placeholder="Football practice time changed to 5:00 pm"
-                        multiline={true}
-                        numberOfLines={8}
+                    <Field
+                      component={CustomInput}
+                      name="body"
+                      value={body}
+                      multiline={true}
+                      numberOfLines={8}
+                      onChangeText={(text) => setBody(text)}
                     />
 
 
-                   
+
                     <Button
                       onPress={handleSubmit}
-                      title="Add Note"
+                      title="Edit Note"
                       disabled={!isValid}
                     />
                   </>
                 )}
               </Formik>
 
-             
+
 
             </View>
           </View>
-          </ScrollView>
-    
+        </ScrollView>
+
       </Modal>
-    
-  </View>
+
+    </View>
   )
 }
 
@@ -190,7 +189,7 @@ const styles = StyleSheet.create({
 
   contai: {
     padding: 5,
-},
+  },
 
 
   buttonContainer2: {
@@ -248,7 +247,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4682B4'
 
   },
- 
+
   title: {
     backgroundColor: '#4682B4',
     width: Dimensions.get('window').width,
@@ -311,13 +310,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
- 
+
   titleContainer: {
     alignItems: 'center',
     marginBottom: 30,
     marginTop: 30,
   },
-  
+
   buttonpanel: {
     flexDirection: 'row',
     justifyContent: 'center',

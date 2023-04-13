@@ -10,6 +10,7 @@ import EditSummeryEvent from './Screens/Admin/EditSummeryEvent';
 import NewEvent from './Screens/Admin/NewEvent';
 import NewCompletedEvent from './Screens/Admin/NewCompletedEvent';
 import NewNote from './Screens/Admin/AddNote';
+import EditNote from './Screens/Admin/EditNote';
 import NetInfo from '@react-native-community/netinfo'; //for checking internet connection
 import React, { useEffect, useState , useContext } from 'react';
 //import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -47,7 +48,104 @@ function App() {
 
   useEffect(() => {
 
-   
+   //check internet connection
+    const unsubscribeNet = NetInfo.addEventListener((state) => {
+      setIsConnected(state.isConnected);
+      if (!state.isConnected) {
+        ToastAndroid.show('No internet connection', ToastAndroid.LONG);
+        ToastAndroid.show('Please check your internet connection', ToastAndroid.LONG);
+      } else {
+        pullMe();
+      }
+    });
+
+
+    const requestUserPermission = async () => {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      setPermissionGranted(enabled);
+
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+        await messaging().subscribeToTopic('EventApp');
+        const token = await messaging().getToken();
+        console.log("token : ", token);
+        setUserToken(token);
+       
+
+        const newUser = {
+          token: token,
+          theme: darkTheme    
+        }
+
+        axios.post(`${BASE_URL}users/user`, newUser)
+          .then(res => {
+            console.log("token added to database");
+            welcomeMessage(token);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+
+        
+
+      } else {
+        console.log("no permission", authStatus);
+      }
+    };
+
+    requestUserPermission();
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification() 
+      .then(async (remoteMessage) => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+        }
+      });
+
+
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      pullMe();
+    });
+
+
+    // Register background handler 
+    messaging().setBackgroundMessageHandler(async remoteMessage => {  
+      console.log('Message handled in the background!', remoteMessage);
+    });
+
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+
+
+      ToastAndroid.show(remoteMessage.notification.title,
+         ToastAndroid.LONG
+         );
+
+      ToastAndroid.show(
+        remoteMessage.notification.body,
+        ToastAndroid.LONG
+      );
+
+      // Alert.alert('A new notification arrived!', JSON.stringify(remoteMessage));
+    });
+
+
+    return () => {
+      unsubscribeNet();
+      unsubscribe();
+    };
 
    
   }, []);
@@ -87,6 +185,7 @@ function AppContainer() {
         <Stack.Screen name="NewEvent" component={NewEvent} options={{ headerShown: false }} />
         <Stack.Screen name="NewCompletedEvent" component={NewCompletedEvent} options={{ headerShown: false }} />
         <Stack.Screen name="NewNote" component={NewNote} options={{ headerShown: false }} />
+        <Stack.Screen name="EditNote" component={EditNote} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

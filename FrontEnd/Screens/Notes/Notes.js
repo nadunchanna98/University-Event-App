@@ -5,17 +5,16 @@ import { NewContext } from '../../Common/Context';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
-
+import { useNavigation } from '@react-navigation/native';
 
 
 const Notes = () => {
 
     const { notes, fetchNotes, darkTheme } = useContext(NewContext);
+    const navigation = useNavigation();
 
     useEffect(() => {
-
         fetchNotes();
-
     }, []);
 
     const confirmDelete = (id) => {
@@ -35,7 +34,7 @@ const Notes = () => {
     }
 
     const deleteNoteHandler = (id) => {
-        axios.delete(`${BASE_URL}/notes/note/${id}`)
+        axios.delete(`${BASE_URL}notes/note/${id}`)
 
 
             .then(res => {
@@ -56,17 +55,19 @@ const Notes = () => {
         <View style={{ ...styles.container, }} >
          
 
-                <Text style={{ ...styles.wait, color: darkTheme ? "white" : "black" }} >Notice Board</Text>
+                <Text style={{ ...styles.Topic, color: darkTheme ? "white" : "black" }} >Notice Board</Text>
 
                 {
-                    notes === '' ? (<Text style={{ ...styles.wait, color: darkTheme ? "white" : "black" }} >No any notice!!</Text>)
+                    notes == '' ? (<Text style={{ ...styles.wait, color: darkTheme ? "white" : "black" }} >No any notice!!</Text>)
                         :
 
                         notes.map((item, index) => {
                             return (
                                 <View key={index} style={styles.card} >
-                                    <Text style={{ ...styles.title, color: darkTheme ? "white" : "black" }} >{Moment(item.date).format('MMMM Do YYYY, h:mm a')}</Text>
+                                    <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }} >{Moment(item.date).format('MMMM Do YYYY, h:mm a')}</Text>
+                                    {/* <Text style={{ ...styles.title, color: darkTheme ? "white" : "black" }} >{item.title}</Text> */}
                                     <Text style={{ ...styles.body, color: darkTheme ? "white" : "black" }} >{item.body}</Text>
+                                    
 
                                     <View style={styles.buttonpanel} >
 
@@ -123,14 +124,24 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10,
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: 15,
+        fontWeight: "500",
+        fontFamily: 'sans-serif-light',
+        marginTop: 0,
+        
+    },
+    Topic: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        textAlign: 'center',
+        fontSize: 22,
         fontWeight: "700",
         fontFamily: 'sans-serif-light',
         marginTop: 0,
         
     },
 
-    title: {
+    date: {
   
         fontSize: 14,
         fontWeight: "700",
@@ -141,8 +152,18 @@ const styles = StyleSheet.create({
         textTransform: 'capitalize',
     },
 
+    title: {
+        fontSize: 17,
+        fontWeight: "700",
+        fontFamily: 'sans-serif-light',
+        marginTop: 2,
+        marginBottom: 0,
+        textTransform: 'none',
+        textTransform: 'capitalize',
+    },
+
     body: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: "700",
 
         fontFamily: 'sans-serif-light',
@@ -155,7 +176,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * 0.7,
         height: Dimensions.get('window').height * 0.1,
         marginTop: Dimensions.get('window').height * 0.02,
-        paddingBottom: Dimensions.get('window').height * 0.01,
+        marginBottom: Dimensions.get('window').height * 0.001,
     
       },
     

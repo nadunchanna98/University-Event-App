@@ -23,7 +23,7 @@ import NotificationServer2 from '../../NotificationServer2'   // for notificatio
 const AddNote = () => {
 
   const navigation = useNavigation();
-  const { pullMe, getTokens, tokens , darkTheme } = useContext(NewContext);
+  const {  getTokens, tokens , darkTheme , fetchNotes } = useContext(NewContext);
 
   useEffect(() => {
     getTokens();
@@ -35,8 +35,8 @@ const AddNote = () => {
     // console.log("data--", data);
 
     let notificationData = {
-      title: "Special Note is added",
-      body: "Note : " + data.body,
+      title: "Special Notice ",
+      body: data.body,
       token: tokens
     }
 
@@ -67,16 +67,16 @@ const AddNote = () => {
   const handleSubmit = async (values) => {
 
     const formData = {
-        title : values.title,
+        // title : values.title,
         body : values.body,
     }
 
 
     axios.post(`${BASE_URL}notes/note`, formData)
       .then(data => {
-        console.log(" success ")
+        // console.log(" success ")
         ToastAndroid.show("Note Added Successfully", ToastAndroid.LONG);
-        pullMe();
+        fetchNotes();
         sendNotification(data.data);
         navigation.goBack();
       }
@@ -138,14 +138,14 @@ const AddNote = () => {
               >
                 {({ handleSubmit, isValid }) => (
                   <>
-                    <Text style={styles.lable}  >Subject</Text>
+                    {/* <Text style={styles.lable}  >Subject</Text>
                     <Field
                       component={CustomInput}
                       name="title"
                       placeholder="Football practice time changed" 
                       multiline={true}
                       numberOfLines={2}
-                    />
+                    /> */}
 
 
                     <Text style={styles.lable}  >Body *</Text>
