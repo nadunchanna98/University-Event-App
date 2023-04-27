@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect, } from 'react';
-import { Alert, Modal, StyleSheet, TouchableOpacity, Text, Image, Dimensions, View, TextInput, Button, ScrollView, ToastAndroid } from 'react-native'
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import { Alert, Animated, Modal, StyleSheet, TouchableOpacity, Text, Image, Dimensions, View,  Button, ScrollView, ToastAndroid } from 'react-native'
 import { NewContext } from '../../Common/Context';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
@@ -23,7 +23,7 @@ const NewCompleteEvent = ({ route }) => {
     const [photoShow, setPhotoShow] = React.useState(null);
     const [imagef, setImagef] = useState(null);
     const [uploading, setUploading] = useState(false);
-
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
 
@@ -31,6 +31,18 @@ const NewCompleteEvent = ({ route }) => {
         getTokens();
 
     }, []);
+
+    const [progress, setProgress] = useState(0);
+    const animation = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(animation, {
+            toValue: progress,
+            duration: 1000, // You can adjust the duration as needed
+            useNativeDriver: false,
+        }).start();
+    }, [progress]);
+
 
 
     const sendNotification = async (data) => {
@@ -41,7 +53,7 @@ const NewCompleteEvent = ({ route }) => {
             title: `Check out the winners of ${data.event}!`,
             body: ` 🥇 Top spot: ${data.firstN}\n 🥈 Second spot: ${data.secondN}\n 🥉 Third spot: ${data.thirdN}`,
             token: tokens
-          }
+        }
 
         // console.log("notificationData--", notificationData);
 
@@ -67,7 +79,7 @@ const NewCompleteEvent = ({ route }) => {
     };
 
 
-    
+
 
     const signUpValidationSchema = yup.object().shape({
         event: yup
@@ -99,6 +111,8 @@ const NewCompleteEvent = ({ route }) => {
 
     const takePhotoAndUpload = async () => {
 
+        setIsUploading(true);
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
@@ -107,6 +121,7 @@ const NewCompleteEvent = ({ route }) => {
         });
 
         if (result.cancelled) {
+            setIsUploading(false);
             return;
         }
 
@@ -118,37 +133,80 @@ const NewCompleteEvent = ({ route }) => {
         // console.log("imagef--", imagef);
 
         uploadImage(source.uri);
-        setPhotoShow(source.uri);
 
     }
 
     //firebase image upload
     const uploadImage = async (uri) => {
 
-        // console.log("im from uploadimage--", uri);
+        console.log("im from uploadimage--", uri);
+        setProgress(0);
 
-        setUploading(true);
-        const response = await fetch(uri);
-        const blob = await response.blob();
-        const filename = uri.substring(uri.lastIndexOf('/') + 1);
-        var ref = firebase.storage().ref().child(filename).put(blob);
-
-        try {
-            await ref;
-        } catch (e) {
-            console.log(e);
+        if (!uri) { // Check if the uri is null before proceeding with the upload
+            setUploading(false);
+            return;
         }
 
-        const abc = await ref.snapshot.ref.getDownloadURL();
-        console.log("url--", abc);
-        setImagef(abc);
+        setUploading(true);
+        try {
+            const response = await fetch(uri);
+            const blob = await response.blob();
+            const filename = uri.substring(uri.lastIndexOf('/') + 1);
+            const ref = firebase.storage().ref().child(filename).put(blob);
 
 
+
+            ref.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    // console.log(`Upload is ${progress}% done`);
+                    setProgress(progress);
+
+                },
+                (error) => {
+                    console.log(error);
+                },
+                async () => {
+                    await ref;
+
+
+                    const url = await ref.snapshot.ref.getDownloadURL();
+                    console.log("url--", url);
+                    setPhotoShow(url);
+                    setImagef(url);
+                    setUploading(false);
+                    setIsUploading(false);
+
+                }
+            );
+        } catch (e) {
+            console.log(e);
+            setUploading(false);
+
+        } finally {
+            setProgress(0);
+        }
     };
 
+
+    const width = animation.interpolate({
+        inputRange: [0, 100],
+        outputRange: ['0%', '100%'],
+    });
+
     const dicardImage = () => {
+
+
+
         setPhotoShow(null);
         setImagef(null);
+        setIsUploading(false);
+        setUploading(false);
+        setProgress(0);
+
+
     }
 
     //date picker
@@ -368,7 +426,7 @@ const NewCompleteEvent = ({ route }) => {
                                                 <Field
                                                     component={CustomInput}
                                                     name="description"
-            
+
                                                     placeholder="Write about Event.."
                                                     multiline
                                                     numberOfLines={3}
@@ -430,20 +488,39 @@ const NewCompleteEvent = ({ route }) => {
 
                                                 <View style={styles.mainBody}>
 
-                                                    {photoShow &&
-                                                        <View style={styles.imageContainer}>
-                                                            <Image
-                                                                source={{ uri: photoShow }}
-                                                                style={{ width: '100%', height: '100%' }}
-                                                            />
-                                                        </View>
-                                                    }
+                                                    <View style={{ height: 10, backgroundColor: 'white' }}>
+                                                        <Animated.View style={{ height: 10, backgroundColor: '#307ecc', width }} />
+                                                    </View>
+
+
+
+                                                    <View style={styles.imageContainer}>
+                                                        <Image
+
+                                                            source={
+                                                                photoShow !== null
+                                                                    ? { uri: photoShow }
+                                                                    : darkTheme
+                                                                    ? require('../../Components/completedB.jpg')
+                                                                    : require('../../Components/completedW.jpg')
+                                                            }
+
+
+                                                            style={{ width: '100%', height: '100%' }}
+                                                        />
+                                                    </View>
+
+
+                                                    <View style={{ height: 10, backgroundColor: 'white' }}>
+                                                        <Animated.View style={{ height: 10, backgroundColor: '#307ecc', width }} />
+                                                    </View>
 
 
                                                     <View style={styles.buttonContainer}>
                                                         <TouchableOpacity
                                                             style={styles.buttonStyle}
                                                             activeOpacity={0.5}
+                                                            disabled={isUploading}
                                                             onPress={takePhotoAndUpload}
                                                         >
                                                             <Text style={styles.buttonTextStyle}>Upload Image</Text>
@@ -465,7 +542,7 @@ const NewCompleteEvent = ({ route }) => {
                                                 <Button
                                                     style={[styles.button, styles.buttonClose]}
                                                     onPress={handleSubmit}
-                                                    disabled={!isValid}
+                                                    disabled={!isValid || isUploading}
                                                     title="Create"
                                                 />
                                             </>

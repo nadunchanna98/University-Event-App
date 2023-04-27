@@ -132,10 +132,10 @@ function TopNavigation({ index, setIndex }) {
                                     [
                                         { text: 'OK', onPress: () => console.log('OK pressed') },
                                         {
-                                            text: 'Visit Us',
+                                            text: 'Visit My LinkedIn',
                                             onPress: () => {
                                                 // Navigate to your website
-                                                Linking.openURL('https://www.evenbees.com');
+                                                Linking.openURL('https://www.linkedin.com/in/nadun-channa-3a4a181aa/');
                                             },
                                         },
                                     ],
