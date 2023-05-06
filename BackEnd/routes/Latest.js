@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 require('dotenv/config');
 
-// get latest update date for Post, FuturePost, and Notes
+// get latest Post, FuturePost, and Notes update date
 router.get('/', async (req, res) => {
   try {
     const [latestPost, latestFuturePost, latestNote] = await Promise.all([
@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
         {
           $group: {
             _id: null,
-            latestUpdate: { $max: '$dateCreated' }
+            latestUpdate: { $max: '$date' }
           }
         }
       ])
@@ -39,13 +39,13 @@ router.get('/', async (req, res) => {
     let latestUpdate = null;
 
     if (latestPost.length > 0 && latestFuturePost.length > 0 && latestNote.length > 0) {
-      latestUpdate = Math.max(latestPost[0].latestUpdate, latestFuturePost[0].latestUpdate, latestNote[0].latestUpdate);
+      latestUpdate = new Date(Math.max(latestPost[0].latestUpdate, latestFuturePost[0].latestUpdate, latestNote[0].latestUpdate));
     } else if (latestPost.length > 0 && latestFuturePost.length > 0) {
-      latestUpdate = Math.max(latestPost[0].latestUpdate, latestFuturePost[0].latestUpdate);
+      latestUpdate = new Date(Math.max(latestPost[0].latestUpdate, latestFuturePost[0].latestUpdate));
     } else if (latestPost.length > 0 && latestNote.length > 0) {
-      latestUpdate = Math.max(latestPost[0].latestUpdate, latestNote[0].latestUpdate);
+      latestUpdate = new Date(Math.max(latestPost[0].latestUpdate, latestNote[0].latestUpdate));
     } else if (latestFuturePost.length > 0 && latestNote.length > 0) {
-      latestUpdate = Math.max(latestFuturePost[0].latestUpdate, latestNote[0].latestUpdate);
+      latestUpdate = new Date(Math.max(latestFuturePost[0].latestUpdate, latestNote[0].latestUpdate));
     } else if (latestPost.length > 0) {
       latestUpdate = latestPost[0].latestUpdate;
     } else if (latestFuturePost.length > 0) {
