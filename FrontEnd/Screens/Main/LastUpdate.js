@@ -1,15 +1,13 @@
-import { View, Text, StyleSheet, RefreshControl, Dimensions, Button } from 'react-native'
-import React, { useState, useEffect, useContext } from 'react'
+import { View, Text, StyleSheet } from 'react-native'
+import React, { useEffect, useContext } from 'react'
 import Chart from './Chart'
 import Moment from 'moment';
 import { NewContext } from '../../Common/Context';
-import { useNavigation } from '@react-navigation/native';
-
 
 const LastUpdate = () => {
 
-    const { date, fetchDate, darkTheme} = useContext(NewContext);
-    
+    const { date, fetchDate, darkTheme } = useContext(NewContext);
+
     useEffect(() => {
 
         fetchDate();
@@ -19,20 +17,17 @@ const LastUpdate = () => {
 
     return (
 
-        <View style={{...styles.container,}} >
+        <View style={{ ...styles.container, }} >
             <View>
 
 
                 {
-                    date === '' ? <Text style={{...styles.wait, color: darkTheme ? "white" : "black" } } >Loading...</Text>
-                        : <Text style={{...styles.date, color: darkTheme ? "white" : "black" } } >Last updated at{"\n"}{Moment(date).format('LLL')} </Text>
+                    !date ?
+                        <Text style={{ ...styles.wait, color: darkTheme ? "white" : "black" }} >Loading...</Text>
+                        : <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }} >Last updated at{"\n"}{Moment(date).format('LLL')} </Text>
                 }
 
             </View>
-
-            {/* {
-                event === '' ? <Text style={styles.wait}  >Loading...</Text> : <Chart />
-            } */}
 
 
         </View>
@@ -48,7 +43,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
-   
+
     date: {
         textAlign: 'center',
         fontSize: 14,
