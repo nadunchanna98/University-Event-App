@@ -1,6 +1,6 @@
 # University Event App
 
-![App Icon](https://raw.githubusercontent.com/nadunchanna98/Event-App/main/assets/108536998/e13145d6-cb59-402d-8e87-58a0bb66c313)
+![icon](https://github.com/nadunchanna98/Event-App/assets/108536998/8be4ae31-ce3b-4ab0-9a20-f603e3f7c1a0)
 
 University Event App is a mobile application that focuses on keeping users updated about events happening at the University of Jaffna. The app provides timely notifications for upcoming events, access to event details, information about past events, winners, and important announcements.
 
