@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect , useRef } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import {
     Animated,
     StyleSheet,
@@ -24,7 +24,7 @@ import Moment from "moment";
 import { firebase } from '../../src/config'  // for image upload for firebase
 import * as ImagePicker from 'expo-image-picker'
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import { SelectList } from 'react-native-dropdown-select-list'
 
 const EditSummeryEvent = ({ route }) => {
 
@@ -50,7 +50,7 @@ const EditSummeryEvent = ({ route }) => {
     const [imagef, setImagef] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
-   const [ imageexist , setImageExist] = useState(false);
+    const [imageexist, setImageExist] = useState(false);
 
 
     // console.log(selectedEvent)
@@ -59,7 +59,7 @@ const EditSummeryEvent = ({ route }) => {
         axios.get(`${BASE_URL}pastevents/${ID}`)
             .then(res => {
 
-                const  date  = res.data.date;
+                const date = res.data.date;
 
                 setEvent(res.data.event);
                 setMyDate(Moment(date, 'YYYY-MM-DD').toDate());
@@ -76,6 +76,7 @@ const EditSummeryEvent = ({ route }) => {
                 setThirdT(res.data.thirdT);
                 setPhotoShow(res.data.image);
                 setImageExist(res.data.image);
+                setImagef(res.data.image);
 
             })
             .catch(err => {
@@ -122,7 +123,7 @@ const EditSummeryEvent = ({ route }) => {
 
             date: Moment(mydate).format('YYYY-MM-DD'),
             time: mytime,
-            
+
             description: description,
             type: type,
             gender: gender,
@@ -165,7 +166,7 @@ const EditSummeryEvent = ({ route }) => {
         description: yup
             .string()
             .min(0, ({ min, value }) => `${min - value.length} characters to go`),
-        
+
     })
 
 
@@ -359,7 +360,7 @@ const EditSummeryEvent = ({ route }) => {
                                     gender: '',
                                     type: '',
                                     description: '',
-      
+
                                 }}
                                 onSubmit={values => handleSubmit(values)}
                                 validationSchema={signUpValidationSchema}
@@ -374,19 +375,44 @@ const EditSummeryEvent = ({ route }) => {
                                             onChangeText={(text) => setEvent(text)}
                                         />
                                         <Text style={styles.lable}  >Type</Text>
-                                        <Field
-                                            component={CustomInput}
-                                            name="type"
-                                            value={type}
-                                            onChangeText={(text) => setType(text)}
+                                        <SelectList
+                                            setSelected={(val) => setType(val)}
+                                            data={[
+                                                { key: '1', value: 'Single' },
+                                                { key: '2', value: 'Team' },
+                                            ]}
+                                            save="value"
+                                            boxStyles={styles.selectList}
+                                            search={false}
+                                            maxHeight={Dimensions.get('window').height * 0.13}
+                                            defaultOption={type}
+                                            dropdownTextStyles={{ fontSize: Dimensions.get('window').width * 0.04 }}
+                                            inputStyles={{
+                                                fontSize: Dimensions.get('window').width * 0.05,
+                                                
+                                            }}
+                                            placeholder={type}
+                                            
                                         />
 
                                         <Text style={styles.lable}  >Gender</Text>
-                                        <Field
-                                            component={CustomInput}
-                                            name="gender"
-                                            value={gender}
-                                            onChangeText={(text) => setGender(text)}
+                                        <SelectList
+                                            setSelected={(val) => setGender(val)}
+                                            data={[
+                                                { key: '1', value: 'Men' },
+                                                { key: '2', value: 'Women' },
+                                                { key: '3', value: 'Men & Women' },
+                                            ]}
+                                            save="value"
+                                            boxStyles={styles.selectList}
+                                            search={false}
+                                            maxHeight={Dimensions.get('window').height * 0.2}
+                                            defaultOption={gender}
+                                            dropdownTextStyles={{ fontSize: Dimensions.get('window').width * 0.04 }}
+                                            inputStyles={{
+                                                fontSize: Dimensions.get('window').width * 0.05,
+                                            }}
+                                            placeholder={gender}
                                         />
 
                                         <Text style={styles.lable}  >First Name</Text>
@@ -514,7 +540,7 @@ const EditSummeryEvent = ({ route }) => {
 
                                         <View style={styles.mainBody}>
 
-                                        <View style={{ height: 10, backgroundColor: 'white' }}>
+                                            <View style={{ height: 10, backgroundColor: 'white' }}>
                                                 <Animated.View style={{ height: 10, backgroundColor: '#307ecc', width }} />
                                             </View>
 
@@ -560,12 +586,16 @@ const EditSummeryEvent = ({ route }) => {
 
                                         </View>
 
-
-                                        <Button
+                                        <TouchableOpacity
                                             onPress={handleSubmit}
-                                            title="Save Changes"
                                             disabled={!isValid || isUploading}
-                                        />
+                                            style={[
+                                                styles.addeventbutton,
+                                                { backgroundColor: isValid && !isUploading ? '#0b65bf' : 'gray' },
+                                            ]}
+                                        >
+                                            <Text style={styles.addeventbuttonText}>Save Changes</Text>
+                                        </TouchableOpacity>
                                     </>
                                 )}
                             </Formik>
@@ -601,7 +631,7 @@ const styles = StyleSheet.create({
 
     },
     photoButton: {
-        backgroundColor: '#04b040',
+        backgroundColor: '#0b65bf',
         borderRadius: 15,
         paddingHorizontal: 15,
         paddingVertical: 5,
@@ -647,7 +677,7 @@ const styles = StyleSheet.create({
     },
 
     buttonStyle: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#0b65bf',
         borderWidth: 0,
         color: '#FFFFFF',
         borderColor: '#307ecc',
@@ -685,7 +715,7 @@ const styles = StyleSheet.create({
     },
 
     button2: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#0b65bf',
         padding: 2,
         borderRadius: 10,
         marginHorizontal: 10,
@@ -712,7 +742,33 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginLeft: 10,
     },
+    selectList: {
+        width: Dimensions.get('window').width * 0.5,
+        backgroundColor: 'white',
+        borderColor: 'white',
+        borderRadius: 10,
+        borderWidth: StyleSheet.hairlineWidth,
+        textAlignVertical: 'top',
+        textAlign: 'center',
+        fontSize: 20,
+    },
+    addeventbutton: {
+        color: '#fff',
+        padding: 10,
+        borderRadius: 10,
+        marginHorizontal: 10,
+        width: Dimensions.get('window').width * 0.8,
+        height: Dimensions.get('window').width * 0.15,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 
+    addeventbuttonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
+        alignItems: 'center',
+    }
 
 })
 export default EditSummeryEvent;

@@ -158,14 +158,11 @@ const ShareEvent = ({ route }) => {
 
   const signUpValidationSchema = yup.object().shape({
     firstN: yup
-      .string()
-      .required('First place is required'),
+      .string(),
     secondN: yup
-      .string()
-      .required('Second place is required'),
+      .string(),
     thirdN: yup
-      .string()
-      .required('Third place is required'),
+      .string(),
     description: yup
       .string()
       .min(0, ({ min, value }) => `${min - value.length} characters to go`),
@@ -417,13 +414,17 @@ const ShareEvent = ({ route }) => {
 
                         </View>
 
-
-                        <Button
-                          style={[styles.button, styles.buttonClose]}
+                        <TouchableOpacity
                           onPress={handleSubmit}
-                          disabled={!isValid}
-                          title="Share"
-                        />
+                          
+                          style={[
+                            styles.addeventbutton,
+                            { backgroundColor: '#0b65bf'  },
+                          ]}
+                        >
+                          <Text style={styles.addeventbuttonText}>Share</Text>
+                        </TouchableOpacity>
+
                       </>
                     )}
                   </Formik>
@@ -523,7 +524,7 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-    backgroundColor: '#307ecc',
+    backgroundColor: '#0b65bf',
     borderWidth: 0,
     color: '#FFFFFF',
     borderColor: '#307ecc',
@@ -550,5 +551,23 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
   },
+
+  addeventbutton: {
+    color: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    width: Dimensions.get('window').width * 0.8,
+    height: Dimensions.get('window').width * 0.15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  addeventbuttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    alignItems: 'center',
+  }
 
 });

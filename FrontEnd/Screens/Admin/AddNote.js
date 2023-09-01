@@ -1,4 +1,4 @@
-import React, {  useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -8,7 +8,8 @@ import {
   Modal,
   Alert,
   ScrollView,
-  ToastAndroid
+  ToastAndroid,
+  TouchableOpacity,
 } from 'react-native'
 import { Formik, Field } from 'formik'
 import * as yup from 'yup'
@@ -23,7 +24,7 @@ import NotificationServer2 from '../../NotificationServer2'   // for notificatio
 const AddNote = () => {
 
   const navigation = useNavigation();
-  const {  getTokens, tokens , darkTheme , fetchNotes } = useContext(NewContext);
+  const { getTokens, tokens, darkTheme, fetchNotes } = useContext(NewContext);
 
   useEffect(() => {
     getTokens();
@@ -67,8 +68,8 @@ const AddNote = () => {
   const handleSubmit = async (values) => {
 
     const formData = {
-        // title : values.title,
-        body : values.body,
+      // title : values.title,
+      body: values.body,
     }
 
 
@@ -92,46 +93,46 @@ const AddNote = () => {
 
 
   const signUpValidationSchema = yup.object().shape({
-    
+
     title: yup
-        .string(),
+      .string(),
     body: yup
-        .string()
-        .required('Body is required'),
+      .string()
+      .required('Body is required'),
 
   })
 
-  
+
   return (
 
     <View style={{ flex: 1 }}>
-   
-      <Modal 
-      visible={true} 
-      animationType="slide"
-       onRequestClose={() => {
+
+      <Modal
+        visible={true}
+        animationType="slide"
+        onRequestClose={() => {
           confirmModalClose();
         }}
       >
 
-        
+
         <View style={styles.title}>
-            <Text style={styles.titleText}>Add new Note</Text>
-          </View>
+          <Text style={styles.titleText}>Add new Note</Text>
+        </View>
 
-          <View style={{...styles.contai , backgroundColor: darkTheme ? "#282C35" : "white" }}> 
-                </View>
+        <View style={{ ...styles.contai, backgroundColor: darkTheme ? "#282C35" : "white" }}>
+        </View>
 
-        
-                <ScrollView>
-        
-          <View style={{...styles.container, backgroundColor: darkTheme ? "#282C35" : "white"}} >
+
+        <ScrollView>
+
+          <View style={{ ...styles.container, backgroundColor: darkTheme ? "#282C35" : "white" }} >
             <View style={styles.signupContainer}>
 
               <Formik
                 initialValues={{
-                    title: '',
-                    body: '',
+                  title: '',
+                  body: '',
                 }}
                 onSubmit={values => handleSubmit(values)}
                 validationSchema={signUpValidationSchema}
@@ -149,36 +150,40 @@ const AddNote = () => {
 
 
                     <Text style={styles.lable}  >Body *</Text>
-                    
+
                     <Field
-                        component={CustomInput}
-                        name="body"
+                      component={CustomInput}
+                      name="body"
 
-                        placeholder="Football practice time changed to 5:00 pm"
-                        multiline={true}
-                        numberOfLines={8}
+                      placeholder="Football practice time changed to 5:00 pm"
+                      multiline={true}
+                      numberOfLines={8}
                     />
 
-
-                   
-                    <Button
+                    <TouchableOpacity
                       onPress={handleSubmit}
-                      title="Add Note"
-                      disabled={!isValid}
-                    />
+                      disabled={!isValid }
+                      style={[
+                        styles.addeventbutton,
+                        { backgroundColor: isValid  ? '#0b65bf' : 'gray' },
+                      ]}
+                    >
+                      <Text style={styles.addeventbuttonText}>Add Note</Text>
+                    </TouchableOpacity>
+
                   </>
                 )}
               </Formik>
 
-             
+
 
             </View>
           </View>
-          </ScrollView>
-    
+        </ScrollView>
+
       </Modal>
-    
-  </View>
+
+    </View>
   )
 }
 
@@ -189,7 +194,7 @@ const styles = StyleSheet.create({
 
   contai: {
     padding: 5,
-},
+  },
 
 
   buttonContainer2: {
@@ -247,7 +252,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4682B4'
 
   },
- 
+
   title: {
     backgroundColor: '#4682B4',
     width: Dimensions.get('window').width,
@@ -310,13 +315,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
- 
+
   titleContainer: {
     alignItems: 'center',
     marginBottom: 30,
     marginTop: 30,
   },
-  
+
   buttonpanel: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -324,4 +329,22 @@ const styles = StyleSheet.create({
 
     alignItems: 'center',
   },
+
+  addeventbutton: {
+    color: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    width: Dimensions.get('window').width * 0.8,
+    height: Dimensions.get('window').width * 0.15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  addeventbuttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    alignItems: 'center',
+  }
 })

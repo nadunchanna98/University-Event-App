@@ -8,6 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 // import newB from '../../Components/newB.jpg';
 // import newW from '../../Components/newW.jpg';
 
@@ -75,50 +76,34 @@ const UpComingContainer = () => {
               }
             />
 
+            {item.event ? <Text style={{ ...styles.event, color: darkTheme ? "white" : "black" }}>
+              {item.event}
+            </Text> : null}
 
+            {item.gender ? <AntDesign name="pushpin" style={{ ...styles.gender, color: "red" }} >
+              <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }}>  {item.gender}</Text>
+            </AntDesign> : null}
 
+            {item.type ? <AntDesign name="pushpin" style={{ ...styles.type, color: "red" }}>
+              <Text style={{ ...styles.type, color: darkTheme ? "white" : "black" }}>  {item.type}</Text>
+            </AntDesign> : null}
 
-            <Text style={{ ...styles.event, color: darkTheme ? "white" : "black" }}  >{item.event} </Text>
+            {item.date || item.time ? <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }}>
+              {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}
+            </Text> : null}
 
-            <View style={{ ...styles.genderType, color: darkTheme ? "white" : "black" }} >
+            {item.location ?
+              <Text style={{ ...styles.location, color: darkTheme ? "white" : "black" }}>
+                At {item.location}
+              </Text>
+              : null}
 
-              <View>
-                {item.gender || item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} > ( </Text> : null
-                }
-              </View>
-
-              <View>
-                {item.gender ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} >  {item.gender}  </Text> : null
-                }
-              </View>
-              <View>
-                {item.gender && item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} > /  </Text> : null
-                }
-              </View>
-
-
-              <View>
-                {item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} >{item.type} </Text> : null
-                }
-              </View>
-
-
-              <View>
-                {item.gender || item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} > ) </Text> : null
-                }
-              </View>
-
-            </View>
-
-            <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }}  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
-
-
-            <View>
-              {item.location ? <Text style={{ ...styles.location, color: darkTheme ? "white" : "black" }}>At {item.location}</Text> : null
-              }
-            </View>
-
-            <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }}>{item.description}</Text>
+            {item.description ?
+              <Text style={{ ...styles.description, color: darkTheme ? "white" : "black" }}>
+              {item.description}
+            </Text>
+              : null}
+            
 
             <View style={styles.buttonpanel} >
 
@@ -166,75 +151,79 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9F9F9',
     paddingBottom: Dimensions.get('window').height * 0.1,
   },
-
   event: {
     textTransform: 'capitalize',
-    fontSize: 26,
+    fontSize: Dimensions.get('window').width * 0.058,
     fontWeight: "700",
-    marginBottom: 10,
+    marginBottom: Dimensions.get('window').width * 0.03,
+    marginTop: Dimensions.get('window').width * 0.01,
     textAlign: 'center',
-
-  },
-
-  genderType: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
+    width: Dimensions.get('window').width * 0.83,
   },
 
   gender: {
     textTransform: 'capitalize',
-    fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 5,
+    fontSize: Dimensions.get('window').width * 0.045,
+    fontWeight: "600",
+    marginBottom: Dimensions.get('window').width * 0.01,
     textAlign: 'center',
+    width: Dimensions.get('window').width * 0.83,
+    textDirection: 'column',
+  },
+
+  type: {
+    textTransform: 'capitalize',
+    fontSize: Dimensions.get('window').width * 0.045,
+    fontWeight: "600",
+    marginBottom: Dimensions.get('window').width * 0.03,
+    textAlign: 'center',
+    width: Dimensions.get('window').width * 0.83,
+    textDirection: 'column',
   },
 
 
   date: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 5,
+    fontSize: Dimensions.get('window').width * 0.045,
+    fontWeight: "500",
+    marginBottom: Dimensions.get('window').width * 0.01,
     textAlign: 'center',
   },
 
   description: {
-    textTransform: 'capitalize',
-    fontSize: 15,
-    fontWeight: "700",
-    marginBottom: 5
+    fontSize: Dimensions.get('window').width * 0.04,
+    fontWeight: "400",
+    marginBottom: Dimensions.get('window').width * 0.01,
+    textAlign: 'center',
+    width: Dimensions.get('window').width * 0.83,
   },
 
   location: {
     textTransform: 'capitalize',
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 5,
+    fontSize: Dimensions.get('window').width * 0.045,
+    fontWeight: "500",
+    marginBottom: Dimensions.get('window').width * 0.03,
     textAlign: 'center',
+    width: Dimensions.get('window').width * 0.83,
   },
 
   post: {
-    //backgroundColorImage: backgroundImage,
     flexDirection: 'column',
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-    marginLeft: 20,
-    marginRight: 20,
-    borderRadius: 20,
-    borderWidth: 4,
+    margin: Dimensions.get('window').width * 0.05,
+    borderRadius: Dimensions.get('window').width * 0.05,
+    borderWidth: Dimensions.get('window').width * 0.008,
     borderColor: '#3d6ecf',
     padding: Dimensions.get('window').width * 0.01,
+    paddingBottom: Dimensions.get('window').width * 0.05,
   },
 
   image: {
     width: Dimensions.get('window').width * 0.85,
     height: Dimensions.get('window').width * 0.85 * 3 / 4,
-    borderRadius: 20,
-    marginBottom: 10,
+    borderRadius: Dimensions.get('window').width * 0.05,
+    marginBottom: Dimensions.get('window').width * 0.025,
   },
 
   buttonpanel: {
@@ -255,9 +244,5 @@ const styles = StyleSheet.create({
     margin: Dimensions.get('window').width * 0.01,
 
   },
-
-  //when the user click on the button, the button will change color
-
-
 
 })

@@ -120,19 +120,18 @@ function TopNavigation({ index, setIndex }) {
                     <Text style={{ ...styles.text, color: "white" }}>
 
 
-                        <AntDesign
+                    <AntDesign
                             name="infocirlce"
                             size={24}
                             color="white"
                             onPress={() =>
                                 Alert.alert(
-                                    'Event App',
-                                    'Created by Nadun Channa.',
-                                     
+                                    'University Event App',
+                                    "Welcome to the University Event App!\n\nThis app focuses on keeping you updated about events happening at the University of Jaffna. Through timely notifications, you can stay informed about upcoming events and access all the relevant event details.\n\nAdditionally, you can find information about past events, including the winners and all details. We also provide special notices to ensure you don't miss any important announcements.\n\nDeveloped by Nadun Channa, Computer department, Faculty of Engineering\nUniversity of Jaffna",
                                     [
                                         { text: 'OK', onPress: () => console.log('OK pressed') },
                                         {
-                                            text: 'Visit My LinkedIn',
+                                            text: 'CONTACT US',
                                             onPress: () => {
                                                 // Navigate to your website
                                                 Linking.openURL('https://www.linkedin.com/in/nadun-channa-3a4a181aa/');
@@ -253,9 +252,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         flexDirection: "row",
-
-
-
 
     }
 

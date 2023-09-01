@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { Alert, Animated, Modal, StyleSheet, TouchableOpacity, Text, Image, Dimensions, View,  Button, ScrollView, ToastAndroid } from 'react-native'
+import { Alert, Animated, Modal, StyleSheet, TouchableOpacity, Text, Image, Dimensions, View, Button, ScrollView, ToastAndroid } from 'react-native'
 import { NewContext } from '../../Common/Context';
 import BASE_URL from '../../Common/BaseURL'
 import axios from 'axios';
@@ -12,6 +12,7 @@ import * as ImagePicker from 'expo-image-picker'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Moment from "moment";
 import NotificationServer2 from '../../NotificationServer2'   // for notification for firebase
+import { SelectList } from 'react-native-dropdown-select-list'
 
 const NewCompleteEvent = ({ route }) => {
 
@@ -24,6 +25,8 @@ const NewCompleteEvent = ({ route }) => {
     const [imagef, setImagef] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [selectedGender, setSelectedGender] = useState("");
+    const [selectedType, setSelectedType] = useState("");
 
     useEffect(() => {
 
@@ -95,14 +98,11 @@ const NewCompleteEvent = ({ route }) => {
             .min(0, ({ min, value }) => `${min - value.length} characters to go`),
 
         firstN: yup
-            .string()
-            .required('First place is required'),
+            .string(),
         secondN: yup
-            .string()
-            .required('Second place is required'),
+            .string(),
         thirdN: yup
-            .string()
-            .required('Third place is required'),
+            .string(),
         description: yup
             .string()
             .min(0, ({ min, value }) => `${min - value.length} characters to go`),
@@ -268,8 +268,8 @@ const NewCompleteEvent = ({ route }) => {
             secondT: values.secondT,
             thirdT: values.thirdT,
             location: values.location,
-            gender: values.gender,
-            type: values.type,
+            type: selectedType,
+            gender: selectedGender,
             date: Moment(mydate).format('YYYY-MM-DD'),
             time: mytime,
             image: imagef,
@@ -345,24 +345,49 @@ const NewCompleteEvent = ({ route }) => {
                                         {({ handleSubmit, isValid }) => (
                                             <>
 
-                                                <Text style={styles.lable}  >Event Name</Text>
+                                                <Text style={styles.lable}  >Event Name *</Text>
                                                 <Field
                                                     component={CustomInput}
                                                     name="event"
                                                     placeholder="Football"
                                                 />
                                                 <Text style={styles.lable}  >Type</Text>
-                                                <Field
-                                                    component={CustomInput}
-                                                    name="type"
-                                                    placeholder="Team/Individual"
+                                                <SelectList
+                                                    setSelected={(val) => setSelectedType(val)}
+                                                    data={[
+                                                        { key: '1', value: 'Single' },
+                                                        { key: '2', value: 'Team' },
+                                                    ]}
+                                                    save="value"
+                                                    boxStyles={styles.selectList}
+                                                    search={false}
+                                                    maxHeight={Dimensions.get('window').height * 0.13}
+                                                    defaultOption={selectedType}
+                                                    dropdownTextStyles={{ fontSize: Dimensions.get('window').width * 0.04 }}
+                                                    inputStyles={{
+                                                        fontSize: Dimensions.get('window').width * 0.05,
+                                                    }}
+                                                    placeholder="Single or Team"
                                                 />
 
                                                 <Text style={styles.lable}  >Gender</Text>
-                                                <Field
-                                                    component={CustomInput}
-                                                    name="gender"
-                                                    placeholder="Men"
+                                                <SelectList
+                                                    setSelected={(val) => setSelectedGender(val)}
+                                                    data={[
+                                                        { key: '1', value: 'Men' },
+                                                        { key: '2', value: 'Women' },
+                                                        { key: '3', value: 'Men & Women' },
+                                                    ]}
+                                                    save="value"
+                                                    boxStyles={styles.selectList}
+                                                    search={false}
+                                                    maxHeight={Dimensions.get('window').height * 0.2}
+                                                    defaultOption={selectedGender}
+                                                    dropdownTextStyles={{ fontSize: Dimensions.get('window').width * 0.04 }}
+                                                    inputStyles={{
+                                                        fontSize: Dimensions.get('window').width * 0.05,
+                                                    }}
+                                                    placeholder="Select Gender"
                                                 />
                                                 <Text style={styles.lable}  >Location</Text>
                                                 <Field
@@ -501,8 +526,8 @@ const NewCompleteEvent = ({ route }) => {
                                                                 photoShow !== null
                                                                     ? { uri: photoShow }
                                                                     : darkTheme
-                                                                    ? require('../../Components/completedB.jpg')
-                                                                    : require('../../Components/completedW.jpg')
+                                                                        ? require('../../Components/completedB.jpg')
+                                                                        : require('../../Components/completedW.jpg')
                                                             }
 
 
@@ -539,12 +564,20 @@ const NewCompleteEvent = ({ route }) => {
                                                 </View>
 
 
-                                                <Button
-                                                    style={[styles.button, styles.buttonClose]}
+                
+                                                <TouchableOpacity
                                                     onPress={handleSubmit}
                                                     disabled={!isValid || isUploading}
-                                                    title="Create"
-                                                />
+                                                    style={[
+                                                        styles.addeventbutton,
+                                                        { backgroundColor: isValid && !isUploading ? '#0b65bf' : 'gray' },
+                                                    ]}
+                                                >
+                                                    <Text style={styles.addeventbuttonText}>Create</Text>
+                                                </TouchableOpacity>
+
+
+
                                             </>
                                         )}
                                     </Formik>
@@ -638,7 +671,7 @@ const styles = StyleSheet.create({
     },
 
     buttonStyle: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#0b65bf',
         borderWidth: 0,
         color: '#FFFFFF',
         borderColor: '#307ecc',
@@ -666,7 +699,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     button2: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#0b65bf',
         padding: 2,
         borderRadius: 10,
         marginHorizontal: 10,
@@ -703,6 +736,33 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
 
+    selectList: {
+        width: Dimensions.get('window').width * 0.5,
+        backgroundColor: 'white',
+        borderColor: 'white',
+        borderRadius: 10,
+        borderWidth: 1,
+        textAlignVertical: 'top',
+        textAlign: 'center',
+        fontSize: 20,
+    },
 
+    addeventbutton: {
+        color: '#fff',
+        padding: 10,
+        borderRadius: 10,
+        marginHorizontal: 10,
+        width: Dimensions.get('window').width * 0.8,
+        height: Dimensions.get('window').width * 0.15,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    
+      addeventbuttonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
+        alignItems: 'center',
+      }
 
 });

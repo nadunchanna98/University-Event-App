@@ -7,7 +7,7 @@ import BASE_URL from '../../Common/BaseURL';
 import axios from 'axios';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Moment from 'moment';
-
+import { AntDesign } from '@expo/vector-icons';
 
 const AllPostContainer = () => {
 
@@ -52,9 +52,7 @@ const AllPostContainer = () => {
 
     <View style={{ ...styles.AllPostContainer, backgroundColor: darkTheme ? '#282C35' : '#fff' }} >
 
-
       <FlatList
-
         refreshControl={
           <RefreshControl
             refreshing={refresh}
@@ -62,15 +60,10 @@ const AllPostContainer = () => {
           />
         }
 
-
         data={post}
         renderItem={({ item }) =>
 
           <View style={{ ...styles.post, backgroundColor: darkTheme ? "#282C35" : "white" }}>
-
-            {/* <Image style={styles.image} source={item.image ? { uri: item.image } : { uri: 'https://m.marketplacepin.com/images/no-photos.png' }} />
-           */}
-
             <Image
               style={styles.image}
               source={
@@ -82,49 +75,31 @@ const AllPostContainer = () => {
               }
             />
 
-            <Text style={{ ...styles.event, color: darkTheme ? "white" : "black" }} >{item.event} </Text>
-
-            <View style={styles.genderType} >
-
-              <View>
-                {item.gender || item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }}> ( </Text> : null
-                }
-              </View>
-
-              <View>
-                {item.gender ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }}>  {item.gender}  </Text> : null
-                }
-              </View>
-              <View>
-                {item.gender && item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} > /  </Text> : null
-                }
-              </View>
+            {item.event ? <Text style={{ ...styles.event, color: darkTheme ? "white" : "black" }} >{item.event} </Text> : null}
+            {item.firstN ? <Text style={{ ...styles.firstN, color: darkTheme ? "white" : "black" }}><FontAwesome5 name="medal" size={20} color="gold" />  {item.firstN} {item.firstT}</Text> : null}      
+            {item.secondN ? <Text style={{ ...styles.secondN, color: darkTheme ? "white" : "black" }}><FontAwesome5 name="medal" size={20} color="#B2B2B2" />  {item.secondN} {item.secondT}</Text>   : null}
+            {item.thirdN ? <Text style={{ ...styles.thirdN, color: darkTheme ? "white" : "black" }}><FontAwesome5 name="medal" size={20} color="#CD7F32" />  {item.thirdN} {item.thirdT}</Text> : null}
 
 
-              <View>
-                {item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} >{item.type} </Text> : null
-                }
-              </View>
+            <View style={styles.line} >
 
+              {item.description ? <Text style={{ ...styles.description, color: darkTheme ? "white" : "black" }} >{item.description}</Text> : null}
 
-              <View>
-                {item.gender || item.type ? <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }} > ) </Text> : null
-                }
-              </View>
+              {item.gender ? 
+              <AntDesign name="pushpin" style={{ ...styles.pin, color: darkTheme ? "white" : "black" }} >
+                <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }}>  {item.gender}</Text>
+              </AntDesign> 
+              : null}
+
+              {item.type ? <AntDesign name="pushpin" style={{ ...styles.pin, color: darkTheme ? "white" : "black" }}>
+                <Text style={{ ...styles.gender, color: darkTheme ? "white" : "black" }}>  {item.type}</Text>
+              </AntDesign> : null}
+
+              {item.date || item.time ? <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }}  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text> : null}
 
             </View>
 
-
-            <Text style={{ ...styles.firstN, color: darkTheme ? "white" : "black" }}><FontAwesome5 name="medal" size={20} color="gold" />  {item.firstN} {item.firstT}</Text>
-            <Text style={{ ...styles.secondN, color: darkTheme ? "white" : "black" }}><FontAwesome5 name="medal" size={20} color="#B2B2B2" />  {item.secondN} {item.secondT}</Text>
-            <Text style={{ ...styles.thirdN, color: darkTheme ? "white" : "black" }}><FontAwesome5 name="medal" size={20} color="#CD7F32" />  {item.thirdN} {item.thirdT}</Text>
-
-            <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }}  > {Moment(item.date).format('LL')}  {Moment(item.time).format('LT')}</Text>
-            <Text style={{ ...styles.date, color: darkTheme ? "white" : "black" }} >{item.description}</Text>
-
             <View style={styles.buttonpanel} >
-
-
 
               <View style={styles.buttons} >
                 <FontAwesome name="edit" size={50} color="#1947a3"
@@ -139,7 +114,6 @@ const AllPostContainer = () => {
               </View>
 
             </View>
-
 
           </View>
 
@@ -164,42 +138,25 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-    marginLeft: 20,
-    marginRight: 20,
-    borderRadius: 20,
-    borderWidth: 4,
+    margin: Dimensions.get('window').height * 0.02,
+    borderRadius: Dimensions.get('window').height * 0.02,
+    borderWidth: Dimensions.get('window').width * 0.008,
     borderColor: '#3d6ecf',
     padding: Dimensions.get('window').width * 0.01,
-  },
-
-
-  buttonpanel: {
-
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: Dimensions.get('window').width * 0.7,
-    height: Dimensions.get('window').height * 0.1,
-    marginTop: Dimensions.get('window').height * 0.02,
-    paddingBottom: Dimensions.get('window').height * 0.01,
-
-  },
-
-  buttons: {
-    width: Dimensions.get('window').width * 0.2,
-    height: Dimensions.get('window').height * 0.1,
-    margin: Dimensions.get('window').width * 0.01,
   },
 
   image: {
     width: Dimensions.get('window').width * 0.85,
     height: Dimensions.get('window').width * 0.85 * 3 / 4,
-    borderRadius: 20,
-    borderWidth: 1,
-    marginBottom: 10,
+    borderRadius: Dimensions.get('window').width * 0.05,
+    marginBottom: Dimensions.get('window').width * 0.025,
   },
 
+  line: {
+    borderTopWidth: 1,
+    borderTopColor: '#336699',
+    Width: Dimensions.get('window').width * 0.85,
+  },
 
   AllPostContainer: {
     width: Dimensions.get('window').width,
@@ -208,35 +165,30 @@ const styles = StyleSheet.create({
     paddingBottom: Dimensions.get('window').height * 0.1,
 
   },
-
   event: {
     textTransform: 'capitalize',
-    fontSize: 26,
+    fontSize: Dimensions.get('window').width * 0.058,
     fontWeight: "700",
-    marginBottom: 10
-
-  },
-
-  genderType: {
-
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: Dimensions.get('window').width * 0.01,
+    marginTop: Dimensions.get('window').width * 0.01,
+    textAlign: 'center',
+    width: Dimensions.get('window').width * 0.83,
   },
 
   gender: {
     textTransform: 'capitalize',
-    fontSize: 17,
-    fontWeight: "800",
-    marginBottom: 5,
+    fontSize: Dimensions.get('window').width * 0.035,
+    fontWeight: "500",
+    marginBottom: Dimensions.get('window').width * 0.01,
     textAlign: 'center',
+    marginTop: Dimensions.get('window').width * 0.05,
+    
   },
 
 
   location: {
     textTransform: 'capitalize',
-    fontSize: 18,
+    fontSize: Dimensions.get('window').width * 0.045,
     fontWeight: "700",
     marginBottom: 5,
     textAlign: 'center',
@@ -244,44 +196,68 @@ const styles = StyleSheet.create({
 
   firstN: {
     textTransform: 'capitalize',
-    fontSize: 20,
-    padding: 3,
+    fontSize: Dimensions.get('window').width * 0.045,
+    padding: Dimensions.get('window').width * 0.01,
     fontWeight: "500",
-    marginBottom: 5
+    marginBottom: Dimensions.get('window').width * 0.01
   },
 
   secondN: {
     textTransform: 'capitalize',
-    fontSize: 20,
-    padding: 3,
+    fontSize: Dimensions.get('window').width * 0.045,
+    padding: Dimensions.get('window').width * 0.01,
     fontWeight: "500",
-    marginBottom: 5
+    marginBottom: Dimensions.get('window').width * 0.01
   },
 
   thirdN: {
     textTransform: 'capitalize',
-    fontSize: 20,
-    padding: 3,
+    fontSize: Dimensions.get('window').width * 0.045,
+    padding: Dimensions.get('window').width * 0.01,
     fontWeight: "500",
-    marginBottom: 13
+    marginBottom: Dimensions.get('window').width * 0.04
   },
 
   date: {
-    padding: 3,
-    fontSize: 15,
+    padding: Dimensions.get('window').width * 0.005,
+    fontSize: Dimensions.get('window').width * 0.035,
     fontWeight: "500",
-    textAlign: "center"
+    textAlign: "center",
+    marginTop: Dimensions.get('window').width * 0.02,
+
   },
 
   description: {
-    textTransform: 'capitalize',
-    fontSize: 12,
-    fontWeight: "400",
-    marginBottom: 5
+    padding: Dimensions.get('window').width * 0.005,
+    fontSize: Dimensions.get('window').width * 0.038,
+    fontWeight: "500",
+    textAlign: "center",
+    marginTop: Dimensions.get('window').width * 0.04,
   },
 
+  pin: {
+    fontSize: Dimensions.get('window').width * 0.035,
+    fontWeight: "500",
+    marginBottom: Dimensions.get('window').width * 0.01,
+    textAlign: 'center',
+    marginLeft: Dimensions.get('window').width * 0.01,
+    marginTop: Dimensions.get('window').width * 0.02,
+   height: Dimensions.get('window').width * 0.04,
+  },
 
+  buttonpanel: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: Dimensions.get('window').width * 0.7,
+    height: Dimensions.get('window').height * 0.1,
+    marginTop: Dimensions.get('window').height * 0.02,
+    paddingBottom: Dimensions.get('window').height * 0.01,
+  },
 
-
+  buttons: {
+    width: Dimensions.get('window').width * 0.2,
+    height: Dimensions.get('window').height * 0.1,
+    margin: Dimensions.get('window').width * 0.01,
+  },
 
 })

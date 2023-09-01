@@ -15,15 +15,12 @@ const postSchema = mongoose.Schema({
     },
     firstN: {
         type: String,
-        required: true
     },
     secondN: {
         type: String,
-        required: true
     },
     thirdN: {
         type: String,
-        required: true
     },
     firstT: {
         type: String,

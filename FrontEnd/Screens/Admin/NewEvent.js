@@ -26,7 +26,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Moment from 'moment';
 import { firebase } from '../../src/config'  // for image upload for firebase
 import NotificationServer2 from '../../NotificationServer2'   // for notification for firebase
-
+import { SelectList } from 'react-native-dropdown-select-list'
 
 const NewEvent = () => {
 
@@ -36,9 +36,11 @@ const NewEvent = () => {
   const [imagef, setImagef] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [photoShow, setPhotoShow] = React.useState(null);
-
-
   const [isUploading, setIsUploading] = useState(false);
+
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+
 
 
 
@@ -129,7 +131,7 @@ const NewEvent = () => {
     // console.log("imagef--", imagef);
 
     uploadImage(source.uri);
-    
+
 
   }
 
@@ -146,7 +148,7 @@ const NewEvent = () => {
       return;
     }
 
-  
+
 
     setUploading(true);
 
@@ -156,7 +158,7 @@ const NewEvent = () => {
       const filename = uri.substring(uri.lastIndexOf('/') + 1);
       const ref = firebase.storage().ref().child(filename).put(blob);
 
-     
+
 
       ref.on(
         "state_changed",
@@ -173,14 +175,14 @@ const NewEvent = () => {
         async () => {
           await ref;
 
-      
+
           const url = await ref.snapshot.ref.getDownloadURL();
           console.log("url--", url);
           setPhotoShow(url);
           setImagef(url);
           setUploading(false);
           setIsUploading(false);
-      
+
         }
       );
     } catch (e) {
@@ -209,8 +211,8 @@ const NewEvent = () => {
     setIsUploading(false);
     setUploading(false);
     setProgress(0);
-  
-     
+
+
   }
 
 
@@ -223,8 +225,8 @@ const NewEvent = () => {
       date: Moment(mydate).format('YYYY-MM-DD'),
       time: mytime,
       description: values.description,
-      type: values.type,
-      gender: values.gender,
+      type: selectedType,
+      gender: selectedGender,
       image: imagef,
       location: values.location,
     }
@@ -350,10 +352,7 @@ const NewEvent = () => {
                 initialValues={{
                   event: '',
                   location: '',
-                  gender: '',
-                  type: '',
                   description: '',
-                  image: ''
                 }}
                 onSubmit={values => handleSubmit(values)}
                 validationSchema={signUpValidationSchema}
@@ -366,19 +365,46 @@ const NewEvent = () => {
                       name="event"
                       placeholder="Football"
                     />
+
                     <Text style={styles.lable}  >Type</Text>
-                    <Field
-                      component={CustomInput}
-                      name="type"
-                      placeholder="Team/Individual"
+                    <SelectList
+                      setSelected={(val) => setSelectedType(val)}
+                      data={[
+                        { key: '1', value: 'Single' },
+                        { key: '2', value: 'Team' },
+                      ]}
+                      save="value"
+                      boxStyles={styles.selectList}
+                      search={false}
+                      maxHeight={Dimensions.get('window').height * 0.13}
+                      defaultOption={selectedType}
+                      dropdownTextStyles={{ fontSize: Dimensions.get('window').width * 0.04 }}
+                      inputStyles={{
+                        fontSize: Dimensions.get('window').width * 0.05,
+                      }}
+                      placeholder="Single or Team"
                     />
 
                     <Text style={styles.lable}  >Gender</Text>
-                    <Field
-                      component={CustomInput}
-                      name="gender"
-                      placeholder="Men"
+                    <SelectList
+                      setSelected={(val) => setSelectedGender(val)}
+                      data={[
+                        { key: '1', value: 'Men' },
+                        { key: '2', value: 'Women' },
+                        { key: '3', value: 'Men & Women' },
+                      ]}
+                      save="value"
+                      boxStyles={styles.selectList}
+                      search={false}
+                      maxHeight={Dimensions.get('window').height * 0.2}
+                      defaultOption={selectedGender}
+                      dropdownTextStyles={{ fontSize: Dimensions.get('window').width * 0.04 }}
+                      inputStyles={{
+                        fontSize: Dimensions.get('window').width * 0.05,
+                      }}
+                      placeholder="Select Gender"
                     />
+
                     <Text style={styles.lable}  >Location</Text>
                     <Field
                       component={CustomInput}
@@ -455,23 +481,23 @@ const NewEvent = () => {
                       </View>
 
 
-                      
+
                       <View style={styles.imageContainer}>
-                      <Image
-                        
-                        source={
-                          photoShow !== null
-                            ? { uri: photoShow }
-                            : darkTheme
-                              ? require('../../Components/newB.jpg')
-                              : require('../../Components/newW.jpg')
-                        }
-                        
-                       
-                        style={{ width: '100%', height: '100%' }}
-                      />
-                    </View>
-                      
+                        <Image
+
+                          source={
+                            photoShow !== null
+                              ? { uri: photoShow }
+                              : darkTheme
+                                ? require('../../Components/newB.jpg')
+                                : require('../../Components/newW.jpg')
+                          }
+
+
+                          style={{ width: '100%', height: '100%' }}
+                        />
+                      </View>
+
 
                       <View style={{ height: 10, backgroundColor: 'white' }}>
                         <Animated.View style={{ height: 10, backgroundColor: '#307ecc', width }} />
@@ -485,8 +511,8 @@ const NewEvent = () => {
                           activeOpacity={0.5}
                           disabled={isUploading}
                           onPress={takePhotoAndUpload}
-                          
-                          
+
+
                         >
                           <Text style={styles.buttonTextStyle}>Upload Image</Text>
                         </TouchableOpacity>
@@ -504,11 +530,16 @@ const NewEvent = () => {
                     </View>
 
 
-                    <Button
+                    <TouchableOpacity
                       onPress={handleSubmit}
-                      title="Add Event"
                       disabled={!isValid || isUploading}
-                    />
+                      style={[
+                        styles.addeventbutton,
+                        { backgroundColor: isValid && !isUploading ? '#0b65bf' : 'gray' },
+                      ]}
+                    >
+                      <Text style={styles.addeventbuttonText}>Add Event</Text>
+                    </TouchableOpacity>
                   </>
                 )}
               </Formik>
@@ -543,7 +574,7 @@ const styles = StyleSheet.create({
   },
 
   button2: {
-    backgroundColor: '#307ecc',
+    backgroundColor: '#0b65bf',
     padding: 2,
     borderRadius: 10,
     marginHorizontal: 10,
@@ -587,7 +618,7 @@ const styles = StyleSheet.create({
 
   },
   photoButton: {
-    backgroundColor: '#04b040',
+    backgroundColor: '#0b65bf',
     borderRadius: 15,
     paddingHorizontal: 15,
     paddingVertical: 5,
@@ -620,8 +651,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 
-
-
   mainBody: {
     flex: 1,
     justifyContent: 'center',
@@ -632,7 +661,7 @@ const styles = StyleSheet.create({
 
   },
   buttonStyle: {
-    backgroundColor: '#307ecc',
+    backgroundColor: '#0b65bf',
     borderWidth: 0,
     color: '#FFFFFF',
     borderColor: '#307ecc',
@@ -682,4 +711,35 @@ const styles = StyleSheet.create({
 
     alignItems: 'center',
   },
+
+  selectList: {
+    width: Dimensions.get('window').width * 0.5,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    borderRadius: 10,
+    borderWidth: StyleSheet.hairlineWidth,
+    textAlignVertical: 'top',
+    textAlign: 'center',
+    fontSize: 20,
+  },
+
+  addeventbutton: {
+    color: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    width: Dimensions.get('window').width * 0.8,
+    height: Dimensions.get('window').width * 0.15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  addeventbuttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    alignItems: 'center',
+  }
+
+
 })

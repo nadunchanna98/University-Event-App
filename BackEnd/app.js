@@ -45,12 +45,14 @@ mongoose.connect(process.env.CONNECTION_STRING,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        // dbName: 'Event-App-testing'
         dbName: 'Event-App'
     })
 
 .then(()=>{
    // res.json()
-   console.log('Event-App DB connected')
+   //console.log('Event-App-testing DB connected')
+    console.log('Event-App DB connected') 
 }).catch((err)=>{
     console.log(err)
 })
